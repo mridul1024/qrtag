@@ -18,6 +18,11 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 </head>
 <body>
     <div id="app">
@@ -49,6 +54,20 @@
                                 </li>
                             @endif
                         @else
+                        @hasanyrole('super-admin|admin')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('users')}}">Users</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="#">Categories</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="#">Products</a>
+                          </li>
+                          @endhasanyrole
+                          <li class="nav-item">
+                            <a class="nav-link" href="#">Attributes</a>
+                          </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
