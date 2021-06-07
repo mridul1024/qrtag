@@ -124,7 +124,7 @@
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
-                    <div class="col-sm-10"><h2>User <b>Details</b></h2></div>
+                    <div class="col-sm-10"><h2>Users <b>List</b></h2></div>
                     <div class="col-sm-2">
 
                             <a type="button" href="{{ route('users-create')}}" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</a>
@@ -132,6 +132,12 @@
                     </div>
                 </div>
             </div>
+            @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
             <table class="table table-striped table-hover table-bordered">
                 <thead>
                     <tr>
@@ -139,7 +145,7 @@
                         <th>Name </th>
                         <th>Email</th>
                         <th>Role</th>
-                        <th>Permission</th>
+                        
                         <th>Created At</th>
                         <th>Actions</th>
                     </tr>
@@ -153,13 +159,13 @@
                         <td> {{$user->name}}</td>
                         <td>{{$user->email}}</td>
                         <td>{{$user->roles[0]->name}}</td>
-                        <td></td>
+
                         <td>{{$user->created_at}}</td>
                         <td>
-                            <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
+                            <a href="/user/show/{{$user->id}}" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
                             <a href="/users/{{$user->id}}/edit" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
                             @hasanyrole('super-admin|admin')
-                             <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                             <a type="button" class="delete" title="Delete" data-whatever="/user/delete/{{ $user->id }}" data-toggle="modal" data-target="#exampleModal"><i class="material-icons">&#xE872;</i></a>
                             @endhasanyrole
                         </td>
                     </tr>
@@ -174,6 +180,41 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete this User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure to you want to delete this user? <br>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a type="button" id="deletecategory" href="" class="btn btn-primary">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script type="text/javascript" >
+    $(document).ready(function() {
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var id = button.data('whatever') ;// Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+            $('#deletecategory').attr('href', id);
+        });
+    });
+</script>
 <script>
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip();

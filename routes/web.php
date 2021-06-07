@@ -14,14 +14,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('login');
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/users', 'UserController@index')->name('users');
-Route::get('/users/create', 'UserController@create')->name('users-create');
-Route::post('/users/store', 'UserController@store')->name('users-store');
-Route::get('/users/{user}/edit', 'UserController@edit');
+Route::middleware('auth')->group(function () {
+
+    Route::get('/users', 'UserController@index')->name('users');
+    Route::get('/users/create', 'UserController@create')->name('users-create');
+    Route::post('/users/store', 'UserController@store')->name('users-store');
+    Route::get('/users/{user}/edit', 'UserController@edit');
+    Route::put('/user/update/{id}', 'UserController@update');
+    Route::get('/user/delete/{id}', 'UserController@destroy');
+    Route::get('/user/show/{id}', 'UserController@show');
+});
+

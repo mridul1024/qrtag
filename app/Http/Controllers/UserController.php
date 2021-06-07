@@ -4,38 +4,58 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Facade\FlareClient\Http\Response;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
+
+
+
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
+
     {
-        if (Auth::user()->hasAnyRole(['admin'])){
+        if ($request->is('api/*')) {
 
-               $users1 = User::with('roles');
+            $user = User::where('email', $request->email)->first();
 
-               $users = $users1->whereNotIn('name', [ 'admin','super-admin'])->paginate(15);
-               //ddd($users1);
+            if ($user->hasAnyRole(['admin'])) {
 
-            }else{
+                $users1 = User::with('roles');
+
+                $users = $users1->whereNotIn('name', ['admin', 'super-admin'])->paginate(15);
+            } else {
                 $users = User::with('roles')->paginate(15);
-               // ddd($users);
+            }
 
+            return response()->json($users);
+        } else {
+
+            if (Auth::user()->hasAnyRole(['admin'])) {
+
+                $users1 = User::with('roles');
+
+                $users = $users1->whereNotIn('name', ['admin', 'super-admin'])->paginate(15);
+            } else {
+                $users = User::with('roles')->paginate(15);
+            }
+
+
+            return view('user.index', ['users' => $users]);
         }
-        //ddd($users);
-
-        return view('user.index', ['users' => $users]);
     }
 
     /**
@@ -43,20 +63,35 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->is('api/*')) {
+            $user = User::where('email', $request->email)->first();
 
-        if (Auth::user()->hasAnyRole(['super-admin'])){
+            if ($user->hasAnyRole(['super-admin'])) {
 
-            $roles = Role::all()->whereNotIn('name', ['super-admin']);
+                $roles = Role::all()->whereNotIn('name', ['super-admin']);
+            } else {
 
-        }else{
+                $roles = Role::all()->whereNotIn('name', ['super-admin', 'admin']);
+            }
 
-            $roles = Role::all()->whereNotIn('name', ['super-admin','admin']);
+
+
+            return response()->json($roles);
+        } else {
+
+            if (Auth::user()->hasAnyRole(['super-admin'])) {
+
+                $roles = Role::all()->whereNotIn('name', ['super-admin']);
+            } else {
+
+                $roles = Role::all()->whereNotIn('name', ['super-admin', 'admin']);
+            }
+
+            // ddd(response()->json($roles));
+            return view('user.create', ['roles' => $roles]);
         }
-
-       // ddd(response()->json($roles));
-        return view('user.create', ['roles' => $roles]);
     }
 
     /**
@@ -68,9 +103,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255',
-            'password' => 'required|min:6|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|unique:users,email|max:255',
+            'password' => 'required|string|min:6|max:255',
             'role' =>  'required',
         ]);
 
@@ -83,8 +118,18 @@ class UserController extends Controller
 
         $user->assignRole($request->role);
 
-        return back()->with('success','Successfully registered a new user!');
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully registered a new user!'
+            ];
 
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return back()->with('success', 'Successfully registered a new user!');
+        }
     }
 
     /**
@@ -93,9 +138,27 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
-        //
+        $user = User::find($id);
+        $permissions = $user->getAllPermissions();
+        $role = $user->getRoleNames();
+
+
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'user' => $user,
+                'role' => $role,
+                'permissions' => $permissions
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return view('user.show', ['user' => $user, 'role' => $role, 'permissions' => $permissions]);
+        }
     }
 
     /**
@@ -104,23 +167,47 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request,$id)
     {
-        $user = User::find($id);
+        if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
+            $user = User::find($id);
 
-        if (Auth::user()->hasAnyRole(['super-admin'])){
+            if ($loggedinUser->hasAnyRole(['super-admin'])) {
 
-            $roles = Role::all()->whereNotIn('name', ['super-admin']);
+                $roles = Role::all()->whereNotIn('name', ['super-admin']);
+            } else {
 
-        }else{
+                $roles = Role::all()->whereNotIn('name', ['super-admin', 'admin']);
+            }
+            //$user = User::where('email', $request->email)->first();
+            $role = $user->getRoleNames();
+            //ddd($role[0]);
+            //return view('user.edit', ['user' => $user, 'role' => $role[0], 'roles' => $roles]);
 
-            $roles = Role::all()->whereNotIn('name', ['super-admin','admin']);
+            $response = [
+                'user' => $user,
+                'role' => $role[0],
+                'roles' =>  $roles
+            ];
+
+            return response($response, 201);
+        } else {
+
+            $user = User::find($id);
+
+            if (Auth::user()->hasAnyRole(['super-admin'])) {
+
+                $roles = Role::all()->whereNotIn('name', ['super-admin']);
+            } else {
+
+                $roles = Role::all()->whereNotIn('name', ['super-admin', 'admin']);
+            }
+
+            $role = $user->getRoleNames();
+            //ddd($role[0]);
+            return view('user.edit', ['user' => $user, 'role' => $role[0], 'roles' => $roles]);
         }
-
-        $role = Auth::user()->getRoleNames();
-        //ddd($role[0]);
-        return view('user.edit', ['user'=> $user,'role' => $role[0], 'roles' => $roles]);
-
     }
 
     /**
@@ -130,9 +217,42 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id )
     {
-        //
+        //$some = $request->id;
+        $user = User::find($id);
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+
+            'role' =>  'required',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' =>  Hash::make($request->password),
+
+        ]);
+
+        //$user->assignRole($request->role);
+        $affected = DB::table('model_has_roles')
+              ->where('model_id', $id)
+              ->update(['role_id' => $request->role]);
+
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully updated user!'
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return back()->with('success', 'Successfully updated user!');
+        }
     }
 
     /**
@@ -141,8 +261,23 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        //
+        $user = User::find($id);
+
+        $user->delete();
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully deleted user!'
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return back()->with('success', 'Successfully deleted user!');
+        }
+
     }
 }

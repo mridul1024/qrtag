@@ -174,24 +174,26 @@
                         <strong>{{ $message }}</strong>
                     </div>
                 @endif
-                <form method="POST" action="{{ route('users-store') }}">
+                <form method="POST" action="/user/update/{{$user->id}}">
                     @csrf
-
+                    @method('PUT')
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputName4">Name</label>
-                            <input type="text" name="name" value="{{ $user->name }}" class="form-control" id="inputName4" placeholder="Name">
+                            <input type="text" name="name" value="{{ $user->name }}" class="form-control" id="inputName4"
+                                placeholder="Name">
 
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Email</label>
-                            <input type="email" name="email" value="{{ $user->email }}" class="form-control " id="inputEmail4" placeholder="Email">
+                            <input type="email" name="email" value="{{ $user->email }}" class="form-control "
+                                id="inputEmail4" placeholder="Email">
 
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputPassword4">Password</label>
-                            <input type="password" name="password" value="{{ $user->password }}" class="form-control" id="inputPassword4"
-                                placeholder="Password">
+                            <input type="password" name="password" value="" class="form-control"
+                                id="inputPassword4" placeholder="To change Password, just enter a new password and click update">
 
                         </div>
 
@@ -199,20 +201,25 @@
                         <div class="form-group col-md-6">
                             <label for="inputRole">Role</label>
                             <select id="inputRole" name="role" id="role" class="form-control ">
-                                @if($role)
-                                <option value="" selected>{{$role}}</option>
-                                @else
                                 <option selected value="">Choose Role of the User</option>
-                                @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+
+
+                                @foreach ($roles as $role1)
+
+                                    @if ($role1->name == $role)
+
+                                        <option value="{{ $role1->id }}" selected>{{ $role }} </option>
+                                    @else
+                                        <option value="{{ $role1->id }}">{{ $role1->name }}</option>
+                                    @endif
                                 @endforeach
-                                @endif
+
                             </select>
 
                         </div>
 
                     </div>
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </form>
 
             </div>
