@@ -26,8 +26,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //public
 Route::get('login', 'AuthApiController@login')->name('login');
 
-//protected routes
+//protected routes user management
 Route::group(['middleware' => ['auth:sanctum']], function () {
+
     // http://127.0.0.1:8000/api/logout/?email=admin@admin.com
     Route::get('logout', 'AuthApiController@logout'); // requires email of the user
     // http://127.0.0.1:8000/api/users/?email=admin@admin.com

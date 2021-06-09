@@ -58,16 +58,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('users')}}">Users</a>
                           </li>
-                          <li class="nav-item">
-                            <a class="nav-link" href="#">Categories</a>
-                          </li>
-                          <li class="nav-item">
-                            <a class="nav-link" href="#">Products</a>
-                          </li>
                           @endhasanyrole
                           <li class="nav-item">
-                            <a class="nav-link" href="#">Attributes</a>
+                            <a class="nav-link" href="/categories">Categories</a>
                           </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="/subcategories">Subcategories</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="/attributemasters">Attribue Master List</a>
+                          </li>
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
