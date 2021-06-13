@@ -191,6 +191,11 @@
 
                         </div>
                         <div class="form-group col-md-6">
+                            <label for="inputName5">Phone</label>
+                            <input type="number" name="phone" value="{{ $user->phone }}" class="form-control" id="inputName5" placeholder="Must be Whatsapp Number">
+
+                        </div>
+                        <div class="form-group col-md-6">
                             <label for="inputPassword4">Password</label>
                             <input type="password" name="password" value="" class="form-control"
                                 id="inputPassword4" placeholder="To change Password, just enter a new password and click update">

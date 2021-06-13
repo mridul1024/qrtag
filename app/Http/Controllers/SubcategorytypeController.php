@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\HtmlString;
+
 class SubcategorytypeController extends Controller
 {
 
@@ -117,26 +117,26 @@ class SubcategorytypeController extends Controller
             return response($response, 201);
         } else {
             //write your logic for web call
-            return view('subcategory.type.show', ['subcategorytype' => $subcategorytype, 'attributes' => $subcategorytype->attributes]);
+            return view('subcategory.type.show', ['subcategorytype' => $subcategorytype, 'pattributes' => $subcategorytype->attributes->where('published','Y'),'nattributes' => $subcategorytype->attributes->where('published','N')]);
         }
     }
 
-    public function generateQr(Request $request){
-       // $image = new \ImagickPixel(QrCode::format('svg')->size(150)->generate( request('qrcode')));
+    // public function generateQr(Request $request){
+    //    // $image = new \ImagickPixel(QrCode::format('svg')->size(150)->generate( request('qrcode')));
 
-        // $image =;
-       // dd($image);
-       // $imagepath = ->store('qr_images');
-       //$path = $image->store('qrcodes');
-       $path = Storage::putFile('qrcodes', $image);
-       // $path = (String)$image->store('avatars');
-        $affected = DB::table('subcategorytypes')
-              ->where('id', request('id'))
-              ->update(['qrcode' => $path]);
+    //     // $image =;
+    //    // dd($image);
+    //    // $imagepath = ->store('qr_images');
+    //    //$path = $image->store('qrcodes');
+    //    $path = Storage::putFile('qrcodes', $image);
+    //    // $path = (String)$image->store('avatars');
+    //     $affected = DB::table('subcategorytypes')
+    //           ->where('id', request('id'))
+    //           ->update(['qrcode' => $path]);
 
-        return redirect( request('subcategory_id'));
+    //     return redirect( request('subcategory_id'));
 
-    }
+    // }
 
     /**
      * Show the form for editing the specified resource.

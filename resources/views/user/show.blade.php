@@ -19,15 +19,19 @@
     <h1> User Details</h1>
     <div class="row">
 
-        <div class="col">
-            <b>Name : </b> {{ $user->name}} <br>
-            <b>Email : </b> {{ $user->email}} <br>
-            <b>Role : </b> {{$role}} <br>
-            <b>Date of Creation : </b> {{$user->created_at}} <br>
+        <div class="card col">
+            <p><b>Name : </b> {{ $user->name}} <br></p>
+            <p><b>Email : </b> {{ $user->email}} <br></p>
+            <p><b>Phone : </b> {{$user->phone}} <br></p>
+            <p><b>Role : </b> {{$role[0]}} <br></p>
+            <p><b>Date of Creation : </b> {{$user->created_at}} <br></p>
         </div>
         <div class="col">
             <h4>Permissions Available</h4>
             <ul>
+                @if ( $role[0] == 'super-admin')
+                <li> ALL PERMISSIONS GRANTED </li>
+                @endif
                 @foreach ( $permissions as $permission )
                     <li> {{$permission->name}} </li>
                 @endforeach

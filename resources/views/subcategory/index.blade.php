@@ -127,9 +127,9 @@
                     <div class="col-md-8 col-12 text-center"><h2>SubCategory <b>List</b></h2></div>
 
                     <div class="col-md-3 col-2 text-right">
-
+                        @hasanyrole('super-admin|admin')
                             <a type="button" href="/subcategory/create" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</a>
-
+                        @endhasanyrole
                     </div>
                      <div class="col-1 text-left" >
 
@@ -176,7 +176,7 @@
                         <td>{{$subcategory->created_by}}</td>
                         <td>{{$subcategory->created_at}}</td>
                         <td>
-                            <a href="/subcategorytypes/{{$subcategory->id}}" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
+                            <a href="/subcategorytypes/{{$subcategory->id}}" class="view" title="View Types" data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
                             @hasanyrole('super-admin|admin')
                             <a href="/category/{{$subcategory->id}}/edit" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
 

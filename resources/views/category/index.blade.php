@@ -126,9 +126,9 @@
                 <div class="row">
                     <div class="col-sm-10"><h2>Category <b>List</b></h2></div>
                     <div class="col-sm-2">
-
+                        @hasanyrole('super-admin|admin')
                             <a type="button" href="/category/create" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</a>
-
+                        @endhasanyrole
                     </div>
                 </div>
             </div>
@@ -158,9 +158,10 @@
                         <td>{{$category->created_by}}</td>
                         <td>{{$category->created_at}}</td>
                         <td>
-                            <a href="/subcategories/{{$category->id}}" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                            <a href="/category/{{$category->id}}/edit" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                            <a href="/subcategories/{{$category->id}}" class="view" title="View Subcategories" data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
+
                             @hasanyrole('super-admin|admin')
+                             <a href="/category/{{$category->id}}/edit" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
                              <a type="button" class="delete" title="Delete" data-whatever="/category/delete/{{ $category->id }}" data-toggle="modal" data-target="#exampleModal"><i class="material-icons">&#xE872;</i></a>
                             @endhasanyrole
                         </td>

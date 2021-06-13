@@ -162,7 +162,7 @@
 
                     <div class="col-md-3">
                         <img class="card-img" src="/storage/{{ $subcategory->image }}" alt="Card image cap">
-                        
+
                     </div>
                 </div>
             </div>
@@ -176,10 +176,10 @@
                             <h2>Type <b>List </b></h2>
                         </div>
                         <div class="col-sm-2">
-
+                            @hasanyrole('super-admin|admin')
                             <a type="button" href="/subcategorytype/create/{{ $subcategory->id}}" class="btn btn-info add-new"><i
                                     class="fa fa-plus"></i> Add New</a>
-
+                                @endhasanyrole
                         </div>
                     </div>
                 </div>
@@ -213,8 +213,9 @@
                                 <td>{{ $subcategory->created_by }}</td>
                                 <td>{{ $subcategory->created_at }}</td>
                                 <td>
+
                                     <a href="/subcategorytype/show/{{ $subcategory->id }}" class="view" title="View"
-                                        data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
+                                        data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
                                     @hasanyrole('super-admin|admin')
                                     <a href="/subcategorytype/{{ $subcategory->id }}/edit" class="edit" title="Edit"
                                         data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>

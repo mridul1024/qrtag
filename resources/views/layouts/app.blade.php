@@ -58,6 +58,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('users')}}">Users</a>
                           </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="/jobs">Jobs</a>
+                          </li>
                           @endhasanyrole
                           <li class="nav-item">
                             <a class="nav-link" href="/categories">Categories</a>

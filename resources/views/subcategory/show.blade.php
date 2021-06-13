@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<!--
 <style>
     body {
         color: #566787;
@@ -171,8 +172,9 @@
                             <td> {{$attribute->name}}</td>
                             <td> {{$attribute->value}}</td>
                             <td>
-
+                                @hasanyrole('super-admin|admin|approver|editor')
                                 <a href="/attribute/{{$attribute->id}}/edit" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                                @endhasanyrole
                                 @hasanyrole('super-admin|admin')
                                  <a type="button" class="delete" title="Delete" data-whatever="/attribute/delete/{{ $attribute->id }}" data-toggle="modal" data-target="#exampleModal"><i class="material-icons">&#xE872;</i></a>
                                 @endhasanyrole
@@ -188,5 +190,5 @@
      </div>
  </div>
 
-
+-->
 @endsection

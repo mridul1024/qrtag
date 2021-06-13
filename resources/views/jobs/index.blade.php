@@ -124,14 +124,12 @@
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
-                    <div class="col-sm-10"><h2>Attributes <b>List</b></h2></div>
-                    @hasanyrole('super-admin|admin')
+                    <div class="col-sm-10"><h2>Job <b>List</b></h2></div>
                     <div class="col-sm-2">
-
-                            <a type="button" href="/attributemaster/create" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</a>
-
+                        @hasanyrole('super-admin|admin')
+                            <a type="button" href="/job/create" class="btn btn-info add-new"><i class="fa fa-plus"></i> Create Job</a>
+                        @endhasanyrole
                     </div>
-                    @endhasanyrole
                 </div>
             </div>
             @if ($message = Session::get('success'))
@@ -143,31 +141,27 @@
             <table class="table table-striped table-hover table-bordered">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Name </th>
+                        <th>Job ID</th>
                         <th>Created By</th>
-
                         <th>Created At</th>
-                        @hasanyrole('super-admin|admin')
+                        <th>Updated At</th>
                         <th>Actions</th>
-                        @endhasanyrole
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ( $attributemasters as $masterlist )
+                    @foreach ( $jobs as $job )
                     <tr>
-                        <td>{{$masterlist->id}}</td>
-                        <td> {{$masterlist->name}}</td>
-                        <td>{{$masterlist->created_by}}</td>
-                        <td>{{$masterlist->created_at}}</td>
-                        @hasanyrole('super-admin|admin')
+                        <td>{{$job->id}}</td>
+                        <td> {{$job->created_by}}</td>
+                        <td>{{$job->created_at}}</td>
+                        <td>{{$job->updated_at}}</td>
                         <td>
-                            <a href="/attributemaster/{{$masterlist->id}}/edit" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                            <a href="/job/show/{{$job->id}}" class="view" title="View Subcategories" data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
                             @hasanyrole('super-admin|admin')
-                             <a type="button" class="delete" title="Delete" data-whatever="/attributemaster/delete/{{ $masterlist->id }}" data-toggle="modal" data-target="#exampleModal"><i class="material-icons">&#xE872;</i></a>
+                             <a href="/job/edit/{{$job->id}}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                             <a type="button" class="delete" title="Delete" data-whatever="/category/delete/{{ $job->id }}" data-toggle="modal" data-target="#exampleModal"><i class="material-icons">&#xE872;</i></a>
                             @endhasanyrole
                         </td>
-                        @endhasanyrole 
                     </tr>
 
                     @endforeach
@@ -175,7 +169,7 @@
             </table>
             <div class="clearfix">
 
-                {{ $attributemasters->links() }}
+                {{ $jobs->links() }}
             </div>
         </div>
     </div>

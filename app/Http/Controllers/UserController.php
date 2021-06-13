@@ -105,6 +105,7 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|unique:users,email|email|max:255',
+            'phone' => 'required|digits_between:10,12',
             'password' => 'required|string|min:6|max:255',
             'role' =>  'required',
         ]);
@@ -112,6 +113,7 @@ class UserController extends Controller
         $user = factory(\App\User::class)->create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' =>  $request->phone,
             'password' =>  Hash::make($request->password),
 
         ]);
@@ -225,13 +227,15 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
-
+           // 'email' => 'required|string|unique:users,email|email|max:255',
+            'phone' => 'required|digits_between:10,12',
             'role' =>  'required',
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' =>  $request->phone,
             'password' =>  Hash::make($request->password),
 
         ]);

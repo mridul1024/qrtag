@@ -53,10 +53,34 @@ Route::middleware('auth')->group(function () {
     Route::get('/attribute/create', 'AttributesController@create')->name('attribute-create');
     Route::post('/attribute/store', 'AttributesController@store')->name('attribute-store');
     Route::get('/attribute/create/{id}', 'AttributesController@create');
+    Route::get('/attribute/delete/{id}', 'AttributesController@destroy');
 
     Route::get('/attributemaster/create', 'AttributeMasterController@create')->name('attributemaster-create');
     Route::get('/attributemasters', 'AttributeMasterController@index')->name('attributemasters');
     Route::post('/attributemaster/store', 'AttributeMasterController@store')->name('attributemaster-store');
 
+    Route::get('/attributechange/approve/{id}', 'AttributeChangeController@approve');
+    Route::post('/attributechange/store', 'AttributeChangeController@store')->name('attributechange-store');
+    Route::get('/attributechange/delete/{id}', 'AttributeChangeController@destroy');
+
+    Route::get('/jobs', 'JobController@index');
+    Route::get('/job/create', 'JobController@create');
+    Route::post('/job/store', 'JobController@store');
+    Route::get('/job/show/{id}', 'JobController@show');
+    Route::put('/job/edit/{id}', 'JobController@edit');
+
+    //Route::get('/jobs', 'JobController@index');
+    Route::get('/product/create/{id}', 'ProductController@create');
+    Route::post('/product/store', 'ProductController@store');
+    Route::get('/product/show/{id}', 'ProductController@show');
+    Route::put('/product/edit/{id}', 'ProductController@edit');
+    Route::get('/product/getsubcategories/{id}', 'ProductController@getSubcategories');
+    Route::get('/product/gettypes/{id}', 'ProductController@getTypes');
+    Route::get('/product/getattributes/{id}', 'ProductController@getAttributes');
+    Route::put('/product/generateQr', 'ProductController@generateQr');
+
+
 });
+
+
 

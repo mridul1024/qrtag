@@ -126,9 +126,9 @@
                 <div class="row">
                     <div class="col-sm-10"><h2>Users <b>List</b></h2></div>
                     <div class="col-sm-2">
-
+                        @hasanyrole('super-admin|admin')
                             <a type="button" href="{{ route('users-create')}}" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</a>
-
+                        @endhasanyrole
                     </div>
                 </div>
             </div>
@@ -145,7 +145,7 @@
                         <th>Name </th>
                         <th>Email</th>
                         <th>Role</th>
-                        
+
                         <th>Created At</th>
                         <th>Actions</th>
                     </tr>

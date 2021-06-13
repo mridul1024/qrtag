@@ -12,7 +12,7 @@
 
     </style>
 
-    <div class="container-xl">
+<div class="container card" style="padding: 1em">
 
                     <div class="row">
                         <div class="col-sm-12">

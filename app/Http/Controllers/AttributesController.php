@@ -40,7 +40,7 @@ class AttributesController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255|unique:attributes',
+            'name' => 'required|string|max:255',
 
         ]);
         //dd(request('subcategory_id'));
@@ -50,6 +50,7 @@ class AttributesController extends Controller
             'name' => strtoupper(Str::of(request('name'))->trim()),
             'value' => request('value'),
             'subcategorytype_id' => request('subcategorytype_id'),
+            'published' => 'Y',
             'created_by' => Auth::user()->email,
         ]);
 
@@ -107,8 +108,23 @@ class AttributesController extends Controller
      * @param  \App\Attributes  $attributes
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Attributes $attributes)
+    public function destroy(Request $request, $id)
     {
-        //
+        $Attributes = Attributes::find($id);
+
+        $Attributes->delete();
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully deleted attribute!'
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return back()->with('success', 'Successfully deleted Attribute!');
+        }
+
     }
 }

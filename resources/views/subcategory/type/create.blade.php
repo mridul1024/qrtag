@@ -12,7 +12,7 @@
 
     </style>
 
-    <div class="container-xl">
+    <div class="container card" style="padding: 1em">
 
                     <div class="row">
                         <div class="col-sm-12">
@@ -50,7 +50,7 @@
                         <div class="form-group col-md-12">
 
                         <input type="text" name="subcategory_id" hidden value="{{$subcategory->id}}" class="form-control" id="inputName4" placeholder=" {{ $subcategory->name}}">
-                        </select>
+                        
                         </div>
                     </div>
                     <div class="form-row">

@@ -152,46 +152,31 @@
             <div class="card ">
                 <div class="card-body ">
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-8">
                             <p class="card-text">
 
+                            <p><h5><b>Job Id: </b> {{ $job->id}}</p>
                             <p>
-                            <h5><b>Subcategory: </b> {{ $subcategorytype->subcategory->name }} <b>Type: </b>
-                                {{ $subcategorytype->name }} </h5>
+                            <h5><b>Created By: </b> {{ $job->created_by }} </h5>
                             </p>
                             <p>
-                            <h5><b>Category: </b> {{ $subcategorytype->subcategory->category->name }} </h5>
+                            <h5><b>Created AT:</b> {{ $job->created_at }} </h5>
                             </p>
                             <p>
-                            <h5><b>Created By:</b> {{ $subcategorytype->created_by }} </h5>
-                            </p>
-                            <p>
-                            <h5><b>Description: </b> {{ $subcategorytype->description }} </h5>
+                            <h5><b>Published : </b> {{ $job->published }} </h5>
                             </p>
                             </p>
                         </div>
-                        <div class="col-md-3">
-                            <img class="card-img" src="/storage/{{ $subcategorytype->image }}" alt="Card image cap">
-                        </div>
+
                         <div class="col-md-4">
-                            @if ($subcategorytype->qrcode == null)
+
                                 <div class="visible-print text-center">
                                     {!! QrCode::size(200)->generate(Request::url()) !!}
                                     <p>Scan this to return to this product</p>
                                 </div>
-                                <!--
-                            <form method="POST" action="/subcategorytype/generateQr/">
-                                @csrf
-                                @method('PUT')
-                                <input type="text" hidden name="qrcode" value="{!! Request::url() !!}" class="form-control"
-                                    id="qrcode" >
-                                    <button type="submit" class="btn btn-warning" >Generate QR </button> <br>
-                                </form> -->
 
-                            @else
 
-                                <img src="..." class="rounded float-left" alt="...">
-                            @endif
+
                         </div>
 
 
@@ -205,12 +190,12 @@
                         <div class="table-title">
                             <div class="row">
                                 <div class="col-sm-10">
-                                    <h2>Published Attributes <b>List</b></h2>
+                                    <h2>Product <b>List</b></h2>
                                 </div>
                                 <div class="col-sm-2">
                                     @hasanyrole('super-admin|admin|editor|approver')
-                                    <a type="button" href="/attribute/create/{{ $subcategorytype->id }}"
-                                        class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</a>
+                                    <a type="button" href="/product/create/{{ $job->id }}"
+                                        class="btn btn-info add-new"><i class="fa fa-plus"></i> Add Product</a>
                                     @endhasanyrole
                                 </div>
                             </div>
@@ -225,29 +210,41 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Attribute Name </th>
-                                    <th>Value</th>
+                                    <th>Category </th>
+                                    <th>SubCategory</th>
+                                    <th>Type</th>
+                                    <th>Attributes</th>
+                                    <th>Quantity</th>
                                     @hasanyrole('super-admin|admin|editor|approver')
                                     <th>Action</th>
                                     @endhasanyrole
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($pattributes as $attribute)
+                                @foreach ($products as $product)
 
 
                                     <tr>
-                                        <td>{{ $attribute->id }}</td>
-                                        <td> {{ $attribute->name }}</td>
-                                        <td> {{ $attribute->value }}</td>
+                                        <td>{{ $product->id }}</td>
+                                        <td> {{ $product->subcategorytype->subcategory->category->name }}</td>
+                                        <td> {{ $product->subcategorytype->subcategory->name }}</td>
+                                        <td> {{ $product->subcategorytype->name }}</td>
                                         <td>
+                                                @foreach ( $product->productsattributes as $attr)
+                                                    {{$attr->name }} : {{$attr->value}} <br>
+                                                @endforeach
+
+                                        </td>
+                                        <td> {{ $product->quantity }}</td>
+                                        <td>
+                                            <a href="/product/show/{{$product->id}}" class="view" title="View Types" data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
                                             @hasanyrole('super-admin|admin|editor|approver')
-                                            <a href="/attribute/{{ $attribute->id }}/edit" class="edit" title="Edit"
+                                            <a href="/product/{{ $product->id }}/edit" class="edit" title="Edit"
                                                 data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
                                             @endhasanyrole
                                             @hasanyrole('super-admin|admin')
                                             <a type="button" class="delete" title="Delete"
-                                                data-whatever="/attribute/delete/{{ $attribute->id }}"
+                                                data-whatever="/product/delete/{{ $product->id }}"
                                                 data-toggle="modal" data-target="#exampleModal"><i
                                                     class="material-icons">&#xE872;</i></a>
                                             @endhasanyrole
@@ -262,76 +259,7 @@
                 </div>
             </div>
         </div>
-        @hasanyrole('super-admin|admin|editor|approver')
-        <div class="container">
-            <div class="row">
-                <div class="table-responsive">
-                    <div class="table-wrapper">
-                        <div class="table-title">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <h2>UnPublished Attributes <b>List</b></h2>
-                                </div>
 
-                            </div>
-                        </div>
-                        @if ($message = Session::get('success'))
-                            <div class="alert alert-success alert-block">
-                                <button type="button" class="close" data-dismiss="alert">×</button>
-                                <strong>{{ $message }}</strong>
-                            </div>
-                        @endif
-                        <table class="table table-striped table-hover table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Attribute Name </th>
-                                    <th>Value</th>
-                                    @hasanyrole('editor')
-                                    <th>Status</th>
-                                    @endhasanyrole
-                                    @hasanyrole('super-admin|admin|approver')
-                                    <th>Approve / Reject</th>
-                                    @endhasanyrole
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($nattributes as $attribute)
-
-
-                                    <tr>
-                                        <td>{{ $attribute->id }}</td>
-                                        <td> {{ $attribute->name }}</td>
-                                        <td> {{ $attribute->value }}</td>
-                                        @hasanyrole('editor')
-                                            <td> Waiting for approval </td>
-                                        @endhasanyrole
-                                        @hasanyrole('super-admin|admin|approver')
-                                        <td>
-
-                                            <a href="/attributechange/approve/{{ $attribute->id }}" class="edit" title="Approve"
-                                                data-toggle="tooltip"><i class="material-icons">&#xe5ca;</i></a>
-
-
-                                            <a type="button" class="delete" title="Delete"
-                                                data-whatever="/attributechange/delete/{{ $attribute->id }}"
-                                                data-toggle="modal" data-target="#exampleModal"><i
-                                                    class="material-icons">&#xe5cd;</i></a>
-
-                                        </td>
-                                        @endhasanyrole
-                                    </tr>
-
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        @endhasanyrole
 
         <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
