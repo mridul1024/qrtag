@@ -20,6 +20,8 @@ class CreateProductsTable extends Migration
             $table->string('material_id')->unique();
             $table->text('qrcode')->nullable();
             $table->integer('quantity');
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->string('created_by');
             $table->timestamps();
 

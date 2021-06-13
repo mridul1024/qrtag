@@ -214,6 +214,16 @@
 
                     </div>
                 </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="inputName4">Location</label>
+                        <p>Click the button to get your coordinates.</p>
+                        <button onclick="getLocation()">Get Location</button>
+                        <div id="latitude"></div>
+                        <div id="longitude"><div>
+                    </div>
+                </div>
             </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -333,4 +343,21 @@
 
     </script>
     </body>
+
+<script>
+    var x = document.getElementById("demo");
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+
+    function showPosition(position) {
+      x.innerHTML = "Latitude: " + position.coords.latitude +
+      "<br>Longitude: " + position.coords.longitude;
+    }
+    </script>
 @endsection

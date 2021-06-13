@@ -20,6 +20,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/product/show/{id}', 'ProductController@show');
 
 Route::middleware('auth')->group(function () {
 
@@ -72,7 +73,7 @@ Route::middleware('auth')->group(function () {
     //Route::get('/jobs', 'JobController@index');
     Route::get('/product/create/{id}', 'ProductController@create');
     Route::post('/product/store', 'ProductController@store');
-    Route::get('/product/show/{id}', 'ProductController@show');
+
     Route::put('/product/edit/{id}', 'ProductController@edit');
     Route::get('/product/getsubcategories/{id}', 'ProductController@getSubcategories');
     Route::get('/product/gettypes/{id}', 'ProductController@getTypes');
