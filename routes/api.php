@@ -50,10 +50,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/categories', 'CategoryController@index');
     Route::get('/category/create', 'CategoryController@create');
-    Route::post('/category/store', 'CategoryController@store');
-    Route::get('/category/edit/{id}', 'CategoryController@edit');
-    Route::put('/category/update/{id}', 'CategoryController@update');
-    Route::get('/category/delete/{id}', 'CategoryController@destroy');
+    Route::post('/category/store', 'CategoryController@store'); //requires email to be sent
+    Route::get('/category/edit/{id}', 'CategoryController@edit'); // with selected category id
+    Route::put('/category/update/{id}', 'CategoryController@update'); // with selected category id
+    Route::get('/category/delete/{id}', 'CategoryController@destroy');// with selected category id
+
+    Route::get('/subcategories', 'SubcategoryController@index');
+    Route::get('/subcategories/{id}', 'SubcategoryController@indexById'); // with selected category id
+    Route::get('/subcategory/create', 'SubcategoryController@create');
+    Route::post('/subcategory/store', 'SubcategoryController@store'); //requires email to be sent
+    Route::get('/subcategory/show/{id}', 'SubcategoryController@show');// with selected subcategory id
+    Route::get('/subcategory/edit/{id}', 'SubcategoryController@edit'); // with selected subcategory id
+    Route::put('/subcategory/update/{id}', 'SubcategoryController@update'); // with selected subcategory id
+    Route::get('/subcategory/delete/{id}', 'SubcategoryController@destroy'); // with selected subcategory id
 
 });
 

@@ -252,7 +252,7 @@
                                         <td> {{ $product->subcategorytype->name }}</td>
                                         <td>
                                             @foreach ($product->productsattributes as $attr)
-                                                {{ $attr->name }} : {{ $attr->value }} <br>
+                                                {{ $attr->name }} : {{ $attr->value }} {{ $attr->unit }} <br>
                                             @endforeach
 
                                         </td>
@@ -260,7 +260,7 @@
                                         <td>
                                             <a href="/product/show/{{ $product->id }}" class="view" title="View Types"
                                                 data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
-                                            @if ($job->published == 'N')
+                                            @if($job->published == 'N')
                                                 @hasanyrole('super-admin|admin|editor|approver')
                                                 <a href="/product/{{ $product->id }}/edit" class="edit" title="Edit"
                                                     data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>

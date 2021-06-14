@@ -57,15 +57,16 @@ class CategoryController extends Controller
 
         ]);
         //    ddd(Auth::user()->email);
-        Category::create([
-            'name' => strtoupper(Str::of(request('name'))->trim()),
-            'description' => request('description'),
-            'created_by' => Auth::user()->email,
-        ]);
 
         if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
 
-            //write your logic for api call
+            Category::create([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'description' => request('description'),
+                'created_by' => $loggedinUser->email,
+            ]);
+
             $response = [
                 'status' => 'success',
                 'msg' => 'Successfully inserted a new category!'
@@ -73,6 +74,12 @@ class CategoryController extends Controller
 
             return response($response, 201);
         } else {
+            Category::create([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'description' => request('description'),
+                'created_by' => Auth::user()->email,
+            ]);
+
             //write your logic for web call
             return back()->with('success', 'Successfully inserted a new category!');
         }

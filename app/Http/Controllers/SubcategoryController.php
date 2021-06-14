@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Subcategory;
-
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -24,9 +24,12 @@ class SubcategoryController extends Controller
 
 
             $subcategories = Subcategory::paginate(15);
+            $response = [
+                'subcategories' => $subcategories,
+                'categories' => $categories,
+            ];
 
-
-            return response()->json($subcategories);
+            return response($response, 201);
         } else {
 
             $subcategories = Subcategory::paginate(15);
@@ -41,7 +44,13 @@ class SubcategoryController extends Controller
 
             $subcategories = Subcategory::where('category_id', '=', $id)->paginate(15);
 
-            return response()->json($subcategories);
+            $response = [
+                'subcategories' => $subcategories,
+                'categories' => $categories,
+            ];
+
+            return response($response, 201);
+            
         } else {
 
             $subcategories = Subcategory::where('category_id', '=', $id)->paginate(15);
@@ -83,17 +92,19 @@ class SubcategoryController extends Controller
             $image = request('image')->store('subcategory_images');
         }
         //    ddd(Auth::user()->email);
-        Subcategory::create([
-            'category_id' => request('category_id'),
-            'name' => strtoupper(Str::of(request('name'))->trim()),
-            'description' => request('description'),
-            'image' => $image,
 
-            'created_by' => Auth::user()->email,
-        ]);
 
         if ($request->is('api/*')) {
-            //write your logic for api call
+
+            $loggedinUser = User::where('email', $request->email)->first();
+            Subcategory::create([
+                'category_id' => request('category_id'),
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'description' => request('description'),
+                'image' => $image,
+
+                'created_by' => $loggedinUser->email,
+            ]);
             $response = [
                 'status' => 'success',
                 'msg' => 'Successfully inserted a new category!'
@@ -101,6 +112,14 @@ class SubcategoryController extends Controller
 
             return response($response, 201);
         } else {
+            Subcategory::create([
+                'category_id' => request('category_id'),
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'description' => request('description'),
+                'image' => $image,
+
+                'created_by' => Auth::user()->email,
+            ]);
             //write your logic for web call
             return back()->with('success', 'Successfully inserted a new subcategory!');
         }
@@ -122,10 +141,7 @@ class SubcategoryController extends Controller
         if ($request->is('api/*')) {
             //write your logic for api call
             $response = [
-                // 'status' => 'success',
-                // 'user' => $user,
-                // 'role' => $role,
-                // 'permissions' => $permissions
+                'subcategory' => $subcategory, 'attributes' => $subcategory->attributes
             ];
 
             return response($response, 201);

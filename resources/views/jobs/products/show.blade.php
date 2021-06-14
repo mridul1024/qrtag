@@ -230,7 +230,7 @@
 
                                         <td scope="row">{{ $attr->name }} </td>
                                         <td>{{ $attr->value }}</td>
-                                        <td>{{ $attr->value }}</td>
+                                        <td>{{ $attr->unit }}</td>
                                     </tr>
                                 @endforeach
 

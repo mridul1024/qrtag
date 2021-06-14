@@ -161,7 +161,7 @@
                     </div>
 
                     <div class="col-md-3">
-                        <img class="card-img" src="/storage/{{ $subcategory->image }}" alt="Card image cap">
+                        <img class="card-img" src="/storage/{{ $subcategory->image }}" alt="subcategory image">
 
                     </div>
                 </div>
@@ -178,7 +178,7 @@
                         <div class="col-sm-2">
                             @hasanyrole('super-admin|admin')
                             <a type="button" href="/subcategorytype/create/{{ $subcategory->id}}" class="btn btn-info add-new"><i
-                                    class="fa fa-plus"></i> Add New</a>
+                                    class="fa fa-plus"></i> Add New Type of {{$subcategory->name}}</a>
                                 @endhasanyrole
                         </div>
                     </div>

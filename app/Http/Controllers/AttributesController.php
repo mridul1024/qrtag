@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Attributes;
 use App\AttributeMaster;
+use App\UnitMaster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -27,8 +28,12 @@ class AttributesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request, $id)
-    {   $attributeMasters = AttributeMaster::all();
-        return view('attribute.create', ['id' => $id, 'attributemasters' => $attributeMasters]);
+    {
+        $attributeMasters = AttributeMaster::all();
+
+        $unitmasters = UnitMaster::all();
+
+        return view('attribute.create', ['id' => $id, 'attributemasters' => $attributeMasters, 'unitmasters' => $unitmasters]);
     }
 
     /**
@@ -41,6 +46,7 @@ class AttributesController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
+            'unit' => 'required',
 
         ]);
         //dd(request('subcategory_id'));
@@ -49,6 +55,7 @@ class AttributesController extends Controller
         Attributes::create([
             'name' => strtoupper(Str::of(request('name'))->trim()),
             'value' => request('value'),
+            'unit' => request('unit'),
             'subcategorytype_id' => request('subcategorytype_id'),
             'published' => 'Y',
             'created_by' => Auth::user()->email,

@@ -164,9 +164,33 @@
     });
     </script> --}}
     <div class="container card" style="padding: 2em">
+        <div class="row">
+            <div class="col-sm-12">
+                <h4 class="text-center">Create an Item </h4>
+            </div>
+
+        </div>
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+
         <form action="/product/store" method="POST">
             @csrf
-            <h4 class="text-center">Create an Item </h4>
+
             <div class="form-row">
                 <div class="form-group col-md-12">
 
@@ -209,8 +233,8 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="inputName4">Quantity</label>
-                        <input type="text" name="quantity" class="form-control " required id="inputName4"
-                            placeholder="Enter Quanitity">
+                        <input type="text" name="quantity" value="{{ old('quantity')}}" class="form-control " required id="inputName4"
+                            placeholder="Enter Quanitity (Must be a number)">
 
                     </div>
                 </div>
@@ -240,14 +264,8 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="unit">Unit</label>
-                        <div id="dynamic3"></div>
-                       <!-- <select id="inputRole" name="unit" id="unit" class="form-control ">
-                            <option selected value="">Choose Unit</option>
-                            @foreach ($units as $unit)
-                                <option value="{{ $unit->id }}">{{ $unit->name }}</option>
-                            @endforeach
-
-                        </select> -->
+                        <div id="dynamic4"></div>
+                        <div id="dynamic5"></div>
 
                     </div>
                 </div>
@@ -344,10 +362,15 @@
                             $('#dynamic2').append(
                                 `<input type="text"  required name="dynamic[` + i +
                                 `][value]" value="` + value +
-                                `" class="form-control"  placeholder="Enter Value">`
+                                `" class="form-control"  placeholder="Enter Value( Must be a number)">`
                             );
-                            $('#dynamic3').append(`<select id="inputRole" name"dynamic[` + i +
-                                `][value]" id="unit" class="form-control ">`
+                            $('#dynamic4').append(
+                                `<input type="text" hidden required name="dynamic[` + i +
+                                `][unit]" value="${element['unit']}"
+                                class="form-control"  placeholder="Name">`
+                            );
+                            $('#dynamic5').append(
+                                `<div class="form-control">${element['unit']}</div> `
                             );
                             i++;
                         });

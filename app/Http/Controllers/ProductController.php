@@ -21,8 +21,8 @@ class ProductController extends Controller {
     public  function create(Request $request, $id)
     {
         $categories = Category::all();
-        $units = UnitMaster::all();
-        return view('jobs.products.create',['id' => $id, 'categories' => $categories, 'units' => $units]);
+
+        return view('jobs.products.create',['id' => $id, 'categories' => $categories]);
 
     }
 
@@ -48,10 +48,10 @@ class ProductController extends Controller {
 
     public function store(Request $request)
     {
-        // $validatedData = $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'image' => 'image'
-        // ]);
+        $validatedData = $request->validate([
+            'quanity' => 'required|numeric',
+            'value' => 'required|numeric'
+        ]);
 
 
         //dd(request('dynamic'));
@@ -72,6 +72,7 @@ class ProductController extends Controller {
                     'product_id' => $product->id,
                     'name' => $value['name'],
                     'value' => $value['value'],
+                    'unit' => $value['unit'],
 
                 ]);
 
