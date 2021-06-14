@@ -46,6 +46,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/user/update/{id}', 'UserController@update');
     //http://127.0.0.1:8000/api/user/delete/7
     Route::get('/user/delete/{id}', 'UserController@destroy');
+
+
+    Route::get('/categories', 'CategoryController@index');
+    Route::get('/category/create', 'CategoryController@create');
+    Route::post('/category/store', 'CategoryController@store');
+    Route::get('/category/edit/{id}', 'CategoryController@edit');
+    Route::put('/category/update/{id}', 'CategoryController@update');
+    Route::get('/category/delete/{id}', 'CategoryController@destroy');
+
 });
 
 

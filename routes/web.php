@@ -33,15 +33,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/show/{id}', 'UserController@show');
 
     Route::get('/categories', 'CategoryController@index')->name('categories');
-
     Route::get('/category/create', 'CategoryController@create');
     Route::post('/category/store', 'CategoryController@store')->name('category-store');
+    Route::get('/category/edit/{id}', 'CategoryController@edit');
+    Route::put('/category/update/{id}', 'CategoryController@update');
+    Route::get('/category/delete/{id}', 'CategoryController@destroy');
+
+
 
     Route::get('/subcategories', 'SubcategoryController@index')->name('subcategories');
     Route::get('/subcategories/{id}', 'SubcategoryController@indexById');
     Route::get('/subcategory/create', 'SubcategoryController@create');
     Route::post('/subcategory/store', 'SubcategoryController@store')->name('subcategory-store');
     Route::get('/subcategory/show/{id}', 'SubcategoryController@show');
+    Route::get('/subcategory/edit/{id}', 'SubcategoryController@edit');
+    Route::put('/subcategory/update/{id}', 'SubcategoryController@update');
+    Route::get('/subcategory/delete/{id}', 'SubcategoryController@destroy');
 
 
     Route::get('/subcategorytypes/{id}', 'SubcategorytypeController@index')->name('subcategorytypes');
@@ -69,6 +76,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/job/store', 'JobController@store');
     Route::get('/job/show/{id}', 'JobController@show');
     Route::put('/job/edit/{id}', 'JobController@edit');
+    Route::get('/job/approve/{id}', 'JobController@approve');
 
     //Route::get('/jobs', 'JobController@index');
     Route::get('/product/create/{id}', 'ProductController@create');
@@ -80,6 +88,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/product/getattributes/{id}', 'ProductController@getAttributes');
     Route::put('/product/generateQr', 'ProductController@generateQr');
 
+    Route::get('/unitmaster/create', 'UnitMasterController@create');
+    Route::get('/unitmasters', 'UnitMasterController@index');
+    Route::post('/unitmaster/store', 'UnitMasterController@store');
 
 });
 

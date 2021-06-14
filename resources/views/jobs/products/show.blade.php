@@ -183,30 +183,30 @@
                         </p>
                     </div>
                     <div class="col-md-3">
-                        <div class="text-center"  style="width: 18rem;">
-                        <img class="card-img" src="/storage/{{ $product->subcategorytype->image }}" alt="item image">
+                        <div class="text-center" style="width: 18rem;">
+                            <img class="card-img" src="/storage/{{ $product->subcategorytype->image }}" alt="item image">
                         </div>
                     </div>
                     <div class="col-md-4">
 
-                           <div class="visible-print text-center">
-                               <div id="printableArea">
-                                            {!! QrCode::size(250)->generate(Request::url()) !!}
-                                            <p>Scan this to return to this product</p>
-                               </div>
+                        <div class="visible-print text-center">
+                            <div id="printableArea">
+                                {!! QrCode::size(250)->generate(Request::url()) !!}
+                                <p>Scan this to return to this product</p>
+                            </div>
 
-                                            <input type="button" onclick="printDiv('printableArea')" value="Print QR" />
-                                        </div>
- <!--
-                            <form method="POST" action="/product/generateQr">
-                                @csrf
-                                @method('PUT')
-                                <input type="text" hidden name="qrcode" value="{!! Request::url() !!}" class="form-control"
-                                    id="qrcode">
-                                    <input type="text" hidden name="id" value="{{ $product->id }}" class="form-control"
-                                   >
-                                <button type="submit" class="btn btn-warning">Generate QR </button> <br>
-                            </form>-->
+                            <input type="button" onclick="printDiv('printableArea')" value="Print QR" />
+                        </div>
+                        <!--
+                                <form method="POST" action="/product/generateQr">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="text" hidden name="qrcode" value="{!! Request::url() !!}" class="form-control"
+                                        id="qrcode">
+                                        <input type="text" hidden name="id" value="{{ $product->id }}" class="form-control"
+                                       >
+                                    <button type="submit" class="btn btn-warning">Generate QR </button> <br>
+                                </form>-->
 
 
                     </div>
@@ -216,28 +216,28 @@
                         </div>
                         <table class="table">
                             <thead>
-                              <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Value</th>
-                                <th scope="col">Unit</th>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Value</th>
+                                    <th scope="col">Unit</th>
 
-                              </tr>
+                                </tr>
                             </thead>
                             <tbody>
 
                                 @foreach ($product->productsattributes as $attr)
-                                <tr>
+                                    <tr>
 
-                                <td scope="row">{{ $attr->name }} </td>
-                                    <td>{{ $attr->value }}</td>
-                                    <td>{{ $attr->value }}</td>
-                                </tr>
+                                        <td scope="row">{{ $attr->name }} </td>
+                                        <td>{{ $attr->value }}</td>
+                                        <td>{{ $attr->value }}</td>
+                                    </tr>
                                 @endforeach
 
 
 
                             </tbody>
-                          </table>
+                        </table>
 
                     </div>
 
@@ -248,23 +248,73 @@
 
         </div>
     </div>
-
+    <div class="container">
+    <div class="row" style="padding: 2em">
+        <div class="col-md-12">
+            <div id="mapid" style="width: 600px; height: 400px;"></div>
+        </div>
+        <div class="col-md-12">
+            <div id="dvMap" style="width: 500px; height: 500px">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (p) {
+        var LatLng = new google.maps.LatLng(26.1779432, 91.8428137);
+        var mapOptions = {
+            center: LatLng,
+            zoom: 13,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+        var marker = new google.maps.Marker({
+            position: LatLng,
+            map: map,
+            title: "<div style = 'height:60px;width:200px'><b>Your location:</b><br />Latitude: " + p.coords.latitude + "<br />Longitude: " + p.coords.longitude
+        });
+        google.maps.event.addListener(marker, "click", function (e) {
+            var infoWindow = new google.maps.InfoWindow();
+            infoWindow.setContent(marker.title);
+            infoWindow.open(map, marker);
+        });
+    });
+} else {
+    alert('Geo Location feature is not supported in this browser.');
+}
+</script>
     <script>
+        var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoiZGhydWJhbmthMTAiLCJhIjoiY2twdjdwczZyMXUzcDJuczR6Mm84d2dobSJ9.B0vm6Oe9UKnf56zHcyofUg'
+        }).addTo(mymap);
+        mymap.panTo(new L.LatLng(26.1779432, 91.8428137));
+        var popup = L.popup()
+    .setLatLng([26.1779432, 91.8428137])
+    .setContent("Inserted Here.")
+    .openOn(mymap);
+
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
         });
 
         function printDiv(divName) {
-     var printContents = document.getElementById(divName).innerHTML;
-     var originalContents = document.body.innerHTML;
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
 
-     document.body.innerHTML = printContents;
+            document.body.innerHTML = printContents;
 
-     window.print();
+            window.print();
 
-     document.body.innerHTML = originalContents;
-}
-
+            document.body.innerHTML = originalContents;
+        }
 
     </script>
 @endsection

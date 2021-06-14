@@ -18,7 +18,8 @@ class SubcategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {   $categories = Category::all();
+    {
+        $categories = Category::all();
         if ($request->is('api/*')) {
 
 
@@ -34,15 +35,16 @@ class SubcategoryController extends Controller
     }
 
     public function indexById(Request $request, $id)
-    {  $categories = Category::all();
+    {
+        $categories = Category::all();
         if ($request->is('api/*')) {
 
-            $subcategories = Subcategory::where('category_id', '=' , $id)->paginate(15);
+            $subcategories = Subcategory::where('category_id', '=', $id)->paginate(15);
 
             return response()->json($subcategories);
         } else {
 
-            $subcategories = Subcategory::where('category_id', '=' , $id)->paginate(15);
+            $subcategories = Subcategory::where('category_id', '=', $id)->paginate(15);
 
             return view('subcategory.index', ['subcategories' => $subcategories, 'categories' => $categories]);
         }
@@ -53,11 +55,14 @@ class SubcategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $categories = Category::all();
-
-        return view('subcategory.create', ['categories' => $categories]);
+        if ($request->is('api/*')) {
+            return response()->json($categories);
+        } else {
+            return view('subcategory.create', ['categories' => $categories]);
+        }
     }
 
     /**
@@ -136,9 +141,24 @@ class SubcategoryController extends Controller
      * @param  \App\Subcategory  $subcategory
      * @return \Illuminate\Http\Response
      */
-    public function edit(Subcategory $subcategory)
+    public function edit(Request $request, $id)
     {
-        //
+        $subcategory = Subcategory::find($id);
+        $categories = Category::all();
+
+        if ($request->is('api/*')) {
+
+
+            $response = [
+                'subcategory' => $subcategory,
+                'categories' => $categories
+            ];
+
+            return response($response, 201);
+        } else {
+
+            return view('subcategory.edit', ['categories' => $categories,'subcategory' => $subcategory]);
+        }
     }
 
     /**
@@ -148,9 +168,39 @@ class SubcategoryController extends Controller
      * @param  \App\Subcategory  $subcategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Subcategory $subcategory)
+    public function update(Request $request, $id)
     {
-        //
+       //$some = $request->id;
+       $subcategory = Subcategory::find($id);
+
+       $validatedData = $request->validate([
+           'name' => 'required|string|max:255',
+
+       ]);
+       $image = NULL;
+       if (request('image')) {
+          Storage::delete($subcategory->image);
+           $image = request('image')->store('subcategory_images');
+       }
+       $subcategory->update([
+        'name' => strtoupper(Str::of(request('name'))->trim()),
+        'description' => request('description'),
+        'image' => $image,
+       ]);
+
+
+       if ($request->is('api/*')) {
+           //write your logic for api call
+           $response = [
+               'status' => 'success',
+               'msg' => 'Successfully updated!'
+           ];
+
+           return response($response, 201);
+       } else {
+           //write your logic for web call
+           return back()->with('success', 'Successfully updated!');
+       }
     }
 
     /**
@@ -159,8 +209,22 @@ class SubcategoryController extends Controller
      * @param  \App\Subcategory  $subcategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Subcategory $subcategory)
+    public function destroy(Request $request, $id)
     {
-        //
+        $subcategory = Subcategory::find($id);
+        Storage::delete($subcategory->image);
+        $subcategory->delete();
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully deleted!'
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return back()->with('success', 'Successfully deleted!');
+        }
     }
 }

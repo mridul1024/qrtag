@@ -155,25 +155,32 @@
                         <div class="col-md-8">
                             <p class="card-text">
 
-                            <p><h5><b>Job Id: </b> {{ $job->id}}</p>
                             <p>
-                            <h5><b>Created By: </b> {{ $job->created_by }} </h5>
-                            </p>
-                            <p>
-                            <h5><b>Created AT:</b> {{ $job->created_at }} </h5>
-                            </p>
-                            <p>
-                            <h5><b>Published : </b> {{ $job->published }} </h5>
-                            </p>
-                            </p>
+                            <h5><b>Job Id: </b> {{ $job->id }}</p>
+                                <p>
+                                <h5><b>Created By: </b> {{ $job->created_by }} </h5>
+                                </p>
+                                <p>
+                                <h5><b>Created AT:</b> {{ $job->created_at }} </h5>
+                                </p>
+                                <p>
+                                <h5><b>Status : </b>
+                                    @if ($job->published == 'N')
+                                        <b style="color: red"> Waiting for Approval </b>
+                                    @else
+                                        <b style="color: blue"> Approved</b>
+                                    @endif
+                                </h5>
+                                </p>
+                                </p>
                         </div>
 
                         <div class="col-md-4">
 
-                                <div class="visible-print text-center">
-                                    {!! QrCode::size(200)->generate(Request::url()) !!}
-                                    <p>Scan this to return to this product</p>
-                                </div>
+                            <div class="visible-print text-center">
+                                {!! QrCode::size(200)->generate(Request::url()) !!}
+                                <p>Scan this to return to this product</p>
+                            </div>
 
 
 
@@ -189,14 +196,28 @@
                     <div class="table-wrapper">
                         <div class="table-title">
                             <div class="row">
-                                <div class="col-sm-10">
+                                <div class="col-sm-8">
                                     <h2>Product <b>List</b></h2>
                                 </div>
                                 <div class="col-sm-2">
-                                    @hasanyrole('super-admin|admin|editor|approver')
-                                    <a type="button" href="/product/create/{{ $job->id }}"
-                                        class="btn btn-info add-new"><i class="fa fa-plus"></i> Add Product</a>
-                                    @endhasanyrole
+                                    @if ($job->published == 'N')
+
+                                        @hasanyrole('super-admin|admin|approver')
+                                        <a type="button" href="/job/approve/{{ $job->id }}"
+                                            class="btn btn-info add-new"><i class="fa fa-plus"></i> Approve Job</a>
+                                        @endhasanyrole
+
+                                    @endif
+                                </div>
+                                <div class="col-sm-2">
+                                    @if ($job->published == 'N')
+
+                                        @hasanyrole('super-admin|admin|editor|approver')
+                                        <a type="button" href="/product/create/{{ $job->id }}"
+                                            class="btn btn-info add-new"><i class="fa fa-plus"></i> Add Product</a>
+                                        @endhasanyrole
+
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -230,24 +251,27 @@
                                         <td> {{ $product->subcategorytype->subcategory->name }}</td>
                                         <td> {{ $product->subcategorytype->name }}</td>
                                         <td>
-                                                @foreach ( $product->productsattributes as $attr)
-                                                    {{$attr->name }} : {{$attr->value}} <br>
-                                                @endforeach
+                                            @foreach ($product->productsattributes as $attr)
+                                                {{ $attr->name }} : {{ $attr->value }} <br>
+                                            @endforeach
 
                                         </td>
                                         <td> {{ $product->quantity }}</td>
                                         <td>
-                                            <a href="/product/show/{{$product->id}}" class="view" title="View Types" data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
-                                            @hasanyrole('super-admin|admin|editor|approver')
-                                            <a href="/product/{{ $product->id }}/edit" class="edit" title="Edit"
-                                                data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                                            @endhasanyrole
-                                            @hasanyrole('super-admin|admin')
-                                            <a type="button" class="delete" title="Delete"
-                                                data-whatever="/product/delete/{{ $product->id }}"
-                                                data-toggle="modal" data-target="#exampleModal"><i
-                                                    class="material-icons">&#xE872;</i></a>
-                                            @endhasanyrole
+                                            <a href="/product/show/{{ $product->id }}" class="view" title="View Types"
+                                                data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
+                                            @if ($job->published == 'N')
+                                                @hasanyrole('super-admin|admin|editor|approver')
+                                                <a href="/product/{{ $product->id }}/edit" class="edit" title="Edit"
+                                                    data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                                                @endhasanyrole
+                                                @hasanyrole('super-admin|admin')
+                                                <a type="button" class="delete" title="Delete"
+                                                    data-whatever="/product/delete/{{ $product->id }}"
+                                                    data-toggle="modal" data-target="#exampleModal"><i
+                                                        class="material-icons">&#xE872;</i></a>
+                                                @endhasanyrole
+                                            @endif
                                         </td>
                                     </tr>
 
@@ -262,43 +286,47 @@
 
 
         <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete this User</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure to you want to delete this user? <br>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete this User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure to you want to delete this user? <br>
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a type="button" id="deletecategory" href="" class="btn btn-primary">Delete</a>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <a type="button" id="deletecategory" href="" class="btn btn-primary">Delete</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script type="text/javascript" >
-    $(document).ready(function() {
-        $('#exampleModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var id = button.data('whatever') ;// Extract info from data-* attributes
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-
-            $('#deletecategory').attr('href', id);
-        });
-    });
-</script>
-<script>
-    $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-    });
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>
-    @endsection
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#exampleModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data('whatever'); // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+                $('#deletecategory').attr('href', id);
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+    </script>
+@endsection

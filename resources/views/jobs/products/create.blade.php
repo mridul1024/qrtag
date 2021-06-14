@@ -226,16 +226,28 @@
                 </div>
             </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="dynamic1">Attribute</label>
                         <div id="dynamic1"></div>
                         <div id="dynamic3"></div>
                     </div>
 
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="dynamic2">Value</label>
 
                         <div id="dynamic2"></div>
+
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="unit">Unit</label>
+                        <div id="dynamic3"></div>
+                       <!-- <select id="inputRole" name="unit" id="unit" class="form-control ">
+                            <option selected value="">Choose Unit</option>
+                            @foreach ($units as $unit)
+                                <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                            @endforeach
+
+                        </select> -->
 
                     </div>
                 </div>
@@ -333,6 +345,9 @@
                                 `<input type="text"  required name="dynamic[` + i +
                                 `][value]" value="` + value +
                                 `" class="form-control"  placeholder="Enter Value">`
+                            );
+                            $('#dynamic3').append(`<select id="inputRole" name"dynamic[` + i +
+                                `][value]" id="unit" class="form-control ">`
                             );
                             i++;
                         });

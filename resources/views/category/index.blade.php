@@ -161,7 +161,7 @@
                             <a href="/subcategories/{{$category->id}}" class="view" title="View Subcategories" data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
 
                             @hasanyrole('super-admin|admin')
-                             <a href="/category/{{$category->id}}/edit" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                             <a href="/category/edit/{{$category->id}}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
                              <a type="button" class="delete" title="Delete" data-whatever="/category/delete/{{ $category->id }}" data-toggle="modal" data-target="#exampleModal"><i class="material-icons">&#xE872;</i></a>
                             @endhasanyrole
                         </td>

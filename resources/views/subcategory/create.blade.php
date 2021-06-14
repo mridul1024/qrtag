@@ -54,7 +54,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="inputName4">SubCategory Name</label>
-                            <input type="text" name="name" class="form-control" id="inputName4" placeholder="Name">
+                            <input type="text" name="name" value="{{ old('name') }}" class="form-control" id="inputName4" placeholder="Name">
 
                         </div>
                     </div>

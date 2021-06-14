@@ -124,28 +124,14 @@
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
-                    <div class="col-md-8 col-12 text-center"><h2>SubCategory <b>List</b></h2></div>
+                    <div class="col-sm-10"><h2>Unit <b>List</b></h2></div>
+                    @hasanyrole('super-admin|admin')
+                    <div class="col-sm-2">
 
-                    <div class="col-md-3 col-2 text-right">
-                        @hasanyrole('super-admin|admin')
-                            <a type="button" href="/subcategory/create" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</a>
-                        @endhasanyrole
+                            <a type="button" href="/unitmaster/create" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</a>
+
                     </div>
-                     <div class="col-1 text-left" >
-
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Filter
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="/subcategories/">All</a>
-                                @foreach ( $categories as $category)
-                                  <a class="dropdown-item" href="/subcategories/{{$category->id}}">{{$category->name}}</a>
-                              @endforeach
-                            </div>
-                          </div>
-
-                </div>
+                    @endhasanyrole
                 </div>
             </div>
             @if ($message = Session::get('success'))
@@ -159,30 +145,29 @@
                     <tr>
                         <th>#</th>
                         <th>Name </th>
-                        <th>Parent Category</th>
                         <th>Created By</th>
+
                         <th>Created At</th>
+                        @hasanyrole('super-admin|admin')
                         <th>Actions</th>
+                        @endhasanyrole
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ( $subcategories as $subcategory )
-
-
+                    @foreach ( $unitmasters as $unitlist )
                     <tr>
-                        <td>{{$subcategory->id}}</td>
-                        <td> {{$subcategory->name}}</td>
-                        <td>{{$subcategory->category->name}}</td>
-                        <td>{{$subcategory->created_by}}</td>
-                        <td>{{$subcategory->created_at}}</td>
+                        <td>{{$unitlist->id}}</td>
+                        <td> {{$unitlist->name}}</td>
+                        <td>{{$unitlist->created_by}}</td>
+                        <td>{{$unitlist->created_at}}</td>
+                        @hasanyrole('super-admin|admin')
                         <td>
-                            <a href="/subcategorytypes/{{$subcategory->id}}" class="view" title="View Types" data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
+                            <a href="/unitmaster/{{$unitlist->id}}/edit" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
                             @hasanyrole('super-admin|admin')
-                            <a href="/subcategory/edit/{{$subcategory->id}}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-
-                             <a type="button" class="delete" title="Delete" data-whatever="/subcategory/delete/{{ $subcategory->id }}" data-toggle="modal" data-target="#exampleModal"><i class="material-icons">&#xE872;</i></a>
+                             <a type="button" class="delete" title="Delete" data-whatever="/unitmaster/delete/{{ $unitlist->id }}" data-toggle="modal" data-target="#exampleModal"><i class="material-icons">&#xE872;</i></a>
                             @endhasanyrole
                         </td>
+                        @endhasanyrole
                     </tr>
 
                     @endforeach
@@ -190,7 +175,7 @@
             </table>
             <div class="clearfix">
 
-                {{ $subcategories->links() }}
+                {{ $unitmasters->links() }}
             </div>
         </div>
     </div>

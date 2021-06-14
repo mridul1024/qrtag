@@ -66,6 +66,33 @@ class JobController extends Controller
         }
     }
 
+    public function approve(Request $request, $id)
+    {
+        //$some = $request->id;
+        $job = Job::find($id);
 
+        $products = Product::where('job_id', '=', $id)->get();
+
+        $job->update([
+            'published' => 'Y',
+
+
+
+        ]);
+
+
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully updated approval!'
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return view('jobs.show', ['job' => $job, 'products' => $products]);
+        }
+    }
 
 }

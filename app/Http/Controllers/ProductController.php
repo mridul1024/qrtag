@@ -8,8 +8,7 @@ use App\Subcategory;
 use App\Subcategorytype;
 use Illuminate\Support\Str;
 use App\Product;
-
-
+use App\UnitMaster;
 use App\ProductAttribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,8 +21,8 @@ class ProductController extends Controller {
     public  function create(Request $request, $id)
     {
         $categories = Category::all();
-
-        return view('jobs.products.create',['id' => $id, 'categories' => $categories]);
+        $units = UnitMaster::all();
+        return view('jobs.products.create',['id' => $id, 'categories' => $categories, 'units' => $units]);
 
     }
 

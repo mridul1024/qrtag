@@ -6,6 +6,9 @@ use App\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\User;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -18,15 +21,16 @@ class CategoryController extends Controller
     {
         if ($request->is('api/*')) {
 
-
-                $categories = Category::paginate(15);
-
+            $categories = Category::paginate(15);
 
             return response()->json($categories);
+
         } else {
 
             $categories = Category::paginate(15);
+
             return view('category.index', ['categories' => $categories]);
+
         }
     }
 
@@ -60,6 +64,7 @@ class CategoryController extends Controller
         ]);
 
         if ($request->is('api/*')) {
+
             //write your logic for api call
             $response = [
                 'status' => 'success',
@@ -90,9 +95,22 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Request $request, $id)
     {
-        //
+        $category = Category::find($id);
+
+        if ($request->is('api/*')) {
+
+
+            $response = [
+                'category' => $category,
+            ];
+
+            return response($response, 201);
+        } else {
+
+            return view('category.edit', ['category' => $category]);
+        }
     }
 
     /**
@@ -102,9 +120,36 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
-        //
+        //$some = $request->id;
+        $category = Category::find($id);
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'description' => $request->description,
+
+
+        ]);
+
+
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully updated category!'
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return back()->with('success', 'Successfully updated category!');
+        }
     }
 
     /**
@@ -113,8 +158,22 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Request $request,$id)
     {
-        //
+        $category = Category::find($id);
+
+        $category->delete();
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully deleted category!'
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return back()->with('success', 'Successfully deleted category!');
+        }
     }
 }
