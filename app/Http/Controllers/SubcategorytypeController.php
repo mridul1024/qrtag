@@ -144,9 +144,23 @@ class SubcategorytypeController extends Controller
      * @param  \App\Subcategorytype  $subcategorytype
      * @return \Illuminate\Http\Response
      */
-    public function edit(Subcategorytype $subcategorytype)
+    public function edit(Request $request, $id)
     {
-        //
+        $subcategorytype = Subcategorytype::find($id);
+
+
+        if ($request->is('api/*')) {
+
+
+            $response = [
+                'subcategorytype' => $subcategorytype,
+                            ];
+
+            return response($response, 201);
+        } else {
+
+            return view('subcategory.type.edit', ['subcategorytype' => $subcategorytype]);
+        }
     }
 
     /**
@@ -156,9 +170,39 @@ class SubcategorytypeController extends Controller
      * @param  \App\Subcategorytype  $subcategorytype
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Subcategorytype $subcategorytype)
+    public function update(Request $request, $id)
     {
-        //
+       //$some = $request->id;
+       $subcategorytype= Subcategorytype::find($id);
+
+       $validatedData = $request->validate([
+           'name' => 'required|string|max:255',
+
+       ]);
+       $image = NULL;
+       if (request('image')) {
+          Storage::delete($subcategorytype->image);
+           $image = request('image')->store('subcategorytype_images');
+       }
+       $subcategorytype->update([
+        'name' => strtoupper(Str::of(request('name'))->trim()),
+        
+        'image' => $image,
+       ]);
+
+
+       if ($request->is('api/*')) {
+           //write your logic for api call
+           $response = [
+               'status' => 'success',
+               'msg' => 'Successfully updated!'
+           ];
+
+           return response($response, 201);
+       } else {
+           //write your logic for web call
+           return back()->with('success', 'Successfully updated!');
+       }
     }
 
     /**

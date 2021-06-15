@@ -50,7 +50,7 @@
                         <div class="form-group col-md-12">
 
                         <input type="text" name="subcategory_id" hidden value="{{$subcategory->id}}" class="form-control" id="inputName4" placeholder=" {{ $subcategory->name}}">
-                        
+
                         </div>
                     </div>
                     <div class="form-row">
@@ -60,13 +60,13 @@
 
                         </div>
                     </div>
-                        <div class="form-group row">
+                      <!--  <div class="form-group row">
                             <label for="description" class="col-md-2 col-form-label">type Description</label>
                             <div class="col-md-10">
                             <textarea name="description" class="form-control " id="description" rows="5">
                             </textarea>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group row">
                             <label for="file" class="col-md-2 col-form-label">Upload Product Display Image</label>
                             <input type="file" class="form-control-file col-md-4"

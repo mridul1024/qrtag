@@ -57,6 +57,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/subcategorytype/store', 'SubcategorytypeController@store')->name('subcategorytype-store');
     Route::get('/subcategorytype/show/{id}', 'SubcategorytypeController@show');
     Route::put('/subcategorytype/generateQr', 'SubcategorytypeController@generateQr');
+    Route::get('/subcategorytype/edit/{id}', 'SubcategorytypeController@edit');
+    Route::put('/subcategorytype/update/{id}', 'SubcategorytypeController@update');
 
     Route::get('/attributes', 'AttributesController@index')->name('attributes');
     Route::get('/attribute/create', 'AttributesController@create')->name('attribute-create');

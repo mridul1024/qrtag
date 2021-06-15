@@ -201,7 +201,7 @@
                                             class="btn btn-info add-new"><i class="fa fa-plus"></i> Add Product</a>
                                         @endhasanyrole
 
-                                  
+
                                 </div>
                                <!-- <div class="col-sm-2">
                                     @hasanyrole('super-admin|admin|approver')
@@ -264,7 +264,7 @@
                                         <td>
                                             <a href="/product/show/{{ $product->id }}" class="view" title="View Product"
                                                 data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
-                                            @if ($job->published == 'N')
+
                                                 @if ($product->status == 'N')
                                                     @hasanyrole('super-admin|admin|approver')
                                                     <a href="/product/approve/{{ $product->id }}" class="edit"
@@ -283,7 +283,7 @@
                                                     @endhasanyrole
                                                 @endif
 
-                                            @endif
+                                           
                                         </td>
                                     </tr>
 
