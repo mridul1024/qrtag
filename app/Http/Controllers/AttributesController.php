@@ -46,7 +46,7 @@ class AttributesController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'unit' => 'required',
+            
 
         ]);
         //dd(request('subcategory_id'));
@@ -55,7 +55,7 @@ class AttributesController extends Controller
         Attributes::create([
             'name' => strtoupper(Str::of(request('name'))->trim()),
             'value' => request('value'),
-            'unit' => request('unit'),
+
             'subcategorytype_id' => request('subcategorytype_id'),
             'published' => 'Y',
             'created_by' => Auth::user()->email,

@@ -61,18 +61,7 @@
                             <input type="text" name="value" class="form-control" id="inputName2" placeholder="Value">
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                            <label for="inputRole">Unit Name</label>
-                            <select id="inputRole" name="unit" id="name" class="form-control ">
-                                <option selected value="">Select Unit for this Attribute</option>
-                                @foreach ($unitmasters as $unit)
-                                    <option value="{{ $unit->name }}">{{ $unit->name }}</option>
-                                @endforeach
-
-                            </select>
-                            </div>
-                        </div>
+                        
 
                     <div class="form-group  row">
                         <div class="col-md-12">

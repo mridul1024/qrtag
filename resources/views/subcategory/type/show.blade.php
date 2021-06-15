@@ -171,7 +171,12 @@
                             </p>
                         </div>
                         <div class="col-md-3">
-                            <img class="card-img" src="/storage/{{ $subcategorytype->image }}" alt="Card image cap">
+
+                            @if ($subcategorytype->image == NULL)
+                            <img class="card-img" src="/storage/placeholder.png" alt="item image">
+                            @else
+                            <img class="card-img" src="/storage/{{ $subcategorytype->image }}" alt="item image">
+                            @endif
                         </div>
                         <div class="col-md-4">
                             @if ($subcategorytype->qrcode == null)

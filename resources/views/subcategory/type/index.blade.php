@@ -161,8 +161,11 @@
                     </div>
 
                     <div class="col-md-3">
-                        <img class="card-img" src="/storage/{{ $subcategory->image }}" alt="subcategory image">
-
+                        @if ($subcategory->image == NULL)
+                        <img class="card-img" src="/storage/placeholder.png" alt="item image">
+                        @else
+                        <img class="card-img" src="/storage/{{ $subcategory->image }}" alt="item image">
+                        @endif
                     </div>
                 </div>
             </div>
