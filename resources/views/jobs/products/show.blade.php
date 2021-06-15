@@ -144,7 +144,7 @@
             margin-top: 6px;
             font-size: 95%;
         }
-
+        body { -webkit-print-color-adjust: exact !important; }
     </style>
 
     <div class="container">
@@ -304,7 +304,7 @@
         });
 
         function printDiv(divName) {
-            var printContents = document.getElementById(divName).outerHTML;
+            var printContents = document.getElementById(divName).innerHTML;
             var originalContents = document.body.innerHTML;
 
             document.body.innerHTML = printContents;
