@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Subcategorytype;
 use App\Subcategory;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -47,8 +48,12 @@ class SubcategorytypeController extends Controller
     public function create(Request $request, $id)
     {
         $subcategory = Subcategory::find($id);
+        if ($request->is('api/*')) {
+            return response()->json($subcategory);
+        } else {
+            return view('subcategory.type.create', ['subcategory' => $subcategory] );
+        }
 
-        return view('subcategory.type.create', ['subcategory' => $subcategory] );
     }
 
     /**
@@ -70,16 +75,17 @@ class SubcategorytypeController extends Controller
         }
 
         //    ddd(Auth::user()->email);
-        Subcategorytype::create([
-            'subcategory_id' => request('subcategory_id'),
-            'name' => strtoupper(Str::of(request('name'))->trim()),
-            'image' => $image,
-            'qrcode' => request('qrcode'),
-            'created_by' => Auth::user()->email,
-        ]);
 
         if ($request->is('api/*')) {
-            //write your logic for api call
+
+            $loggedinUser = User::where('email', $request->email)->first();
+            Subcategorytype::create([
+                'subcategory_id' => request('subcategory_id'),
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'image' => $image,
+                'qrcode' => request('qrcode'),
+                'created_by' => $loggedinUser->email,
+            ]);
             $response = [
                 'status' => 'success',
                 'msg' => 'Successfully inserted a new type!'
@@ -87,6 +93,13 @@ class SubcategorytypeController extends Controller
 
             return response($response, 201);
         } else {
+            Subcategorytype::create([
+                'subcategory_id' => request('subcategory_id'),
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'image' => $image,
+                'qrcode' => request('qrcode'),
+                'created_by' => Auth::user()->email,
+            ]);
             //write your logic for web call
             return back()->with('success', 'Successfully inserted a new type!');
         }
@@ -100,18 +113,15 @@ class SubcategorytypeController extends Controller
      */
     public function show(Request $request, $id)
     {
-        // $user = User::find($id);
-        // $permissions = $user->getAllPermissions();
-        // $role = $user->getRoleNames();
+        /
         $subcategorytype = Subcategorytype::find($id);
 
         if ($request->is('api/*')) {
             //write your logic for api call
             $response = [
-                // 'status' => 'success',
-                // 'user' => $user,
-                // 'role' => $role,
-                // 'permissions' => $permissions
+                'subcategorytype' => $subcategorytype,
+                'pattributes' => $subcategorytype->attributes->where('published','Y'),
+                'nattributes' => $subcategorytype->attributes->where('published','N')
             ];
 
             return response($response, 201);
@@ -121,22 +131,6 @@ class SubcategorytypeController extends Controller
         }
     }
 
-    // public function generateQr(Request $request){
-    //    // $image = new \ImagickPixel(QrCode::format('svg')->size(150)->generate( request('qrcode')));
-
-    //     // $image =;
-    //    // dd($image);
-    //    // $imagepath = ->store('qr_images');
-    //    //$path = $image->store('qrcodes');
-    //    $path = Storage::putFile('qrcodes', $image);
-    //    // $path = (String)$image->store('avatars');
-    //     $affected = DB::table('subcategorytypes')
-    //           ->where('id', request('id'))
-    //           ->update(['qrcode' => $path]);
-
-    //     return redirect( request('subcategory_id'));
-
-    // }
 
     /**
      * Show the form for editing the specified resource.

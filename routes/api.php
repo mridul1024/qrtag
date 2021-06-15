@@ -64,6 +64,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/subcategory/update/{id}', 'SubcategoryController@update'); // with selected subcategory id
     Route::get('/subcategory/delete/{id}', 'SubcategoryController@destroy'); // with selected subcategory id
 
+    Route::get('/subcategorytypes/{id}', 'SubcategorytypeController@index');
+    Route::get('/subcategorytype/create/{id}', 'SubcategorytypeController@create');
+    Route::post('/subcategorytype/store', 'SubcategorytypeController@store');
+    Route::get('/subcategorytype/show/{id}', 'SubcategorytypeController@show');
+    Route::get('/subcategorytype/edit/{id}', 'SubcategorytypeController@edit');
+    Route::put('/subcategorytype/update/{id}', 'SubcategorytypeController@update');
+    Route::get('/subcategorytype/delete/{id}', 'SubcategorytypeController@destroy');
+
 });
 
 
