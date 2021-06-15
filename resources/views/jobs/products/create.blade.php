@@ -167,6 +167,7 @@
                             let id = $(this).val();
                             $('#dynamic1').empty();
                             $('#dynamic2').empty();
+                            $('#dynamic3').empty();
                             $('#unit').empty();
                             $.ajax({
                                     type: 'GET',
@@ -177,6 +178,7 @@
                                         console.log(response);
                                         $('#dynamic1').empty();
                                         $('#dynamic2').empty();
+                                        $('#dynamic3').empty();
                                         $('#unit').empty();
                                         //$('#sub_categorytype').append(`<option value="0" disabled selected>Select Sub Category*</option>`);
                                         response.forEach(element => {
