@@ -113,7 +113,7 @@ class SubcategorytypeController extends Controller
      */
     public function show(Request $request, $id)
     {
-        /
+        
         $subcategorytype = Subcategorytype::find($id);
 
         if ($request->is('api/*')) {
