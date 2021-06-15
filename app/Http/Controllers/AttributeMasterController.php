@@ -107,8 +107,22 @@ class AttributeMasterController extends Controller
      * @param  \App\AttributeMaster  $attributeMaster
      * @return \Illuminate\Http\Response
      */
-    public function destroy(AttributeMaster $attributeMaster)
+    public function destroy(Request $request,$id)
     {
-        //
+        $attributeMaster = AttributeMaster::find($id);
+
+        $attributeMaster->delete();
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully deleted category!'
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return back()->with('success', 'Successfully deleted category!');
+        }
     }
 }

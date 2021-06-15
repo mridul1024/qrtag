@@ -186,7 +186,7 @@ class SubcategorytypeController extends Controller
        }
        $subcategorytype->update([
         'name' => strtoupper(Str::of(request('name'))->trim()),
-        
+
         'image' => $image,
        ]);
 
@@ -211,8 +211,22 @@ class SubcategorytypeController extends Controller
      * @param  \App\Subcategorytype  $subcategorytype
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Subcategorytype $subcategorytype)
+    public function destroy(Request $request, $id)
     {
-        //
+        $subcategorytype = Subcategorytype::find($id);
+        Storage::delete($subcategorytype->image);
+        $subcategorytype->delete();
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully deleted!'
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return back()->with('success', 'Successfully deleted!');
+        }
     }
 }

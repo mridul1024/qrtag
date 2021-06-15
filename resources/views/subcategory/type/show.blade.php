@@ -246,10 +246,10 @@
                                         <td> {{ $attribute->name }}</td>
                                         <td> {{ $attribute->value }}</td>
                                         <td>
-                                            @hasanyrole('super-admin|admin|editor|approver')
+                                            <!--@hasanyrole('super-admin|admin|editor|approver')
                                             <a href="/attribute/{{ $attribute->id }}/edit" class="edit" title="Edit"
                                                 data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                                            @endhasanyrole
+                                            @endhasanyrole -->
                                             @hasanyrole('super-admin|admin')
                                             <a type="button" class="delete" title="Delete"
                                                 data-whatever="/attribute/delete/{{ $attribute->id }}"

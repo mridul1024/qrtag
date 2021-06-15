@@ -59,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/subcategorytype/generateQr', 'SubcategorytypeController@generateQr');
     Route::get('/subcategorytype/edit/{id}', 'SubcategorytypeController@edit');
     Route::put('/subcategorytype/update/{id}', 'SubcategorytypeController@update');
+    Route::get('/subcategorytype/delete/{id}', 'SubcategorytypeController@destroy');
 
     Route::get('/attributes', 'AttributesController@index')->name('attributes');
     Route::get('/attribute/create', 'AttributesController@create')->name('attribute-create');
@@ -69,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/attributemaster/create', 'AttributeMasterController@create')->name('attributemaster-create');
     Route::get('/attributemasters', 'AttributeMasterController@index')->name('attributemasters');
     Route::post('/attributemaster/store', 'AttributeMasterController@store')->name('attributemaster-store');
+    Route::get('/attributemaster/delete/{id}', 'AttributeMasterController@destroy');
 
     Route::get('/attributechange/approve/{id}', 'AttributeChangeController@approve');
     Route::post('/attributechange/store', 'AttributeChangeController@store')->name('attributechange-store');
@@ -98,7 +100,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/unitmaster/create', 'UnitMasterController@create');
     Route::get('/unitmasters', 'UnitMasterController@index');
     Route::post('/unitmaster/store', 'UnitMasterController@store');
-
+    Route::get('/unitmaster/delete/{id}', 'UnitMasterController@destroy');
 });
 
 

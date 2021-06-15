@@ -105,8 +105,22 @@ class UnitMasterController extends Controller
      * @param  \App\UnitMaster  $unitMaster
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UnitMaster $unitMaster)
+    public function destroy(Request $request,$id)
     {
-        //
+        $unitMaster = UnitMaster::find($id);
+
+        $unitMaster->delete();
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully deleted category!'
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return back()->with('success', 'Successfully deleted category!');
+        }
     }
 }
