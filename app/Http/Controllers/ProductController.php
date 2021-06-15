@@ -169,7 +169,7 @@ class ProductController extends Controller {
             return response($response, 201);
         } else {
             //write your logic for web call
-            return redirect('/job/show/'.$id);
+            return redirect()->back();
         }
     }
 
