@@ -304,7 +304,7 @@
         });
 
         function printDiv(divName) {
-            var printContents = document.getElementById(divName).innerHTML;
+            var printContents = document.getElementById(divName).outerHTML;
             var originalContents = document.body.innerHTML;
 
             document.body.innerHTML = printContents;
