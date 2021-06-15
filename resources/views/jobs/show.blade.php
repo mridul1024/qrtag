@@ -158,22 +158,14 @@
                             <p>
                             <h5><b>Job Id: </b> {{ $job->id }}</p>
                                 <p>
+                                    <h5><b>Job Number: </b> {{ $job->job_number }}</p>
+                                <p>
                                 <h5><b>Created By: </b> {{ $job->created_by }} </h5>
                                 </p>
                                 <p>
                                 <h5><b>Created AT:</b> {{ $job->created_at }} </h5>
                                 </p>
-                                <p>
-                                <h5><b>Status : </b>
-                                    @if ($job->published == 'N')
-                                        <b style="color: blue"> Waiting for Approval </b>
-                                    @elseif($job->published == 'Y')
-                                        <b style="color: green"> Approved</b>
-                                        @elseif($job->published == 'R')
-                                                <b style=" color: red"> Rejected</b>
-                                    @endif
-                                </h5>
-                                </p>
+
                                 </p>
                         </div>
 
@@ -211,7 +203,7 @@
 
                                     @endif
                                 </div>
-                                <div class="col-sm-2">
+                               <!-- <div class="col-sm-2">
                                     @hasanyrole('super-admin|admin|approver')
                                     @if ($job->published == 'N')
                                         <a type="button" href="/job/approve/{{ $job->id }}"
@@ -221,7 +213,7 @@
                                         class="btn btn-info add-new"><i class="fa fa-plus"></i> Disapprove Job</a>
                                     @endif
                                     @endhasanyrole
-                                </div>
+                                </div> -->
 
                             </div>
                         </div>

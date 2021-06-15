@@ -6,6 +6,7 @@ use App\Job;
 use App\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 class JobController extends Controller
 {
@@ -26,7 +27,7 @@ class JobController extends Controller
 
         'created_by' => Auth::user()->email,
         'qrcode' => 'example string',
-        'published' => 'N'
+        'job_number' => Str::uuid()
     ]);
     $job = Job::find($job->id);
     if ($request->is('api/*')) {

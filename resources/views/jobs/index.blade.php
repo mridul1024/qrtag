@@ -173,7 +173,7 @@
                     <thead>
                         <tr>
                             <th>Job ID</th>
-                            <th> Status </th>
+                            <th> Job Number </th>
                             <th>Created By</th>
                             <th>Created At</th>
 
@@ -185,16 +185,7 @@
                             <tr>
                                 <td>{{ $job->id }}</td>
                                 <td>
-                                    @if ($job->published == 'N')
-                                        <b style="color: blue"> Waiting for Approval </b>
-
-
-                                        @elseif ( $job->published== 'Y')
-                                        <b style="color: green"> Approved</b>
-                                    @elseif ( $job->published== 'R')
-                                        <b style="color: red"> Rejected</b>
-
-                                    @endif
+                                    {{ $job->job_number}}
                                 </td>
                                 <td> {{ $job->created_by }}</td>
                                 <td>{{ $job->created_at }}</td>

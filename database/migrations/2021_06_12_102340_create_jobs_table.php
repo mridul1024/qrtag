@@ -17,7 +17,7 @@ class CreateJobsTable extends Migration
             $table->id();
             $table->text('qrcode');
             $table->string('created_by');
-            $table->string('published');
+            $table->string('job_number')->unique();
             $table->timestamps();
         });
     }
