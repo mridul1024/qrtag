@@ -166,7 +166,7 @@ class JobController extends Controller
             return response($response, 201);
         } else {
             //write your logic for web call
-            return back()->with('success', 'Successfully deleted job!');
+            return redirect('/jobs');
         }
     }
 
