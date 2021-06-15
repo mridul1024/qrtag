@@ -40,7 +40,7 @@ class UnitMasterController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255|unique:attribute_masters',
+            'name' => 'required|string|max:255|unique:pgsql.attribute_masters',
 
         ]);
         //dd(request('subcategory_id'));
