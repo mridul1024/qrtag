@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\UnitMaster;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -14,12 +15,16 @@ class UnitMasterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $unitmasters = UnitMaster::paginate(15);
-
-        return view('unitmaster.index', ['unitmasters' => $unitmasters]);
+        //
+        if ($request->is('api/*')) {
+            return response()->json($unitmasters);
+        } else {
+            return view('unitmaster.index', ['unitmasters' => $unitmasters]);
     }
+}
 
     /**
      * Show the form for creating a new resource.
@@ -43,15 +48,16 @@ class UnitMasterController extends Controller
             'name' => 'required|string|max:255|unique:unit_masters',
 
         ]);
-        //dd(request('subcategory_id'));
-        //ddd(Auth::user()->email);
-
-        UnitMaster::create([
-            'name' => strtoupper(Str::of(request('name'))->trim()),
-            'created_by' => Auth::user()->email,
-        ]);
 
         if ($request->is('api/*')) {
+
+            $loggedinUser = User::where('email', $request->email)->first();
+
+            UnitMaster::create([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'created_by' => $loggedinUser->email,
+            ]);
+
             //write your logic for api call
             $response = [
                 'status' => 'success',
@@ -60,6 +66,10 @@ class UnitMasterController extends Controller
 
             return response($response, 201);
         } else {
+            UnitMaster::create([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'created_by' => Auth::user()->email,
+            ]);
             //write your logic for web call
             return back()->with('success', 'Successfully inserted a new unit!');
         }
@@ -114,13 +124,13 @@ class UnitMasterController extends Controller
             //write your logic for api call
             $response = [
                 'status' => 'success',
-                'msg' => 'Successfully deleted category!'
+                'msg' => 'Successfully deleted unit!'
             ];
 
             return response($response, 201);
         } else {
             //write your logic for web call
-            return back()->with('success', 'Successfully deleted category!');
+            return back()->with('success', 'Successfully deleted unit!');
         }
     }
 }

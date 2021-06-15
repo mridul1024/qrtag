@@ -72,6 +72,23 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/subcategorytype/update/{id}', 'SubcategorytypeController@update');
     Route::get('/subcategorytype/delete/{id}', 'SubcategorytypeController@destroy');
 
+    Route::get('/attributemaster/create', 'AttributeMasterController@create'); // a web specific api, not mandatory for mobile
+    Route::get('/attributemasters', 'AttributeMasterController@index');
+    Route::post('/attributemaster/store', 'AttributeMasterController@store');
+    Route::get('/attributemaster/delete/{id}', 'AttributeMasterController@destroy');
+
+    Route::get('/unitmaster/create', 'UnitMasterController@create'); // a web specific api, not mandatory for mobile
+    Route::get('/unitmasters', 'UnitMasterController@index');
+    Route::post('/unitmaster/store', 'UnitMasterController@store');
+    Route::get('/unitmaster/delete/{id}', 'UnitMasterController@destroy');
+
+    Route::get('/attributes', 'AttributesController@index');
+//    Route::get('/attribute/create', 'AttributesController@create');
+    Route::post('/attribute/store', 'AttributesController@store');
+    Route::get('/attribute/create/{id}', 'AttributesController@create');
+    Route::get('/attribute/delete/{id}', 'AttributesController@destroy');
+
+
 });
 
 

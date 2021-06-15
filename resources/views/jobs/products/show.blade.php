@@ -151,7 +151,7 @@
 
         <div class="card ">
             <h3><b>
-                <p class="text-center" style="margin-top: 1em"> Item Details </p>
+                    <p class="text-center" style="margin-top: 1em"> Item Details </p>
                 </b>
             </h3>
             <hr>
@@ -183,25 +183,28 @@
                         <h5><b>Type Description: </b> {{ $product->subcategorytype->description }} </h5>
                         </p>
                         </p>
-                        <p> <b> <span><h5>Status : </h5> </span>
+                        <p> <b> <span>
+                                    <h5>Status : </h5>
+                                </span>
 
-                            @if ($product->status == 'N')
-                            <b style="color: blue"> Waiting for Approval </b>
-                        @elseif ( $product->status == 'Y')
-                            <b style="color: green"> Approved</b>
-                        @elseif ( $product->status == 'R')
-                            <b style="color: red"> Rejected</b><span> due to {{ $product->rejectinfo}} </span>
+                                @if ($product->status == 'N')
+                                    <b style="color: blue"> Waiting for Approval </b>
+                                @elseif ( $product->status == 'Y')
+                                    <b style="color: green"> Approved</b>
+                                @elseif ( $product->status == 'R')
+                                    <b style="color: red"> Rejected</b><span> due to {{ $product->rejectinfo }} </span>
 
-                        @endif
+                                @endif
 
-                        </b></p>
+                            </b></p>
                     </div>
                     <div class="visible-print col-md-4">
                         <div class="text-center" style="width: 18rem;padding:1em;">
-                            @if ($product->subcategorytype->image == NULL)
-                            <img class="card-img" src="/storage/placeholder.png" alt="item image">
+                            @if ($product->subcategorytype->image == null)
+                                <img class="card-img" src="/storage/placeholder.png" alt="item image">
                             @else
-                            <img class="card-img" src="/storage/{{ $product->subcategorytype->image }}" alt="item image">
+                                <img class="card-img" src="/storage/{{ $product->subcategorytype->image }}"
+                                    alt="item image">
                             @endif
 
                         </div>
@@ -217,15 +220,15 @@
                             <input type="button" onclick="printDiv('printableArea')" value="Print QR" />
                         </div>
                         <!--
-                                <form method="POST" action="/product/generateQr">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="text" hidden name="qrcode" value="{!! Request::url() !!}" class="form-control"
-                                        id="qrcode">
-                                        <input type="text" hidden name="id" value="{{ $product->id }}" class="form-control"
-                                       >
-                                    <button type="submit" class="btn btn-warning">Generate QR </button> <br>
-                                </form>-->
+                                    <form method="POST" action="/product/generateQr">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="text" hidden name="qrcode" value="{!! Request::url() !!}" class="form-control"
+                                            id="qrcode">
+                                            <input type="text" hidden name="id" value="{{ $product->id }}" class="form-control"
+                                           >
+                                        <button type="submit" class="btn btn-warning">Generate QR </button> <br>
+                                    </form>-->
 
 
                     </div>
@@ -267,14 +270,18 @@
 
         </div>
     </div>
-    <div class="container">
-    <div class="row" style="padding: 2em">
-        <div class="col-md-12">
-            <div id="mapid" style="width: 600px; height: 400px;"></div>
-        </div>
+    @if ($product->latitude != null)
 
-    </div>
-</div>
+
+        <div class="container">
+            <div class="row" style="padding: 2em">
+                <div class="col-md-12">
+                    <div id="mapid" style="width: 600px; height: 400px;"></div>
+                </div>
+
+            </div>
+        </div>
+    @endif
 
     <script>
         var mymap = L.map('mapid').setView([51.505, -0.09], 13);
@@ -288,9 +295,9 @@
         }).addTo(mymap);
         mymap.panTo(new L.LatLng(26.1779432, 91.8428137));
         var popup = L.popup()
-    .setLatLng([26.1779432, 91.8428137])
-    .setContent("Inserted Here.")
-    .openOn(mymap);
+            .setLatLng([26.1779432, 91.8428137])
+            .setContent("Inserted Here.")
+            .openOn(mymap);
 
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();

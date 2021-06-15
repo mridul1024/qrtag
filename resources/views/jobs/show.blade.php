@@ -275,15 +275,16 @@
                                                         data-toggle="modal" data-target="#exampleModal2"><i
                                                             class="material-icons">&#xe9d3;</i></a>
                                                     @endhasanyrole
-                                                    @hasanyrole('super-admin|admin')
+
+                                                @endif
+                                                @hasanyrole('super-admin|admin')
                                                     <a type="button" class="delete" title="Delete"
                                                         data-whatever="/product/delete/{{ $product->id }}"
                                                         data-toggle="modal" data-target="#exampleModal"><i
                                                             class="material-icons">&#xE872;</i></a>
                                                     @endhasanyrole
-                                                @endif
 
-                                           
+
                                         </td>
                                     </tr>
 

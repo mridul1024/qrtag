@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AttributeMaster;
-use Attribute;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -18,8 +18,11 @@ class AttributeMasterController extends Controller
     public function index(Request $request)
     {
         $attributeMasters = AttributeMaster::paginate(15);
-
-        return view('attribute.master_list.index', ['attributemasters' => $attributeMasters]);
+        if ($request->is('api/*')) {
+            return response()->json($attributeMasters);
+        } else {
+            return view('attribute.master_list.index', ['attributemasters' => $attributeMasters]);
+        }
 
     }
 
@@ -48,12 +51,14 @@ class AttributeMasterController extends Controller
         //dd(request('subcategory_id'));
         //ddd(Auth::user()->email);
 
-        AttributeMaster::create([
-            'name' => strtoupper(Str::of(request('name'))->trim()),
-            'created_by' => Auth::user()->email,
-        ]);
+
 
         if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
+            AttributeMaster::create([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'created_by' => $loggedinUser->email,
+            ]);
             //write your logic for api call
             $response = [
                 'status' => 'success',
@@ -62,6 +67,10 @@ class AttributeMasterController extends Controller
 
             return response($response, 201);
         } else {
+            AttributeMaster::create([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'created_by' => Auth::user()->email,
+            ]);
             //write your logic for web call
             return back()->with('success', 'Successfully inserted a new attribute!');
         }
@@ -116,13 +125,13 @@ class AttributeMasterController extends Controller
             //write your logic for api call
             $response = [
                 'status' => 'success',
-                'msg' => 'Successfully deleted category!'
+                'msg' => 'Successfully deleted attribute!'
             ];
 
             return response($response, 201);
         } else {
             //write your logic for web call
-            return back()->with('success', 'Successfully deleted category!');
+            return back()->with('success', 'Successfully deleted attribute!');
         }
     }
 }

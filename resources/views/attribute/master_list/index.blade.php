@@ -162,12 +162,12 @@
                         <td>{{$masterlist->created_at}}</td>
                         @hasanyrole('super-admin|admin')
                         <td>
-                            <a href="/attributemaster/{{$masterlist->id}}/edit" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                            <!--<a href="/attributemaster/{{$masterlist->id}}/edit" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a> -->
                             @hasanyrole('super-admin|admin')
                              <a type="button" class="delete" title="Delete" data-whatever="/attributemaster/delete/{{ $masterlist->id }}" data-toggle="modal" data-target="#exampleModal"><i class="material-icons">&#xE872;</i></a>
                             @endhasanyrole
                         </td>
-                        @endhasanyrole 
+                        @endhasanyrole
                     </tr>
 
                     @endforeach
@@ -185,13 +185,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete this category</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Delete this attribute</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure to you want to delete this category? <br>
+                Are you sure to you want to delete this attribute? <br>
 
             </div>
             <div class="modal-footer">

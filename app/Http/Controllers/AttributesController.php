@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Attributes;
 use App\AttributeMaster;
 use App\UnitMaster;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -30,10 +31,18 @@ class AttributesController extends Controller
     public function create(Request $request, $id)
     {
         $attributeMasters = AttributeMaster::all();
-
         $unitmasters = UnitMaster::all();
 
-        return view('attribute.create', ['id' => $id, 'attributemasters' => $attributeMasters, 'unitmasters' => $unitmasters]);
+        if ($request->is('api/*')) {
+            $response = [ 'id' => $id,
+            'attributemasters' => $attributeMasters,
+            'unitmasters' => $unitmasters
+            ];
+
+            return response($response, 201);
+        } else {
+            return view('attribute.create', ['id' => $id, 'attributemasters' => $attributeMasters, 'unitmasters' => $unitmasters]);
+        }
     }
 
     /**
@@ -46,22 +55,18 @@ class AttributesController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            
-
-        ]);
-        //dd(request('subcategory_id'));
-        //ddd(Auth::user()->email);
-
-        Attributes::create([
-            'name' => strtoupper(Str::of(request('name'))->trim()),
-            'value' => request('value'),
-
-            'subcategorytype_id' => request('subcategorytype_id'),
-            'published' => 'Y',
-            'created_by' => Auth::user()->email,
         ]);
 
         if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
+            Attributes::create([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'value' => request('value'),
+                'subcategorytype_id' => request('subcategorytype_id'),
+                'published' => 'Y',
+                'created_by' => $loggedinUser->email,
+            ]);
+
             //write your logic for api call
             $response = [
                 'status' => 'success',
@@ -70,6 +75,14 @@ class AttributesController extends Controller
 
             return response($response, 201);
         } else {
+            Attributes::create([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'value' => request('value'),
+
+                'subcategorytype_id' => request('subcategorytype_id'),
+                'published' => 'Y',
+                'created_by' => Auth::user()->email,
+            ]);
             //write your logic for web call
             return back()->with('success', 'Successfully inserted a new attribute!');
         }

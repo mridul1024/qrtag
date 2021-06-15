@@ -245,13 +245,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete this category</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Delete this type</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    Are you sure to you want to delete this category? <br>
+                    Are you sure to you want to delete this  type of subcategory? <br>
 
                 </div>
                 <div class="modal-footer">
