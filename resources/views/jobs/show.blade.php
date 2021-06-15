@@ -194,14 +194,14 @@
                                     <h2>Product <b>List</b></h2>
                                 </div>
                                 <div class="col-sm-2">
-                                    @if ($job->published == 'N')
+
 
                                         @hasanyrole('super-admin|admin|editor|approver')
                                         <a type="button" href="/product/create/{{ $job->id }}"
                                             class="btn btn-info add-new"><i class="fa fa-plus"></i> Add Product</a>
                                         @endhasanyrole
 
-                                    @endif
+                                  
                                 </div>
                                <!-- <div class="col-sm-2">
                                     @hasanyrole('super-admin|admin|approver')

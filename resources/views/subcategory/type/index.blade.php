@@ -220,7 +220,7 @@
                                     <a href="/subcategorytype/show/{{ $subcategory->id }}" class="view" title="View"
                                         data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
                                     @hasanyrole('super-admin|admin')
-                                    <a href="/subcategorytype/{{ $subcategory->id }}/edit" class="edit" title="Edit"
+                                    <a href="/subcategorytype/edit/{{ $subcategory->id }}" class="edit" title="Edit"
                                         data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
 
                                     <a type="button" class="delete" title="Delete"
