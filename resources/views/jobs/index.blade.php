@@ -156,7 +156,7 @@
                             <h2>Job <b>List</b></h2>
                         </div>
                         <div class="col-sm-2">
-                            @hasanyrole('super-admin|admin')
+                            @hasanyrole('super-admin|admin|editor|approver')
                             <a type="button" href="/job/create" class="btn btn-info add-new"><i class="fa fa-plus"></i>
                                 Create Job</a>
                             @endhasanyrole
@@ -186,9 +186,14 @@
                                 <td>{{ $job->id }}</td>
                                 <td>
                                     @if ($job->published == 'N')
-                                        <b style="color: red"> Waiting for Approval </b>
-                                    @else
-                                        <b style="color: blue"> Approved</b>
+                                        <b style="color: blue"> Waiting for Approval </b>
+
+
+                                        @elseif ( $job->published== 'Y')
+                                        <b style="color: green"> Approved</b>
+                                    @elseif ( $job->published== 'R')
+                                        <b style="color: red"> Rejected</b>
+
                                     @endif
                                 </td>
                                 <td> {{ $job->created_by }}</td>
@@ -197,11 +202,10 @@
                                 <td>
                                     <a href="/job/show/{{ $job->id }}" class="view" title="View Subcategories"
                                         data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
-                                    @hasanyrole('super-admin|admin')
-                                    <a href="/job/edit/{{ $job->id }}" class="edit" title="Edit"
-                                        data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                                    @hasanyrole('super-admin|admin|editor')
+
                                     <a type="button" class="delete" title="Delete"
-                                        data-whatever="/category/delete/{{ $job->id }}" data-toggle="modal"
+                                        data-whatever="/job/delete/{{ $job->id }}" data-toggle="modal"
                                         data-target="#exampleModal"><i class="material-icons">&#xE872;</i></a>
                                     @endhasanyrole
                                 </td>
@@ -222,13 +226,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete this category</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Delete this job</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    Are you sure to you want to delete this category? <br>
+                    Are you sure to you want to delete this job? <br>
 
                 </div>
                 <div class="modal-footer">

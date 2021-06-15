@@ -150,9 +150,11 @@
     <div class="container">
 
         <div class="card ">
-            <h4>
-                <p class="text-center" style="padding: 2em"> Item Details </p>
-            </h4>
+            <h3><b>
+                <p class="text-center" style="margin-top: 1em"> Item Details </p>
+                </b>
+            </h3>
+            <hr>
             <div class="card-body ">
                 <div class="row">
                     <div class="col-md-5">
@@ -181,13 +183,30 @@
                         <h5><b>Type Description: </b> {{ $product->subcategorytype->description }} </h5>
                         </p>
                         </p>
+                        <p> <b> <span><h5>Status : </h5> </span>
+
+                            @if ($product->status == 'N')
+                            <b style="color: blue"> Waiting for Approval </b>
+                        @elseif ( $product->status == 'Y')
+                            <b style="color: green"> Approved</b>
+                        @elseif ( $product->status == 'R')
+                            <b style="color: red"> Rejected</b><span> due to {{ $product->rejectinfo}} </span>
+
+                        @endif
+
+                        </b></p>
                     </div>
-                    <div class="col-md-3">
-                        <div class="text-center" style="width: 18rem;">
+                    <div class="visible-print col-md-4">
+                        <div class="text-center" style="width: 18rem;padding:1em;">
+                            @if ($product->subcategorytype->image == NULL)
+                            <img class="card-img" src="/storage/placeholder.png" alt="item image">
+                            @else
                             <img class="card-img" src="/storage/{{ $product->subcategorytype->image }}" alt="item image">
+                            @endif
+
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
 
                         <div class="visible-print text-center">
                             <div id="printableArea">
@@ -253,38 +272,10 @@
         <div class="col-md-12">
             <div id="mapid" style="width: 600px; height: 400px;"></div>
         </div>
-        <div class="col-md-12">
-            <div id="dvMap" style="width: 500px; height: 500px">
-            </div>
-        </div>
+
     </div>
 </div>
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-<script type="text/javascript">
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function (p) {
-        var LatLng = new google.maps.LatLng(26.1779432, 91.8428137);
-        var mapOptions = {
-            center: LatLng,
-            zoom: 13,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
-        var marker = new google.maps.Marker({
-            position: LatLng,
-            map: map,
-            title: "<div style = 'height:60px;width:200px'><b>Your location:</b><br />Latitude: " + p.coords.latitude + "<br />Longitude: " + p.coords.longitude
-        });
-        google.maps.event.addListener(marker, "click", function (e) {
-            var infoWindow = new google.maps.InfoWindow();
-            infoWindow.setContent(marker.title);
-            infoWindow.open(map, marker);
-        });
-    });
-} else {
-    alert('Geo Location feature is not supported in this browser.');
-}
-</script>
+
     <script>
         var mymap = L.map('mapid').setView([51.505, -0.09], 13);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {

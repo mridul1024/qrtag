@@ -20,6 +20,11 @@ class CreateProductAttributesTable extends Migration
             $table->string('unit');
             $table->string('value')->nullable();
             $table->timestamps();
+
+            $table->foreign('product_id')
+                ->references('id')
+                ->on('products')
+                ->onDelete('cascade');
         });
     }
 

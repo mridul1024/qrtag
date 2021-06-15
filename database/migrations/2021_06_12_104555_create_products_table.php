@@ -19,9 +19,10 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('subcategorytype_id');
             $table->string('material_id')->unique();
             $table->text('qrcode')->nullable();
-            $table->integer('quantity');
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
+            $table->string('status');
+            $table->text('rejectinfo')->nullable();
             $table->string('created_by');
             $table->timestamps();
 

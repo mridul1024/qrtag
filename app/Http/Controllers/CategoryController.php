@@ -138,7 +138,7 @@ class CategoryController extends Controller
         ]);
 
         $category->update([
-            'name' => $request->name,
+            'name' => strtoupper(Str::of(request('name'))->trim()),
             'description' => $request->description,
 
 

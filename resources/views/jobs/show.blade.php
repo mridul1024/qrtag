@@ -166,9 +166,11 @@
                                 <p>
                                 <h5><b>Status : </b>
                                     @if ($job->published == 'N')
-                                        <b style="color: red"> Waiting for Approval </b>
-                                    @else
-                                        <b style="color: blue"> Approved</b>
+                                        <b style="color: blue"> Waiting for Approval </b>
+                                    @elseif($job->published == 'Y')
+                                        <b style="color: green"> Approved</b>
+                                        @elseif($job->published == 'R')
+                                                <b style=" color: red"> Rejected</b>
                                     @endif
                                 </h5>
                                 </p>
@@ -202,16 +204,6 @@
                                 <div class="col-sm-2">
                                     @if ($job->published == 'N')
 
-                                        @hasanyrole('super-admin|admin|approver')
-                                        <a type="button" href="/job/approve/{{ $job->id }}"
-                                            class="btn btn-info add-new"><i class="fa fa-plus"></i> Approve Job</a>
-                                        @endhasanyrole
-
-                                    @endif
-                                </div>
-                                <div class="col-sm-2">
-                                    @if ($job->published == 'N')
-
                                         @hasanyrole('super-admin|admin|editor|approver')
                                         <a type="button" href="/product/create/{{ $job->id }}"
                                             class="btn btn-info add-new"><i class="fa fa-plus"></i> Add Product</a>
@@ -219,6 +211,18 @@
 
                                     @endif
                                 </div>
+                                <div class="col-sm-2">
+                                    @hasanyrole('super-admin|admin|approver')
+                                    @if ($job->published == 'N')
+                                        <a type="button" href="/job/approve/{{ $job->id }}"
+                                            class="btn btn-info add-new"><i class="fa fa-plus"></i> Approve Job</a>
+                                    @else
+                                    <a type="button" href="/job/disapprove/{{ $job->id }}"
+                                        class="btn btn-info add-new"><i class="fa fa-plus"></i> Disapprove Job</a>
+                                    @endif
+                                    @endhasanyrole
+                                </div>
+
                             </div>
                         </div>
                         @if ($message = Session::get('success'))
@@ -235,7 +239,7 @@
                                     <th>SubCategory</th>
                                     <th>Type</th>
                                     <th>Attributes</th>
-                                    <th>Quantity</th>
+                                    <th>Status</th>
                                     @hasanyrole('super-admin|admin|editor|approver')
                                     <th>Action</th>
                                     @endhasanyrole
@@ -256,21 +260,37 @@
                                             @endforeach
 
                                         </td>
-                                        <td> {{ $product->quantity }}</td>
                                         <td>
-                                            <a href="/product/show/{{ $product->id }}" class="view" title="View Types"
+                                            @if ($product->status == 'N')
+                                                <b style="color: blue"> Waiting for Approval </b>
+                                            @elseif ( $product->status == 'Y')
+                                                <b style="color: green"> Approved</b>
+                                            @elseif ( $product->status == 'R')
+                                                <b style="color: red"> Rejected</b>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a href="/product/show/{{ $product->id }}" class="view" title="View Product"
                                                 data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
-                                            @if($job->published == 'N')
-                                                @hasanyrole('super-admin|admin|editor|approver')
-                                                <a href="/product/{{ $product->id }}/edit" class="edit" title="Edit"
-                                                    data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                                                @endhasanyrole
-                                                @hasanyrole('super-admin|admin')
-                                                <a type="button" class="delete" title="Delete"
-                                                    data-whatever="/product/delete/{{ $product->id }}"
-                                                    data-toggle="modal" data-target="#exampleModal"><i
-                                                        class="material-icons">&#xE872;</i></a>
-                                                @endhasanyrole
+                                            @if ($job->published == 'N')
+                                                @if ($product->status == 'N')
+                                                    @hasanyrole('super-admin|admin|approver')
+                                                    <a href="/product/approve/{{ $product->id }}" class="edit"
+                                                        title="Approve" data-toggle="tooltip"><i
+                                                            class="material-icons">&#xE876;</i></a>
+                                                    <a type="button" class="delete" title="Reject"
+                                                        data-whatever="/product/reject/{{ $product->id }}"
+                                                        data-toggle="modal" data-target="#exampleModal2"><i
+                                                            class="material-icons">&#xe9d3;</i></a>
+                                                    @endhasanyrole
+                                                    @hasanyrole('super-admin|admin')
+                                                    <a type="button" class="delete" title="Delete"
+                                                        data-whatever="/product/delete/{{ $product->id }}"
+                                                        data-toggle="modal" data-target="#exampleModal"><i
+                                                            class="material-icons">&#xE872;</i></a>
+                                                    @endhasanyrole
+                                                @endif
+
                                             @endif
                                         </td>
                                     </tr>
@@ -290,13 +310,13 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Delete this User</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Delete this item</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        Are you sure to you want to delete this user? <br>
+                        Are you sure to you want to delete this item? <br>
 
                     </div>
                     <div class="modal-footer">
@@ -306,6 +326,38 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Reject this item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" id="formreject" action="">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="rejectinfo">Rejection reason</label>
+                                <textarea name="rejectinfo" required class="form-control " id="rejectinfo" rows="2">
+                                    </textarea>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" id="submitreject" class="btn btn-primary">Reject</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
@@ -319,6 +371,16 @@
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 
                 $('#deletecategory').attr('href', id);
+            });
+        });
+        $(document).ready(function() {
+            $('#exampleModal2').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data('whatever'); // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+                $('#formreject').attr('action', id);
             });
         });
 

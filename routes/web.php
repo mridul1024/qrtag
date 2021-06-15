@@ -21,6 +21,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/product/show/{id}', 'ProductController@show');
+Route::get('/job/show/{id}', 'JobController@show');
 
 Route::middleware('auth')->group(function () {
 
@@ -74,19 +75,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/jobs', 'JobController@index');
     Route::get('/job/create', 'JobController@create');
     Route::post('/job/store', 'JobController@store');
-    Route::get('/job/show/{id}', 'JobController@show');
     Route::put('/job/edit/{id}', 'JobController@edit');
     Route::get('/job/approve/{id}', 'JobController@approve');
+    Route::get('/job/disapprove/{id}', 'JobController@disapprove');
+    Route::get('/job/delete/{id}', 'JobController@destroy');
 
     //Route::get('/jobs', 'JobController@index');
     Route::get('/product/create/{id}', 'ProductController@create');
     Route::post('/product/store', 'ProductController@store');
-
+    Route::get('/product/delete/{id}', 'ProductController@destroy');
     Route::put('/product/edit/{id}', 'ProductController@edit');
     Route::get('/product/getsubcategories/{id}', 'ProductController@getSubcategories');
     Route::get('/product/gettypes/{id}', 'ProductController@getTypes');
+    Route::get('/product/getunits', 'ProductController@getUnits');
     Route::get('/product/getattributes/{id}', 'ProductController@getAttributes');
     Route::put('/product/generateQr', 'ProductController@generateQr');
+    Route::get('/product/approve/{id}', 'ProductController@approve');
+    Route::put('/product/reject/{id}', 'ProductController@reject');
 
     Route::get('/unitmaster/create', 'UnitMasterController@create');
     Route::get('/unitmasters', 'UnitMasterController@index');

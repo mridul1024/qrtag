@@ -17,7 +17,7 @@ class CreateAttributesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('value')->nullable();
-            $table->string('unit');
+
             $table->unsignedBigInteger('subcategorytype_id');
             $table->string('published');
             $table->string('created_by');
