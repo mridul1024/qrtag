@@ -50,7 +50,7 @@ class SubcategoryController extends Controller
             ];
 
             return response($response, 201);
-            
+
         } else {
 
             $subcategories = Subcategory::where('category_id', '=', $id)->paginate(15);
@@ -82,19 +82,18 @@ class SubcategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255|unique:subcategories,name',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
-        $image = NULL;
-        if (request('image')) {
-
-            $image = request('image')->store('subcategory_images');
-        }
-        //    ddd(Auth::user()->email);
-
 
         if ($request->is('api/*')) {
+
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255|unique:subcategories,name',
+                'image' => 'string'
+            ]);
+            $image = NULL;
+            if (request('image')) {
+                $imagefile = base64_decode(request('image'));
+                $image = $imagefile->store('subcategory_images');
+            }
 
             $loggedinUser = User::where('email', $request->email)->first();
             Subcategory::create([
@@ -112,6 +111,16 @@ class SubcategoryController extends Controller
 
             return response($response, 201);
         } else {
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255|unique:subcategories,name',
+                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ]);
+            $image = NULL;
+            if (request('image')) {
+
+                $image = request('image')->store('subcategory_images');
+            }
+
             Subcategory::create([
                 'category_id' => request('category_id'),
                 'name' => strtoupper(Str::of(request('name'))->trim()),

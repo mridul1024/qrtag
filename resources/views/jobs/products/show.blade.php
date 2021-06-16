@@ -212,7 +212,7 @@
                     <div class="col-md-3">
 
                         <div class="visible-print text-center">
-                            <div id="printableArea">
+                            <div id="printableArea" onclick="window.print(this)">
                                 {!! QrCode::size(250)->generate(Request::url()) !!}
                                 <p>Scan this to return to this product</p>
                             </div>
