@@ -19,7 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-
+Route::get('/product/show/{id}', 'ProductController@show');
+Route::get('/job/show/{id}', 'JobController@show');
 
 //Route::get('users/update/{id}', 'UserController@update');
 
