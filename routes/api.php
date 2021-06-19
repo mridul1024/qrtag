@@ -89,6 +89,34 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/attribute/delete/{id}', 'AttributesController@destroy');
 
 
+
+    //job + product + product attributes
+
+    Route::get('/jobs', 'JobController@index');
+    Route::get('/job/create', 'JobController@create');
+    Route::post('/job/store', 'JobController@store');
+    Route::put('/job/edit/{id}', 'JobController@edit');
+    Route::get('/job/approve/{id}', 'JobController@approve');
+    Route::get('/job/disapprove/{id}', 'JobController@disapprove');
+    Route::get('/job/delete/{id}', 'JobController@destroy');
+
+    //Route::get('/jobs', 'JobController@index');
+    Route::get('/product/create/{id}', 'ProductController@create');
+    Route::post('/product/store', 'ProductController@store');
+    Route::get('/product/delete/{id}', 'ProductController@destroy');
+    Route::put('/product/edit/{id}', 'ProductController@edit');
+    Route::get('/product/getsubcategories/{id}', 'ProductController@getSubcategories');
+    Route::get('/product/gettypes/{id}', 'ProductController@getTypes');
+    Route::get('/product/getunits', 'ProductController@getUnits');
+    Route::get('/product/getattributes/{id}', 'ProductController@getAttributes');
+    Route::put('/product/generateQr', 'ProductController@generateQr');
+    Route::get('/product/approve/{id}', 'ProductController@approve');
+    Route::put('/product/reject/{id}', 'ProductController@reject');
+
+    Route::get('/attributechange/approve/{id}', 'AttributeChangeController@approve');
+    Route::post('/attributechange/store', 'AttributeChangeController@store');
+    Route::get('/attributechange/delete/{id}', 'AttributeChangeController@destroy');
+
 });
 
 

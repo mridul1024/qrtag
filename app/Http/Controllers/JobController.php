@@ -8,59 +8,82 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
+use App\User;
+
 class JobController extends Controller
 {
-    public function index(){
-        if( Auth::user()->hasAnyRole(['editor'])){
-             $jobs = Job::where('created_by','=', Auth::user()->email)->paginate(15);
-            }else{
-            $jobs = Job::paginate(15);
-        }
-        return view('jobs.index', ['jobs' => $jobs]);
+    public function index(Request $request)
+    {
+        //
+        if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
+            if ($loggedinUser->hasAnyRole(['editor'])) {
+                $jobs = Job::where('created_by', '=', $loggedinUser->email)->paginate(15);
+            } else {
+                $jobs = Job::orderBy('created_at', 'desc')->paginate(15);
+            }
+            $response = [
+                'jobs' => $jobs,
 
+            ];
+
+            return response($response, 201);
+        } else {
+            if (Auth::user()->hasAnyRole(['editor'])) {
+                $jobs = Job::where('created_by', '=', Auth::user()->email)->orderBy('created_at', 'desc')
+                ->paginate(15);
+            } else {
+                $jobs = Job::orderBy('created_at', 'desc')->paginate(15);
+            }
+            return view('jobs.index', ['jobs' => $jobs]);
+        }
     }
 
     public function create(Request $request)
     {
 
-        $job = job::create([
+        if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
 
-        'created_by' => Auth::user()->email,
-        'qrcode' => 'example string',
-        'job_number' => Str::uuid()
-    ]);
-    $job = Job::find($job->id);
-    if ($request->is('api/*')) {
-        //write your logic for api call
-        $response = [
-            'status' => 'success',
-            'msg' => 'Successfully inserted a new type!'
-        ];
+            $job = job::create([
+                'created_by' => $loggedinUser->email,
+                'qrcode' => 'example string',
+                'job_number' => time().'-'.Str::random(10)
+            ]);
+            $job = Job::find($job->id);
 
-        return response($response, 201);
-    } else {
 
-        $jobs = Job::paginate(12);
-        return view('jobs.index', ['jobs' => $jobs]);
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully inserted a new job!'
+            ];
 
-    }
+            return response($response, 201);
+        } else {
 
+            $job = job::create([
+                'created_by' => Auth::user()->email,
+                'qrcode' => 'example string',
+                'job_number' => time().'-'.Str::uuid()
+            ]);
+            $job = Job::find($job->id);
+
+            $jobs = Job::paginate(12);
+
+            return view('jobs.index', ['jobs' => $jobs]);
+        }
     }
     public function show(Request $request, $id)
     {
-        // $user = User::find($id);
-        // $permissions = $user->getAllPermissions();
-        // $role = $user->getRoleNames();
+
         $job = Job::find($id);
         $products = Product::where('job_id', '=', $id)->get();
         //dd($products);
         if ($request->is('api/*')) {
             //write your logic for api call
             $response = [
-                // 'status' => 'success',
-                // 'user' => $user,
-                // 'role' => $role,
-                // 'permissions' => $permissions
+                'job' => $job, 'products' => $products
             ];
 
             return response($response, 201);
@@ -107,11 +130,7 @@ class JobController extends Controller
 
         $job->update([
             'published' => 'N',
-
-
-
         ]);
-
 
         if ($request->is('api/*')) {
             //write your logic for api call
@@ -152,7 +171,7 @@ class JobController extends Controller
         }
     }
 
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
         $job = Job::find($id);
 
@@ -170,5 +189,4 @@ class JobController extends Controller
             return redirect('/jobs');
         }
     }
-
 }

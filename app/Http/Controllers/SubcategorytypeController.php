@@ -25,18 +25,17 @@ class SubcategorytypeController extends Controller
         $subcategory = Subcategory::find($id);
 
         if ($request->is('api/*')) {
+            $subcategorytypes = Subcategorytype::where('subcategory_id', '=', $id)->paginate(15);
+            $response = [
+                'subcategorytypes' => $subcategorytypes, 'subcategory' => $subcategory
+            ];
 
-
-            $subcategorytypes = Subcategorytype::find($id)->get()->paginate(15);
-
-
-            return response()->json($subcategorytypes);
+            return response($response, 201);
         } else {
 
-            $subcategorytypes = Subcategorytype::where('subcategory_id', '=', $id)->paginate(10);
+            $subcategorytypes = Subcategorytype::where('subcategory_id', '=', $id)->paginate(15);
             //ddd($subcategorytypes);
             return view('subcategory.type.index', ['subcategorytypes' => $subcategorytypes, 'subcategory' => $subcategory]);
-
         }
     }
 
@@ -51,9 +50,8 @@ class SubcategorytypeController extends Controller
         if ($request->is('api/*')) {
             return response()->json($subcategory);
         } else {
-            return view('subcategory.type.create', ['subcategory' => $subcategory] );
+            return view('subcategory.type.create', ['subcategory' => $subcategory]);
         }
-
     }
 
     /**
@@ -64,25 +62,34 @@ class SubcategorytypeController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'image' => 'image'
-        ]);
 
-        $image = NULL;
-        if(request('image')) {
-                $image = request('image')->store('subcategorytype_images');
-        }
 
         //    ddd(Auth::user()->email);
 
         if ($request->is('api/*')) {
 
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+
+            ]);
+
+            $imageNamepath = NULL;
+
+            if (request('image')) {
+                $image = request('image');  // your base64 encoded
+                $image = str_replace('data:image/png;base64,', '', $image);
+                $image = str_replace(' ', '+', $image);
+                $imageName1 = Str::random(20) . '.png';
+                $imageNamepath = 'subcategorytype_images/' . $imageName1;
+                $imageName = 'public/subcategorytype_images/' . $imageName1;
+                Storage::disk('local')->put($imageName, base64_decode($image));
+            }
+
             $loggedinUser = User::where('email', $request->email)->first();
             Subcategorytype::create([
                 'subcategory_id' => request('subcategory_id'),
                 'name' => strtoupper(Str::of(request('name'))->trim()),
-                'image' => $image,
+                'image' => $imageNamepath,
                 'qrcode' => request('qrcode'),
                 'created_by' => $loggedinUser->email,
             ]);
@@ -93,6 +100,16 @@ class SubcategorytypeController extends Controller
 
             return response($response, 201);
         } else {
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'image' => 'image'
+            ]);
+
+            $image = NULL;
+            if (request('image')) {
+                $image = request('image')->store('subcategorytype_images');
+            }
+
             Subcategorytype::create([
                 'subcategory_id' => request('subcategory_id'),
                 'name' => strtoupper(Str::of(request('name'))->trim()),
@@ -113,21 +130,21 @@ class SubcategorytypeController extends Controller
      */
     public function show(Request $request, $id)
     {
-        
+
         $subcategorytype = Subcategorytype::find($id);
 
         if ($request->is('api/*')) {
             //write your logic for api call
             $response = [
                 'subcategorytype' => $subcategorytype,
-                'pattributes' => $subcategorytype->attributes->where('published','Y'),
-                'nattributes' => $subcategorytype->attributes->where('published','N')
+                'pattributes' => $subcategorytype->attributes->where('published', 'Y'),
+                'nattributes' => $subcategorytype->attributes->where('published', 'N')
             ];
 
             return response($response, 201);
         } else {
             //write your logic for web call
-            return view('subcategory.type.show', ['subcategorytype' => $subcategorytype, 'pattributes' => $subcategorytype->attributes->where('published','Y'),'nattributes' => $subcategorytype->attributes->where('published','N')]);
+            return view('subcategory.type.show', ['subcategorytype' => $subcategorytype, 'pattributes' => $subcategorytype->attributes->where('published', 'Y'), 'nattributes' => $subcategorytype->attributes->where('published', 'N')]);
         }
     }
 
@@ -148,7 +165,7 @@ class SubcategorytypeController extends Controller
 
             $response = [
                 'subcategorytype' => $subcategorytype,
-                            ];
+            ];
 
             return response($response, 201);
         } else {
@@ -166,37 +183,56 @@ class SubcategorytypeController extends Controller
      */
     public function update(Request $request, $id)
     {
-       //$some = $request->id;
-       $subcategorytype= Subcategorytype::find($id);
+        //$some = $request->id;
+        $subcategorytype = Subcategorytype::find($id);
 
-       $validatedData = $request->validate([
-           'name' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
 
-       ]);
-       $image = NULL;
-       if (request('image')) {
-          Storage::delete($subcategorytype->image);
-           $image = request('image')->store('subcategorytype_images');
-       }
-       $subcategorytype->update([
-        'name' => strtoupper(Str::of(request('name'))->trim()),
-
-        'image' => $image,
-       ]);
+        ]);
 
 
-       if ($request->is('api/*')) {
-           //write your logic for api call
-           $response = [
-               'status' => 'success',
-               'msg' => 'Successfully updated!'
-           ];
 
-           return response($response, 201);
-       } else {
-           //write your logic for web call
-           return back()->with('success', 'Successfully updated!');
-       }
+        if ($request->is('api/*')) {
+            $imageNamepath = NULL;
+
+            if (request('image')) {
+                Storage::delete($subcategorytype->image);
+                $image = request('image');  // your base64 encoded
+                $image = str_replace('data:image/png;base64,', '', $image);
+                $image = str_replace(' ', '+', $image);
+                $imageName1 = Str::random(20) . '.png';
+                $imageNamepath = 'subcategorytype_images/' . $imageName1;
+                $imageName = 'public/subcategorytype_images/' . $imageName1;
+                Storage::disk('local')->put($imageName, base64_decode($image));
+            }
+            $subcategorytype->update([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+
+                'image' => $imageNamepath,
+            ]);
+
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully updated!'
+            ];
+
+            return response($response, 201);
+        } else {
+            $image = NULL;
+            if (request('image')) {
+                Storage::delete($subcategorytype->image);
+                $image = request('image')->store('subcategorytype_images');
+            }
+            $subcategorytype->update([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+
+                'image' => $image,
+            ]);
+            //write your logic for web call
+            return back()->with('success', 'Successfully updated!');
+        }
     }
 
     /**

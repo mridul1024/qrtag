@@ -16,7 +16,7 @@
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <h2>Create <b>Attribute</b></h2>
+                            <h2>Create <b>Attribute</b> </h2>
                         </div>
 
                     </div>

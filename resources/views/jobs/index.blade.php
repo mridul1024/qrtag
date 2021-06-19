@@ -191,7 +191,7 @@
                                 <td>{{ $job->created_at }}</td>
 
                                 <td>
-                                    <a href="/job/show/{{ $job->id }}" class="view" title="View Subcategories"
+                                    <a href="/job/show/{{ $job->id }}" class="view" title="View jobs"
                                         data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
                                     @hasanyrole('super-admin|admin|editor')
 

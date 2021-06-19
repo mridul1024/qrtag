@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
+use App\User;
 
 
 class ProductController extends Controller {
@@ -22,7 +22,23 @@ class ProductController extends Controller {
     {
         $categories = Category::all();
 
-        return view('jobs.products.create',['id' => $id, 'categories' => $categories]);
+
+        //
+        if ($request->is('api/*')) {
+
+            $response = [
+                'id' => $id, 'categories' => $categories
+            ];
+
+            return response($response, 201);
+
+        } else {
+
+
+
+            return view('jobs.products.create',['id' => $id, 'categories' => $categories]);
+
+        }
 
     }
 
@@ -62,32 +78,77 @@ class ProductController extends Controller {
         //dd(request('dynamic'));
 
 
-       $product = Product::create([
-            'job_id' => request('job_id'),
-            'subcategorytype_id' => request('subcategorytype_id'),
-            'material_id' => Str::uuid(),
-            'status' => 'N',
-            'created_by' => Auth::user()->email,
-        ]);
 
-        if(request('dynamic')){
+            //
+            if ($request->is('api/*')) {
+                $loggedinUser = User::where('email', $request->email)->first();
 
-            foreach ($request->dynamic as $key => $value) {
-
-                ProductAttribute::create([
-
-                    'product_id' => $product->id,
-                    'name' => $value['name'],
-                    'value' => $value['value'],
-                    'unit' => $value['unit'],
-
+                $product = Product::create([
+                    'job_id' => request('job_id'),
+                    'subcategorytype_id' => request('subcategorytype_id'),
+                    'material_id' => Str::uuid(),
+                    'latitude' => request('latitude'),
+                    'longitude' => request('longitude'),
+                    'status' => 'N',
+                    'created_by' => $loggedinUser->email,
                 ]);
 
+                if(request('dynamic')){
+
+                    foreach ($request->dynamic as $key => $value) {
+
+                        ProductAttribute::create([
+
+                            'product_id' => $product->id,
+                            'name' => $value['name'],
+                            'value' => $value['value'],
+                            'unit' => $value['unit'],
+
+                        ]);
+
+                    }
+                   }
+
+                   $response = [
+                    'status' => 'success',
+                    'msg' => 'Successfully inserted a new item!'
+                ];
+
+                return response($response, 201);
+
+            } else {
+
+
+
+                $product = Product::create([
+                    'job_id' => request('job_id'),
+                    'subcategorytype_id' => request('subcategorytype_id'),
+                    'material_id' => Str::uuid(),
+                    'status' => 'N',
+                    'created_by' => Auth::user()->email,
+                ]);
+
+                if(request('dynamic')){
+                    
+                    foreach ($request->dynamic as $key => $value) {
+
+                        ProductAttribute::create([
+
+                            'product_id' => $product->id,
+                            'name' => $value['name'],
+                            'value' => $value['value'],
+                            'unit' => $value['unit'],
+
+                        ]);
+
+                    }
+                   }
+
+
+                    return back()->with('success', 'Successfully inserted a new item!');
+
             }
-           }
-
-
-            return back()->with('success', 'Successfully inserted a new item!');
+            //
      }
 
 
@@ -119,10 +180,7 @@ class ProductController extends Controller {
          if ($request->is('api/*')) {
              //write your logic for api call
              $response = [
-                 // 'status' => 'success',
-                 // 'user' => $user,
-                 // 'role' => $role,
-                 // 'permissions' => $permissions
+                'product' => $product
              ];
 
              return response($response, 201);

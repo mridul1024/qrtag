@@ -101,6 +101,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/unitmasters', 'UnitMasterController@index');
     Route::post('/unitmaster/store', 'UnitMasterController@store');
     Route::get('/unitmaster/delete/{id}', 'UnitMasterController@destroy');
+
+   
+
 });
 
 

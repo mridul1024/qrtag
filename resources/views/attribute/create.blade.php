@@ -16,7 +16,7 @@
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <h2>Create <b>Attribute</b></h2>
+                            <h2>Assign <b>Attribute</b> to this type of subcategory</h2>
                         </div>
 
                     </div>
@@ -61,7 +61,7 @@
                             <input type="text" name="value" class="form-control" id="inputName2" placeholder="Value">
                             </div>
                         </div>
-                        
+
 
                     <div class="form-group  row">
                         <div class="col-md-12">

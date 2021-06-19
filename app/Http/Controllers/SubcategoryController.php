@@ -50,7 +50,6 @@ class SubcategoryController extends Controller
             ];
 
             return response($response, 201);
-
         } else {
 
             $subcategories = Subcategory::where('category_id', '=', $id)->paginate(15);
@@ -86,13 +85,21 @@ class SubcategoryController extends Controller
         if ($request->is('api/*')) {
 
             $validatedData = $request->validate([
+                'category_id' => 'required',
                 'name' => 'required|string|max:255|unique:subcategories,name',
                 'image' => 'string'
             ]);
-            $image = NULL;
+
+            $imageNamepath = NULL;
+
             if (request('image')) {
-                $imagefile = base64_decode(request('image'));
-                $image = $imagefile->store('subcategory_images');
+                $image = request('image');  // your base64 encoded
+                $image = str_replace('data:image/png;base64,', '', $image);
+                $image = str_replace(' ', '+', $image);
+                $imageName1 = Str::random(20) . '.png';
+                $imageNamepath = 'subcategory_images/' . $imageName1;
+                $imageName = 'public/subcategory_images/' . $imageName1;
+                Storage::disk('local')->put($imageName, base64_decode($image));
             }
 
             $loggedinUser = User::where('email', $request->email)->first();
@@ -100,7 +107,7 @@ class SubcategoryController extends Controller
                 'category_id' => request('category_id'),
                 'name' => strtoupper(Str::of(request('name'))->trim()),
                 'description' => request('description'),
-                'image' => $image,
+                'image' => $imageNamepath,
 
                 'created_by' => $loggedinUser->email,
             ]);
@@ -112,6 +119,7 @@ class SubcategoryController extends Controller
             return response($response, 201);
         } else {
             $validatedData = $request->validate([
+                'category_id' => 'required',
                 'name' => 'required|string|max:255|unique:subcategories,name',
                 'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ]);
@@ -182,7 +190,7 @@ class SubcategoryController extends Controller
             return response($response, 201);
         } else {
 
-            return view('subcategory.edit', ['categories' => $categories,'subcategory' => $subcategory]);
+            return view('subcategory.edit', ['categories' => $categories, 'subcategory' => $subcategory]);
         }
     }
 
@@ -195,37 +203,56 @@ class SubcategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-       //$some = $request->id;
-       $subcategory = Subcategory::find($id);
+        //$some = $request->id;
+        $subcategory = Subcategory::find($id);
 
-       $validatedData = $request->validate([
-           'name' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
 
-       ]);
-       $image = NULL;
-       if (request('image')) {
-          Storage::delete($subcategory->image);
-           $image = request('image')->store('subcategory_images');
-       }
-       $subcategory->update([
-        'name' => strtoupper(Str::of(request('name'))->trim()),
-        'description' => request('description'),
-        'image' => $image,
-       ]);
+        ]);
 
 
-       if ($request->is('api/*')) {
-           //write your logic for api call
-           $response = [
-               'status' => 'success',
-               'msg' => 'Successfully updated!'
-           ];
+        if ($request->is('api/*')) {
+            $imageNamepath = NULL;
 
-           return response($response, 201);
-       } else {
-           //write your logic for web call
-           return back()->with('success', 'Successfully updated!');
-       }
+            if (request('image')) {
+                
+                Storage::delete($subcategory->image);
+                $image = request('image');  // your base64 encoded
+                $image = str_replace('data:image/png;base64,', '', $image);
+                $image = str_replace(' ', '+', $image);
+                $imageName1 = Str::random(20) . '.png';
+                $imageNamepath = 'subcategory_images/' . $imageName1;
+                $imageName = 'public/subcategory_images/' . $imageName1;
+                Storage::disk('local')->put($imageName, base64_decode($image));
+            }
+            $subcategory->update([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'description' => request('description'),
+                'image' => $imageNamepath,
+            ]);
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully updated!'
+            ];
+
+            return response($response, 201);
+        } else {
+            $image = NULL;
+            if (request('image')) {
+                Storage::delete($subcategory->image);
+                $image = request('image')->store('subcategory_images');
+            }
+            $subcategory->update([
+                'name' => strtoupper(Str::of(request('name'))->trim()),
+                'description' => request('description'),
+                'image' => $image,
+            ]);
+
+            //write your logic for web call
+            return back()->with('success', 'Successfully updated!');
+        }
     }
 
     /**

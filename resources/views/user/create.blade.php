@@ -180,17 +180,17 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputName4">Name</label>
-                            <input type="text" name="name" class="form-control" id="inputName4" placeholder="Name">
+                            <input type="text" name="name" value="{{ old('name') }}" class="form-control" id="inputName4" placeholder="Name">
 
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Email</label>
-                            <input type="email" name="email" class="form-control " id="inputEmail4" placeholder="Email">
+                            <input type="email" name="email" value="{{ old('email') }}" class="form-control " id="inputEmail4" placeholder="Email">
 
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputName5">Phone</label>
-                            <input type="number" name="phone" class="form-control" id="inputName5" placeholder="Must be Whatsapp Number">
+                            <input type="number" name="phone" value="{{ old('phone') }}" class="form-control" id="inputName5" placeholder="Must be Whatsapp Number">
 
                         </div>
                         <div class="form-group col-md-6">
