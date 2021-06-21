@@ -272,7 +272,8 @@
     </div>
     @if ($product->latitude != null)
 
-
+    <div hidden id="latitude"> {{$product->latitude}} </div>
+    <div hidden id="longitude"> {{$product->longitude}} </div>
         <div class="container">
             <div class="row" style="padding: 2em">
                 <div class="col-md-12">
@@ -293,9 +294,11 @@
             zoomOffset: -1,
             accessToken: 'pk.eyJ1IjoiZGhydWJhbmthMTAiLCJhIjoiY2twdjdwczZyMXUzcDJuczR6Mm84d2dobSJ9.B0vm6Oe9UKnf56zHcyofUg'
         }).addTo(mymap);
-        mymap.panTo(new L.LatLng(26.1779432, 91.8428137));
+        var latitude = document.getElementById('latitude').innerHTML;
+        var longitude = document.getElementById('longitude').innerHTML;
+        mymap.panTo(new L.LatLng(latitude, longitude));
         var popup = L.popup()
-            .setLatLng([26.1779432, 91.8428137])
+            .setLatLng([latitude, longitude])
             .setContent("Inserted Here.")
             .openOn(mymap);
 
