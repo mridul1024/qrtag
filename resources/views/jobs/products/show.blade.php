@@ -146,10 +146,10 @@
         }
         body { -webkit-print-color-adjust: exact !important; }
 
-        @media (min-width:480px)  {
+        @media (max-width:480px)  {
             #mapid { height: 400px; width : 270px;}
             }
-        @media (min-width: 1281px) {
+        @media (max-width: 1281px) {
             #mapid { height: 500px; width : 800px;}/* CSS */
           }
 
