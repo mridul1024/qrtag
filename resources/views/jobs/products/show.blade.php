@@ -154,7 +154,7 @@
 
         /* Smartphones (landscape) ----------- */
         @media only screen and (min-width : 480px) {
-            #mapid { height: 400px; width : 270px;}
+            #mapid { height: 400px; width : 360px;}
         }
         /* Media Query for Laptops and Desktops */
         @@media only screen  and (min-width : 1224px) {
