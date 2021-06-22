@@ -149,7 +149,12 @@
         @media (min-width:480px)  {
             #mapid { height: 400px; width : 270px;}
             }
-            #mapid { height: 500px; width : 800px;}
+        @media (min-width: 1281px) {
+            #mapid { height: 500px; width : 800px;}/* CSS */
+          }
+
+
+
     </style>
 
     <div class="container">
