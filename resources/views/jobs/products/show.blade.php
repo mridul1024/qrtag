@@ -276,9 +276,14 @@
     <div hidden id="longitude"> {{$product->longitude}} </div>
         <div class="container">
             <div class="row" style="padding: 2em">
-                <div class="col-md-12 center-text">
-                    <div id="mapid" style="width: 600px; height: 400px;"></div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"> Location of the item </h5>
+                <div class="card-text col-md-12 center-text">
+                    <div id="mapid" style="width: 800px; height: 400px;"></div>
                 </div>
+                </div>
+            </div>
 
             </div>
         </div>
