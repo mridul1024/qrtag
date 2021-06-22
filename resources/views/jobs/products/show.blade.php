@@ -146,13 +146,26 @@
         }
         body { -webkit-print-color-adjust: exact !important; }
 
-        @media (max-width:480px)  {
-            #mapid { height: 400px; width : 270px;}
-            }
-        @media (max-width: 1281px) {
-            #mapid { height: 500px; width : 800px;}/* CSS */
-          }
+        
+          /* Media Query for Mobile Devices */
+         @media (max-width: 480px) {
+                 #mapid { height: 400px; width : 270px;}
+        }
 
+        /* Media Query for low resolution  Tablets, Ipads */
+        @media (min-width: 481px) and (max-width: 767px) {
+            #mapid { height: 400px; width : 370px;}
+        }
+
+        /* Media Query for Tablets Ipads portrait mode */
+        @media (min-width: 768px) and (max-width: 1024px){
+            #mapid { height: 400px; width : 440px;}
+        }
+
+        /* Media Query for Laptops and Desktops */
+        @media (min-width: 1025px) and (max-width: 1280px){
+            #mapid { height: 500px; width : 800px;}/* CSS */
+        }
 
 
     </style>
