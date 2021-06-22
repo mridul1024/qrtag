@@ -152,11 +152,11 @@
                  #mapid { height: 400px; width : 270px;}
         }
 
-        
+        #mapid { height: 500px; width : 800px;}/* CSS */
 
         /* Media Query for Laptops and Desktops */
         @media (min-width: 767px) and (max-width: 1280px){
-            #mapid { height: 500px; width : 800px;}/* CSS */
+
         }
 
 
