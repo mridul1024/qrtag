@@ -155,7 +155,7 @@
 
         /* Media Query for Laptops and Desktops */
         @@media only screen  and (min-width : 1224px) {
-            #mapid { height: 500px; width : 800px;}/* CSS */
+            #mapid { height: 500px; width : 900px;}/* CSS */
 
         }
 
