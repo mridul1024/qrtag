@@ -194,6 +194,7 @@ class ProductController extends Controller {
                     $product = Product::find($id);
                     $response = [
                        'authorised' => 'Y',
+                       'approved' => 'Y',
                        'product' => $product,
                        'category' => $product->subcategorytype->subcategory->category->name,
                        'subcategory' => $product->subcategorytype->subcategory->name,
