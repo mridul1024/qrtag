@@ -152,14 +152,10 @@
                  #mapid { height: 400px; width : 270px;}
         }
 
-        /* Media Query for low resolution  Tablets, Ipads */
-        @media (min-width: 481px) and (max-width: 767px) {
-            #mapid { height: 400px; width : 370px;}
-        }
+        
 
-      
         /* Media Query for Laptops and Desktops */
-        @media (min-width: 1025px) and (max-width: 1280px){
+        @media (min-width: 767px) and (max-width: 1280px){
             #mapid { height: 500px; width : 800px;}/* CSS */
         }
 
