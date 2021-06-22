@@ -148,13 +148,13 @@
 
 
           /* Media Query for Mobile Devices */
-          @media only screen and (max-width : 320px) {
+         @media (max-width: 480px) {
                  #mapid { height: 400px; width : 270px;}
         }
 
         /* Smartphones (landscape) ----------- */
-        @media only screen and (min-width : 321px) {
-           #mapid { height: 400px; width : 470px;}
+        @media only screen and (min-width : 480px) {
+            #mapid { height: 400px; width : 270px;}
         }
         /* Media Query for Laptops and Desktops */
         @@media only screen  and (min-width : 1224px) {
