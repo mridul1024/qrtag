@@ -146,7 +146,7 @@
         }
         body { -webkit-print-color-adjust: exact !important; }
 
-        #mapid { height: 400px; width : 300px;}
+        #mapid { height: 400px; width : 270px;}
     </style>
 
     <div class="container">
