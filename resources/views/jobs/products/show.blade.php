@@ -146,7 +146,7 @@
         }
         body { -webkit-print-color-adjust: exact !important; }
 
-        
+
           /* Media Query for Mobile Devices */
          @media (max-width: 480px) {
                  #mapid { height: 400px; width : 270px;}
@@ -157,11 +157,7 @@
             #mapid { height: 400px; width : 370px;}
         }
 
-        /* Media Query for Tablets Ipads portrait mode */
-        @media (min-width: 768px) and (max-width: 1024px){
-            #mapid { height: 400px; width : 440px;}
-        }
-
+      
         /* Media Query for Laptops and Desktops */
         @media (min-width: 1025px) and (max-width: 1280px){
             #mapid { height: 500px; width : 800px;}/* CSS */
