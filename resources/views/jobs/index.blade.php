@@ -157,8 +157,9 @@
                         </div>
                         <div class="col-sm-2">
                             @hasanyrole('super-admin|admin|editor|approver')
-                            <a type="button" href="/job/create" class="btn btn-info add-new"><i class="fa fa-plus"></i>
-                                Create Job</a>
+                                <a type="button" class="btn btn-info add-new" title="Create New Job"
+                                data-whatever="/job/create" data-toggle="modal"
+                                data-target="#exampleModal2"><i class="fa fa-plus"></i> Create Job</a>
                             @endhasanyrole
                         </div>
                     </div>
@@ -234,6 +235,28 @@
         </div>
     </div>
     </div>
+       <!-- Modal -->
+       <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create a new job</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Press Create below! <br>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a type="button" id="deletecategory2" href="" class="btn btn-primary">Create</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>
@@ -248,7 +271,16 @@
                 $('#deletecategory').attr('href', id);
             });
         });
+        $(document).ready(function() {
+            $('#exampleModal2').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data('whatever'); // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 
+                $('#deletecategory2').attr('href', id);
+            });
+        });
     </script>
     <script>
         $(document).ready(function() {

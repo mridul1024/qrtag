@@ -162,104 +162,101 @@
         });
 
         $(document).ready(function() {
-                    $('#sub_categorytype').on('change', function() {
-                            var i = 0;
-                            let id = $(this).val();
-                            $('#dynamic1').empty();
-                            $('#dynamic2').empty();
-                            $('#dynamic3').empty();
-                            $('#unit').empty();
-                            $.ajax({
-                                    type: 'GET',
-                                    url: '/product/getattributes/' + id,
-                                    success: function(response) {
+            $('#sub_categorytype').on('change', function() {
+                var i = 0;
+                let id = $(this).val();
+                $('#dynamic1').empty();
+                $('#dynamic2').empty();
+                $('#dynamic3').empty();
+                $('#unit').empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '/product/getattributes/' + id,
+                    success: function(response) {
 
-                                        var response = JSON.parse(response);
-                                        console.log(response);
-                                        $('#dynamic1').empty();
-                                        $('#dynamic2').empty();
-                                        $('#dynamic3').empty();
-                                        $('#unit').empty();
-                                        //$('#sub_categorytype').append(`<option value="0" disabled selected>Select Sub Category*</option>`);
-                                        response.forEach(element => {
-                                                $('#dynamic1').append(
-                                                    `<input type="text" hidden required name="dynamic[` +
-                                                    i +
-                                                    `][name]" value="${element['name']}"
+                        var response = JSON.parse(response);
+                        console.log(response);
+                        $('#dynamic1').empty();
+                        $('#dynamic2').empty();
+                        $('#dynamic3').empty();
+                        $('#unit').empty();
+                        //$('#sub_categorytype').append(`<option value="0" disabled selected>Select Sub Category*</option>`);
+                        response.forEach(element => {
+                            $('#dynamic1').append(
+                                `<input type="text" hidden required name="dynamic[` +
+                                i +
+                                `][name]" value="${element['name']}"
                                     class="form-control"  placeholder="Name">`
-                                                );
-                                                $('#dynamic3').append(
-                                                    `<div class="form-control">${element['name']}</div> `
-                                                );
-                                                var value = null;
-                                                value = element['value'];
-                                                if (value == null) {
-                                                    value = '';
-                                                }
-                                                $('#dynamic2').append(
-                                                    `<input type="number"  required name="dynamic[` +
-                                                    i +
-                                                    `][value]" value="` + value +
-                                                    `" class="form-control"  placeholder="Enter Value( Must be a number)">`
-                                                );
-                                                $('#dynamic4').append(
-                                                    `<input type="text" hidden required name="dynamic[` +
-                                                    i + `][unit]" value="${element['unit']}"
+                            );
+                            $('#dynamic3').append(
+                                `<div class="form-control">${element['name']}</div> `
+                            );
+                            var value = null;
+                            value = element['value'];
+                            if (value == null) {
+                                value = '';
+                            }
+                            $('#dynamic2').append(
+                                `<input type="number"  required name="dynamic[` +
+                                i +
+                                `][value]" value="` + value +
+                                `" class="form-control"  placeholder="Enter Value( Must be a number)">`
+                            );
+                            $('#dynamic4').append(
+                                `<input type="text" hidden required name="dynamic[` +
+                                i + `][unit]" value="${element['unit']}"
                                                     class="form-control"  placeholder="Name">`
-                                                );
+                            );
 
-                                               // console.log(value['units']);
-
-
-                                                        i++;
+                            // console.log(value['units']);
 
 
-                                                });
-                                                //
-                                                var j = 0;
-                                                $('#unit').empty();
+                            i++;
 
 
-                                                    $.ajax({
-                                                        type: 'GET',
-                                                        url: '/product/getunits/',
-                                                        success: function(response) {
+                        });
+                        //
+                        var j = 0;
+                        $('#unit').empty();
 
-                                                            var response = JSON.parse(response);
-                                                            console.log(j);
-                                                            while(j<i){
 
-                                                            $('#unit').append(
-                                                                        `<select class="form-control formselect " required name="dynamic[` +
-                                                                             j + `][unit]" id="unit`+j+`" placeholder="Select Unit"
-                                                                        id="unit` +
-                                                                             j + `">
+                        $.ajax({
+                            type: 'GET',
+                            url: '/product/getunits/',
+                            success: function(response) {
+
+                                var response = JSON.parse(response);
+                                console.log(j);
+                                while (j < i) {
+
+                                    $('#unit').append(
+                                        `<select  class="form-control formselect "  name="dynamic[` +
+                                        j + `][unit]" id="unit` + j + `" placeholder="Select Unit"  required="required">
                                                                     </select> `
-                                                                    );
-                                                            $('#unit'+ j).append(
-                                                                    `<option value="0" disabled selected>Select Unit</option>`
-                                                                );
-                                                                    console.log('break');
-                                                            //$('#sub_categorytype').append(`<option value="0" disabled selected>Select Sub Category*</option>`);
-                                                            response.forEach(element1 => {
-                                                                    $('#unit'+ j).append(
-                                                                        `<option value="${element1['name']}">${element1['name']}</option>`
-                                                                    );
+                                    );
+                                    $('#unit' + j).append(
+                                        `<option value="" >Select Unit</option>`
+                                    );
+                                    console.log('break');
+                                    //$('#sub_categorytype').append(`<option value="0" disabled selected>Select Sub Category*</option>`);
+                                    response.forEach(element1 => {
+                                        $('#unit' + j).append(
+                                            `<option value="${element1['name']}">${element1['name']}</option>`
+                                        );
 
-                                                                 });
-                                                                 j++;
-                                                            }
-                                                            }
-                                                        });
-
-
-
-                                                //
-                                        }
                                     });
-                            });
-                    });
+                                    j++;
+                                }
+                            }
+                        });
 
+
+
+                        //
+                    }
+                });
+            });
+        });
     </script>
 
     </body>

@@ -65,22 +65,31 @@ class JobController extends Controller
             $job = job::create([
                 'created_by' => Auth::user()->email,
                 'qrcode' => 'example string',
-                'job_number' => time().'-'.Str::uuid()
+                'job_number' => time().'-'.Str::random(10)
             ]);
             $job = Job::find($job->id);
 
             $jobs = Job::paginate(12);
 
-            return view('jobs.index', ['jobs' => $jobs]);
+            return redirect('/jobs');
         }
     }
     public function show(Request $request, $id)
     {
 
         $job = Job::find($id);
-        $products = Product::where('job_id', '=', $id)->get();
+
+
         //dd($products);
         if ($request->is('api/*')) {
+                $loggedinUser = User::where('email', $request->email)->first();
+                if($loggedinUser){
+                    if($loggedinUser->hasAnyRole(['super-admin','admin','editor']) ){
+                    $products = Product::where('job_id', '=', $id)->get();
+                    }
+                }else{
+                    $products = Product::where('job_id', '=', $id)->where('status', '=', 'Y')->get();
+                }
             //write your logic for api call
             $response = [
                 'job' => $job, 'products' => $products
@@ -88,6 +97,13 @@ class JobController extends Controller
 
             return response($response, 201);
         } else {
+            if(Auth::user() ){
+                if(Auth::user()->hasAnyRole(['super-admin','admin','editor']) ){
+                $products = Product::where('job_id', '=', $id)->get();
+                }
+            }else{
+                $products = Product::where('job_id', '=', $id)->where('status', '=', 'Y')->get();
+            }
             //write your logic for web call
             return view('jobs.show', ['job' => $job, 'products' => $products]);
         }
@@ -102,8 +118,6 @@ class JobController extends Controller
 
         $job->update([
             'published' => 'Y',
-
-
 
         ]);
 

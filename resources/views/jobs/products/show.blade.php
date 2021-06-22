@@ -164,6 +164,8 @@
 
 
     </style>
+@if($product != NULL)
+
 
     <div class="container">
 
@@ -288,6 +290,7 @@
 
         </div>
     </div>
+
     @if ($product->latitude != null)
 
     <div hidden id="latitude"> {{$product->latitude}} </div>
@@ -306,7 +309,9 @@
             </div>
         </div>
     @endif
-
+    @endif
+    <div class="container">
+    <p style="text-center"> <h4> Product not approved </h4> </p></div>
     <script>
         var mymap = L.map('mapid').setView([51.505, -0.09], 13);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
