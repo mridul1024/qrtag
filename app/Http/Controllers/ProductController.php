@@ -231,15 +231,20 @@ class ProductController extends Controller {
              return response($response, 201);
          } else {
             if(Auth::user()){
-                if(Auth::user()->hasAnyRole(['super-admin','admin','editor']) ){
+                if(Auth::user()->hasAnyRole(['super-admin','admin','editor','approver']) ){
                    $product = Product::find($id);
                    return view('jobs.products.show', ['product' => $product ]);
+                }else{
+                    if($product->status == 'Y'){
+                        return view('jobs.products.show', ['product' => $product ]);
+                       }else{
+                        return view('jobs.products.show', ['product' => NULL ]);
+                       }
                 }
             }else{
                $product = Product::find($id);
                if($product->status == 'Y'){
                 return view('jobs.products.show', ['product' => $product ]);
-
 
                }else{
                 return view('jobs.products.show', ['product' => NULL ]);

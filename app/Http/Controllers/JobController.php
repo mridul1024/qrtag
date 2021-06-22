@@ -84,7 +84,7 @@ class JobController extends Controller
         if ($request->is('api/*')) {
                 $loggedinUser = User::where('email', $request->email)->first();
                 if($loggedinUser){
-                    if($loggedinUser->hasAnyRole(['super-admin','admin','editor']) ){
+                    if($loggedinUser->hasAnyRole(['super-admin','admin','approver','editor']) ){
                     $products = Product::where('job_id', '=', $id)->get();
                     }
                 }else{
@@ -98,8 +98,10 @@ class JobController extends Controller
             return response($response, 201);
         } else {
             if(Auth::user() ){
-                if(Auth::user()->hasAnyRole(['super-admin','admin','editor']) ){
+                if(Auth::user()->hasAnyRole(['super-admin','admin','approver', 'editor']) ){
                 $products = Product::where('job_id', '=', $id)->get();
+                }else{
+                    $products = Product::where('job_id', '=', $id)->where('status', '=', 'Y')->get();
                 }
             }else{
                 $products = Product::where('job_id', '=', $id)->where('status', '=', 'Y')->get();

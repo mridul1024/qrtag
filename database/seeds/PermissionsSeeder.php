@@ -45,23 +45,44 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'add attributes']);
         Permission::create(['name' => 'view attributes']);
         Permission::create(['name' => 'approve attributes']);
+        //jobs
+        Permission::create(['name' => 'create job']);
+        Permission::create(['name' => 'delete job']);
+        Permission::create(['name' => 'view job']);
+        //products
+        Permission::create(['name' => 'add product']);
+        Permission::create(['name' => 'delete product']);
+        Permission::create(['name' => 'view product']);
+        Permission::create(['name' => 'approve product']);
+        Permission::create(['name' => 'reject product']);
         // create roles and assign existing permissions
         //viewer
         $role1 = Role::create(['name' => 'viewer']);
         $role1->givePermissionTo('view category');
         $role1->givePermissionTo('view attributes');
         $role1->givePermissionTo('view subcategory');
+        $role1->givePermissionTo('view job');
+        $role1->givePermissionTo('view product');
         //editor
         $role2 = Role::create(['name' => 'editor']);
-        $role2->givePermissionTo('edit category');
         $role2->givePermissionTo('view category');
         $role2->givePermissionTo('view attributes');
-        $role2->givePermissionTo('edit category');
+        $role2->givePermissionTo('create job');
+        $role2->givePermissionTo('delete job');
+        $role2->givePermissionTo('view job');
+        $role2->givePermissionTo('view product');
+        $role2->givePermissionTo('delete product');
         //approver
         $role3 = Role::create(['name' => 'approver']);
-        $role3->givePermissionTo('approve category');
-        $role3->givePermissionTo('approve subcategory');
-        $role3->givePermissionTo('approve attributes');
+        $role3->givePermissionTo('view category');
+        $role3->givePermissionTo('view attributes');
+        $role3->givePermissionTo('create job');
+        $role3->givePermissionTo('delete job');
+        $role3->givePermissionTo('view job');
+        $role3->givePermissionTo('view product');
+        $role3->givePermissionTo('delete product');
+        $role3->givePermissionTo('approve product');
+        $role3->givePermissionTo('reject product');
         //admin
         $role4 = Role::create(['name' => 'admin']);
         $role4->givePermissionTo('add user');
@@ -71,6 +92,13 @@ class PermissionsSeeder extends Seeder
         $role4->givePermissionTo('add category');
         $role4->givePermissionTo('delete category');
         $role4->givePermissionTo('view category');
+        $role4->givePermissionTo('create job');
+        $role4->givePermissionTo('delete job');
+        $role4->givePermissionTo('view job');
+        $role4->givePermissionTo('view product');
+        $role4->givePermissionTo('delete product');
+        $role4->givePermissionTo('approve product');
+        $role4->givePermissionTo('reject product');
         //superadmin
         $role5 = Role::create(['name' => 'super-admin']);
         // gets all permissions via Gate::before rule; see AuthServiceProvider
@@ -78,7 +106,7 @@ class PermissionsSeeder extends Seeder
         // create demo users
 
         $user = factory(App\User::class)->create([
-            'name' => 'Super-Admin',
+            'name' => 'SuperAdmin',
             'email' => 'superadmin@example.com',
             'phone' => '1234567890',
             'password' =>  Hash::make('demo'),
@@ -87,8 +115,8 @@ class PermissionsSeeder extends Seeder
         $user->assignRole($role5);
 
         $user2 = factory(App\User::class)->create([
-            'name' => 'edtior user',
-            'email' => 'writer@example.com',
+            'name' => 'edtior',
+            'email' => 'edtior@example.com',
             'phone' => '1234567892',
             'password' =>  Hash::make('demo'),
 
