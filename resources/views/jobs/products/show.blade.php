@@ -276,7 +276,7 @@
     <div hidden id="longitude"> {{$product->longitude}} </div>
         <div class="container">
             <div class="row" style="padding: 2em">
-                <div class="col-md-12">
+                <div class="col-md-12 center-text">
                     <div id="mapid" style="width: 600px; height: 400px;"></div>
                 </div>
 
