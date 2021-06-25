@@ -153,13 +153,13 @@
                 <div class="table-title">
                     <div class="row">
                         <div class="col-sm-10">
-                            <h2>Job <b>List</b></h2>
+                            <h2>Batch <b>List</b></h2>
                         </div>
                         <div class="col-sm-2">
                             @hasanyrole('super-admin|admin|editor|approver')
                                 <a type="button" class="btn btn-info add-new" title="Create New Job"
                                 data-whatever="/job/create" data-toggle="modal"
-                                data-target="#exampleModal2"><i class="fa fa-plus"></i> Create Job</a>
+                                data-target="#exampleModal2"><i class="fa fa-plus"></i> Create Batch</a>
                             @endhasanyrole
                         </div>
                     </div>
@@ -173,8 +173,8 @@
                 <table class="table table-striped table-hover table-bordered">
                     <thead>
                         <tr>
-                            <th>Job ID</th>
-                            <th> Job Number </th>
+                            <th>Batch ID</th>
+                            <th> Batch Number </th>
                             <th>Created By</th>
                             <th>Created At</th>
 

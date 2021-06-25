@@ -19,7 +19,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/test',function () {
+    
+    return view('jobs.products.test');
+});
 Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('/product/show/{id}', 'ProductController@show');
 Route::get('/job/show/{id}', 'JobController@show');
 
@@ -70,7 +75,7 @@ Route::middleware('auth')->group(function () {
 
     });
     Route::group(['middleware' => ['role:super-admin|admin|approver|editor']], function () {
-
+        Route::get('/jobs', 'JobController@index');
         Route::get('/job/create', 'JobController@create');
         Route::post('/job/store', 'JobController@store');
         Route::get('/job/delete/{id}', 'JobController@destroy');
@@ -106,7 +111,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/attributemasters', 'AttributeMasterController@index')->name('attributemasters');
 
-    Route::get('/jobs', 'JobController@index');
+
 
     Route::put('/job/edit/{id}', 'JobController@edit');
     Route::get('/job/approve/{id}', 'JobController@approve');
@@ -116,7 +121,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/product/gettypes/{id}', 'ProductController@getTypes');
     Route::get('/product/getunits', 'ProductController@getUnits');
     Route::get('/product/getattributes/{id}', 'ProductController@getAttributes');
-    Route::put('/product/generateQr', 'ProductController@generateQr');
+    Route::post('/product/generateqr/{id}', 'ProductController@generateQr');
 
     Route::get('/unitmasters', 'UnitMasterController@index');
 

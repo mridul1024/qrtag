@@ -33,7 +33,6 @@
            /* Media Query for Mobile Devices */
            @media (max-width: 480px) {
                  #mapid { height: 400px; width : 270px;}
-                 #pic1 { width: 18 em !important;}
         }
 
         /* Smartphones (landscape) ----------- */
@@ -57,26 +56,9 @@
                 <aside class="col-sm-5 border-right">
                     <article class="gallery-wrap">
                         <div class="img-big-wrap">
-                            <div>
-                             @if ($product->subcategorytype->image == null)
-                                <img style="width: 30em; padding: 2em;" id="pic1" src="/storage/placeholder.png" alt="item image">
-                            @else
-                                <img  style="width: 30em; padding: 2em" src="/storage/{{ $product->subcategorytype->image }}"
-                                    alt="item image">
-                            @endif
-                            </a></div>
+                            <div> <a href="#"><img src="https://s9.postimg.org/tupxkvfj3/image.jpg"></a></div>
                         </div> <!-- slider-product.// -->
-                        <div class="img-big-wrap">
-                            <div class="visible-print text-center">
-                                <div id="printableArea" onclick="">
-                                    {!! QrCode::size(250)->generate(Request::url()) !!}
-                                    <p>Scan this to return to this product</p>
-                                </div>
-
-                               
-                            </div>
-                        </div>
-                       <!--  <div class="img-small-wrap">
+                        <div class="img-small-wrap">
                             <div class="item-gallery">
                                 @if ($product->subcategorytype->image == null)
                                 <img  src="/storage/placeholder.png" alt="item image">
@@ -96,7 +78,7 @@
                                 </div>
                             </div>
 
-                        </div> slider-nav.// -->
+                        </div> <!-- slider-nav.// -->
                     </article> <!-- gallery-wrap .end// -->
                 </aside>
                 <aside class="col-sm-7">
@@ -107,7 +89,7 @@
                             <span class="price h3 text-warning">
                                 <span class="currency">{{ $product->subcategorytype->subcategory->name }}</span>
                             </span>
-                            <span>-subcategory</span>
+                            <span>/per kg</span>
                         </p> <!-- price-detail-wrap .// -->
                         <dl class="item-property">
                             <dt>Description</dt>
@@ -138,9 +120,7 @@
                             @elseif ( $product->status == 'Y')
                             <dd> <b style="color: green"> Approved</b></dd>
                             @elseif ( $product->status == 'R')
-                            <dd> <b style="color: red"> Rejected</b><span>
-                                 due to {{ $product->rejectinfo }} </span></dd>
-                             @endif
+                            <dd> <b style="color: red"> Rejected</b><span> due to {{ $product->rejectinfo }} </span></dd>
 
                         </dl> <!-- item-property-hor .// -->
 

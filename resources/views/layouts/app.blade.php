@@ -69,9 +69,12 @@
                           <li class="nav-item">
                             <a class="nav-link" href="/subcategories">Subcategories</a>
                           </li>
+
+                          @hasanyrole('super-admin|admin|approver')
                           <li class="nav-item">
-                            <a class="nav-link" href="/jobs">Jobs</a>
+                            <a class="nav-link" href="/jobs">Batch</a>
                           </li>
+                          @endhasanyrole
 
                         @hasanyrole('super-admin|admin')
 

@@ -69,6 +69,16 @@
                         placeholder="Select Sub Category type" id="sub_categorytype">
                     </select>
                 </div>
+                <div class="form-group col-md-6">
+                    <label for="inputName4">BU Code</label>
+                    <input type="text" required name="bu_code" class="form-control"  value="{{ old('bu_code') }}" id="inputName4" placeholder="Enter BU code">
+
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputName4">Warehouse Code</label>
+                    <input type="text" required name="wh_code" class="form-control"  value="{{ old('wh_code') }}" id="inputName4" placeholder="Enter Warehouse Code">
+
+                </div>
 
 
                 <div class="col-md-12">

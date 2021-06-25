@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Attributes;
 use App\AttributeMaster;
+use App\Subcategorytype;
 use App\UnitMaster;
 use App\User;
 use Illuminate\Http\Request;
@@ -30,9 +31,9 @@ class AttributesController extends Controller
      */
     public function create(Request $request, $id)
     {
-        $attributeMasters = AttributeMaster::all();
+        $attributeMasters = AttributeMaster::all(); // select * from attributemasters
         $unitmasters = UnitMaster::all();
-
+        $Subcategorytype = Subcategorytype::find($id); // select * from categorytypes where id = '';
         if ($request->is('api/*')) {
             $response = [ 'id' => $id,
             'attributemasters' => $attributeMasters,
@@ -41,7 +42,11 @@ class AttributesController extends Controller
 
             return response($response, 201);
         } else {
-            return view('attribute.create', ['id' => $id, 'attributemasters' => $attributeMasters, 'unitmasters' => $unitmasters]);
+
+            return view('attribute.create', ['id' => $id,
+            'email' => $Subcategorytype->created_by,
+            'attributemasters' => $attributeMasters,
+            'unitmasters' => $unitmasters]);
         }
     }
 

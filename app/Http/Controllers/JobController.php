@@ -48,7 +48,7 @@ class JobController extends Controller
             $job = job::create([
                 'created_by' => $loggedinUser->email,
                 'qrcode' => 'example string',
-                'job_number' => time().'-'.Str::random(10)
+                'job_number' => 'GRP-BTH-'.time().'-'.Str::random(4)
             ]);
             $job = Job::find($job->id);
 
@@ -65,7 +65,7 @@ class JobController extends Controller
             $job = job::create([
                 'created_by' => Auth::user()->email,
                 'qrcode' => 'example string',
-                'job_number' => time().'-'.Str::random(10)
+                'job_number' => 'GRP-BTH-'.time().'-'.Str::random(4)
             ]);
             $job = Job::find($job->id);
 

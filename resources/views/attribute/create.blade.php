@@ -37,7 +37,8 @@
                         <strong>{{ $message }}</strong>
                     </div>
                 @endif
-                @hasanyrole('super-admin|admin|approver')
+                @if( strcmp($email, Auth::user()->email) == 0)
+
                 <form method="POST" action="{{  route('attribute-store')  }}" >
                     @csrf
 
@@ -70,9 +71,9 @@
                     </div>
 
                 </form>
-                @endhasanyrole
 
-                @hasanyrole('editor')
+
+                @else
                 <form method="POST" action="{{  route('attributechange-store')  }}" >
                     @csrf
 
@@ -104,7 +105,7 @@
                     </div>
 
                 </form>
-                @endhasanyrole
+                @endif
 
 
     </div>

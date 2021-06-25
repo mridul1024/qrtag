@@ -21,13 +21,13 @@ class CategoryController extends Controller
     {
         if ($request->is('api/*')) {
 
-            $categories = Category::paginate(15);
+            $categories = Category::orderBy('created_at', 'desc')->paginate(15);
 
             return response()->json($categories);
 
         } else {
 
-            $categories = Category::paginate(15);
+            $categories = Category::orderBy('created_at', 'desc')->paginate(15);
 
             return view('category.index', ['categories' => $categories]);
 
@@ -154,6 +154,7 @@ class CategoryController extends Controller
 
             return response($response, 201);
         } else {
+            
             //write your logic for web call
             return back()->with('success', 'Successfully updated category!');
         }

@@ -172,10 +172,10 @@
                         </div>
                         <div class="col-md-3">
 
-                            @if ($subcategorytype->image == NULL)
-                            <img class="card-img" src="/storage/placeholder.png" alt="item image">
+                            @if ($subcategorytype->image == null)
+                                <img class="card-img" src="/storage/placeholder.png" alt="item image">
                             @else
-                            <img class="card-img" src="/storage/{{ $subcategorytype->image }}" alt="item image">
+                                <img class="card-img" src="/storage/{{ $subcategorytype->image }}" alt="item image">
                             @endif
                         </div>
                         <div class="col-md-4">
@@ -185,13 +185,13 @@
                                     <p>Scan this to return to this product</p>
                                 </div>
                                 <!--
-                            <form method="POST" action="/subcategorytype/generateQr/">
-                                @csrf
-                                @method('PUT')
-                                <input type="text" hidden name="qrcode" value="{!! Request::url() !!}" class="form-control"
-                                    id="qrcode" >
-                                    <button type="submit" class="btn btn-warning" >Generate QR </button> <br>
-                                </form> -->
+                                <form method="POST" action="/subcategorytype/generateQr/">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="text" hidden name="qrcode" value="{!! Request::url() !!}" class="form-control"
+                                        id="qrcode" >
+                                        <button type="submit" class="btn btn-warning" >Generate QR </button> <br>
+                                    </form> -->
 
                             @else
 
@@ -233,7 +233,9 @@
                                     <th>Attribute Name </th>
                                     <th>Value</th>
                                     @hasanyrole('super-admin|admin|editor|approver')
-                                    <th>Action</th>
+                                    @if (strcmp($subcategorytype->created_by, Auth::user()->email) == 0)
+                                        <th>Action</th>
+                                    @endif
                                     @endhasanyrole
                                 </tr>
                             </thead>
@@ -245,18 +247,21 @@
                                         <td>{{ $attribute->id }}</td>
                                         <td> {{ $attribute->name }}</td>
                                         <td> {{ $attribute->value }}</td>
-                                        <td>
-                                            <!--@hasanyrole('super-admin|admin|editor|approver')
-                                            <a href="/attribute/{{ $attribute->id }}/edit" class="edit" title="Edit"
-                                                data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                                            @endhasanyrole -->
-                                            @hasanyrole('super-admin|admin')
-                                            <a type="button" class="delete" title="Delete"
-                                                data-whatever="/attribute/delete/{{ $attribute->id }}"
-                                                data-toggle="modal" data-target="#exampleModal"><i
-                                                    class="material-icons">&#xE872;</i></a>
-                                            @endhasanyrole
+
+                                        <!--@hasanyrole('super-admin|admin|editor|approver')
+                                                <a href="/attribute/{{ $attribute->id }}/edit" class="edit" title="Edit"
+                                                    data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                                                @endhasanyrole -->
+                                        @hasanyrole('super-admin|admin')
+                                        @if (strcmp($subcategorytype->created_by, Auth::user()->email) == 0)
+                                            <td> <a type="button" class="delete" title="Delete"
+                                                    data-whatever="/attribute/delete/{{ $attribute->id }}"
+                                                    data-toggle="modal" data-target="#exampleModal"><i
+                                                        class="material-icons">&#xE872;</i></a>
+                                        @endif
                                         </td>
+                                        @endhasanyrole
+
                                     </tr>
 
                                 @endforeach
@@ -267,6 +272,7 @@
                 </div>
             </div>
         </div>
+        @if($nattributes->isNotEmpty())
         @hasanyrole('super-admin|admin|editor|approver')
         <div class="container">
             <div class="row">
@@ -296,7 +302,9 @@
                                     <th>Status</th>
                                     @endhasanyrole
                                     @hasanyrole('super-admin|admin|approver')
-                                    <th>Approve / Reject</th>
+                                    @if (strcmp($subcategorytype->created_by, Auth::user()->email) == 0)
+                                        <th>Approve / Reject</th>
+                                    @endif
                                     @endhasanyrole
                                 </tr>
                             </thead>
@@ -309,21 +317,24 @@
                                         <td> {{ $attribute->name }}</td>
                                         <td> {{ $attribute->value }}</td>
                                         @hasanyrole('editor')
-                                            <td> Waiting for approval </td>
+                                        <td> Waiting for approval </td>
                                         @endhasanyrole
                                         @hasanyrole('super-admin|admin|approver')
-                                        <td>
+                                        @if (strcmp($subcategorytype->created_by, Auth::user()->email) == 0)
+                                            <td>
 
-                                            <a href="/attributechange/approve/{{ $attribute->id }}" class="edit" title="Approve"
-                                                data-toggle="tooltip"><i class="material-icons">&#xe5ca;</i></a>
+                                                <a href="/attributechange/approve/{{ $attribute->id }}" class="edit"
+                                                    title="Approve" data-toggle="tooltip"><i
+                                                        class="material-icons">&#xe5ca;</i></a>
 
 
-                                            <a type="button" class="delete" title="Delete"
-                                                data-whatever="/attributechange/delete/{{ $attribute->id }}"
-                                                data-toggle="modal" data-target="#exampleModal"><i
-                                                    class="material-icons">&#xe5cd;</i></a>
+                                                <a type="button" class="delete" title="Delete"
+                                                    data-whatever="/attributechange/delete/{{ $attribute->id }}"
+                                                    data-toggle="modal" data-target="#exampleModal"><i
+                                                        class="material-icons">&#xe5cd;</i></a>
 
-                                        </td>
+                                            </td>
+                                        @endif
                                         @endhasanyrole
                                     </tr>
 
@@ -337,45 +348,47 @@
             </div>
         </div>
         @endhasanyrole
-
+        @endif
         <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete this attribute</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure to you want to delete this attribute from this type of subcategory? <br>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete this attribute</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure to you want to delete this attribute from {{ $subcategorytype->name }} ? <br>
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a type="button" id="deletecategory" href="" class="btn btn-primary">Delete</a>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <a type="button" id="deletecategory" href="" class="btn btn-primary">Delete</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script type="text/javascript" >
-    $(document).ready(function() {
-        $('#exampleModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var id = button.data('whatever') ;// Extract info from data-* attributes
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-
-            $('#deletecategory').attr('href', id);
-        });
-    });
-</script>
-<script>
-    $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-    });
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>
-    @endsection
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#exampleModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data('whatever'); // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+                $('#deletecategory').attr('href', id);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+@endsection

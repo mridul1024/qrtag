@@ -23,7 +23,7 @@ class SubcategoryController extends Controller
         if ($request->is('api/*')) {
 
 
-            $subcategories = Subcategory::paginate(15);
+            $subcategories = Subcategory::orderBy('created_at', 'desc')->paginate(15);
             $response = [
                 'subcategories' => $subcategories,
                 'categories' => $categories,
@@ -32,7 +32,7 @@ class SubcategoryController extends Controller
             return response($response, 201);
         } else {
 
-            $subcategories = Subcategory::paginate(15);
+            $subcategories = Subcategory::orderBy('created_at', 'desc')->paginate(15);
             return view('subcategory.index', ['subcategories' => $subcategories, 'categories' => $categories]);
         }
     }
@@ -42,7 +42,7 @@ class SubcategoryController extends Controller
         $categories = Category::all();
         if ($request->is('api/*')) {
 
-            $subcategories = Subcategory::where('category_id', '=', $id)->paginate(15);
+            $subcategories = Subcategory::orderBy('created_at', 'desc')->where('category_id', '=', $id)->paginate(15);
 
             $response = [
                 'subcategories' => $subcategories,
@@ -52,7 +52,7 @@ class SubcategoryController extends Controller
             return response($response, 201);
         } else {
 
-            $subcategories = Subcategory::where('category_id', '=', $id)->paginate(15);
+            $subcategories = Subcategory::orderBy('created_at', 'desc')->where('category_id', '=', $id)->paginate(15);
 
             return view('subcategory.index', ['subcategories' => $subcategories, 'categories' => $categories]);
         }
@@ -216,7 +216,7 @@ class SubcategoryController extends Controller
             $imageNamepath = NULL;
 
             if (request('image')) {
-                
+
                 Storage::delete($subcategory->image);
                 $image = request('image');  // your base64 encoded
                 $image = str_replace('data:image/png;base64,', '', $image);

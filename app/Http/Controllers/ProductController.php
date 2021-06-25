@@ -72,6 +72,8 @@ class ProductController extends Controller {
         $validatedData = $request->validate([
             'job_id' => 'required',
             'subcategorytype_id' => 'required',
+            'bu_code' => 'required',
+            'wh_code' => 'required'
         ]);
 
         //dd(request('dynamic'));
@@ -85,7 +87,7 @@ class ProductController extends Controller {
                 $product = Product::create([
                     'job_id' => request('job_id'),
                     'subcategorytype_id' => request('subcategorytype_id'),
-                    'material_id' => time().'-'.Str::random(10),
+                    'material_id' => 'GRP-'.Str::substr(request('bu_code'),1,3).'-'.Str::substr(request('wh_code'),1,3).'-'.date("Y-m-d H:i:s", time()),
                     'latitude' => request('latitude'),
                     'longitude' => request('longitude'),
                     'status' => 'N',
@@ -128,7 +130,7 @@ class ProductController extends Controller {
                 $product = Product::create([
                     'job_id' => request('job_id'),
                     'subcategorytype_id' => request('subcategorytype_id'),
-                    'material_id' => time().'-'.Str::random(10),
+                    'material_id' => 'GRP-'.strtoupper(Str::substr(request('bu_code'),1,3)).'-'.strtoupper(Str::substr(request('wh_code'),1,3)).'-'.date("YmdHis", time()),
                     'status' => 'N',
                     'created_by' => Auth::user()->email,
                 ]);
@@ -161,23 +163,13 @@ class ProductController extends Controller {
      }
 
 
-//      public function generateQr(Request $request){
-//         // //  $path = QrCode::size(500)
-//         // //  ->format('png')
-//         // //  ->generate(request('qrcode'), public_path('images/qrcode.png'));
-//         // $image = QrCode::format('eps')->generate(request('qrcode'));
-//         //dd($image);
-//          $path = QRCode::text('QR Code Generator for Laravel!')->png()->store('product_qrcodes');
+     public function generateQr(Request $request, $id){
 
-//    // $result = ;
-//         dd($result);
-//          $affected = DB::table('products')
-//                ->where('id', request('id'))
-//                ->update(['qrcode' => $path]);
 
-//          return route('/product/show/' + request('id'));
+         return view('jobs.products.generateqr',['items' =>Product::where('job_id',$id)->get(),'height' => request('height'),
+         'width' => request('width') ]);
 
-//      }
+     }
 
      public function show(Request $request, $id)
      {

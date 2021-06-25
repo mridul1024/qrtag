@@ -156,9 +156,9 @@
                             <p class="card-text">
 
                             <p>
-                            <h5><b>Job Id: </b> {{ $job->id }}</p>
+                            <h5><b>Batch Id: </b> {{ $job->id }}</p>
                                 <p>
-                                    <h5><b>Job Number: </b> {{ $job->job_number }}</p>
+                                    <h5><b>Batch Number: </b> {{ $job->job_number }}</p>
                                 <p>
                                 <h5><b>Created By: </b> {{ $job->created_by }} </h5>
                                 </p>
@@ -191,14 +191,20 @@
                         <div class="table-title">
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <h2>Product <b>List</b></h2>
+                                    <h2>Item <b>List</b></h2>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-4">
+                                    @if($products)
+                                    <a type="button" id="" class="btn btn-info add-new" title=""
+                                    data-whatever="/product/generateqr/{{ $job->id}}"
+                                    data-toggle="modal" data-target="#exampleModal3"><i class="fa fa-plus"></i>Print QR </a>
 
+                                    @endif
 
                                         @hasanyrole('super-admin|admin|editor|approver')
                                         <a type="button" href="/product/create/{{ $job->id }}"
-                                            class="btn btn-info add-new"><i class="fa fa-plus"></i> Add Product</a>
+                                            class="btn btn-info add-new"><i class="fa fa-plus"></i> Add Item</a>
+
                                         @endhasanyrole
 
 
@@ -352,6 +358,40 @@
         </div>
     </div>
     </div>
+     <!-- Modal -->
+     <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Generate Batch QR for Printing</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" id="generateqr" action="">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="rejectinfo">Enter  Dimensions in Pixels for each QR</label>
+                                <div class="form-group col-md-6">
+                                    <label for="inputName4"> Enter Dimension  </label>
+                                    <input type="text" required name="height" class="form-control"  value="200" id="inputName4" placeholder="Enter Warehouse Code">
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" id="submitreject" class="btn btn-primary">Click to Proceed</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>
@@ -374,6 +414,17 @@
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 
                 $('#formreject').attr('action', id);
+            });
+        });
+
+        $(document).ready(function() {
+            $('#exampleModal3').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data('whatever'); // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+                $('#generateqr').attr('action', id);
             });
         });
 
