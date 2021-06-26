@@ -51,6 +51,35 @@ class AttributeChangeController extends Controller
         }
     }
 
+    public function reject(Request $request, $id)
+    {
+        //$some = $request->id;
+        $Attributes = Attributes::find($id);
+
+        //$products = Product::where('job_id', '=', $id)->get();
+
+        $Attributes->update([
+            'published' => 'R',
+            'rejectinfo' => request('rejectinfo')
+
+
+        ]);
+
+
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully rejected!'
+            ];
+
+            return response($response, 201);
+        } else {
+            //write your logic for web call
+            return redirect()->back();
+        }
+    }
+
     public function destroy(Request $request,$id)
     {
         $Attributes = Attributes::find($id);

@@ -138,13 +138,14 @@ class SubcategorytypeController extends Controller
             $response = [
                 'subcategorytype' => $subcategorytype,
                 'pattributes' => $subcategorytype->attributes->where('published', 'Y'),
-                'nattributes' => $subcategorytype->attributes->where('published', 'N')
+                'nattributes' => $subcategorytype->attributes->where('published', 'N'),
+                'rattributes' => $subcategorytype->attributes->where('published', 'R')
             ];
 
             return response($response, 201);
         } else {
             //write your logic for web call
-            return view('subcategory.type.show', ['subcategorytype' => $subcategorytype, 'pattributes' => $subcategorytype->attributes->where('published', 'Y'), 'nattributes' => $subcategorytype->attributes->where('published', 'N')]);
+            return view('subcategory.type.show', ['subcategorytype' => $subcategorytype, 'pattributes' => $subcategorytype->attributes->where('published', 'Y'), 'nattributes' => $subcategorytype->attributes->where('published', 'N'), 'rattributes' => $subcategorytype->attributes->where('published', 'R')]);
         }
     }
 
@@ -205,11 +206,13 @@ class SubcategorytypeController extends Controller
                 $imageNamepath = 'subcategorytype_images/' . $imageName1;
                 $imageName = 'public/subcategorytype_images/' . $imageName1;
                 Storage::disk('local')->put($imageName, base64_decode($image));
+                $subcategorytype->update([
+                    'image' => $imageNamepath,
+                ]);
             }
+
             $subcategorytype->update([
                 'name' => strtoupper(Str::of(request('name'))->trim()),
-
-                'image' => $imageNamepath,
             ]);
 
             //write your logic for api call

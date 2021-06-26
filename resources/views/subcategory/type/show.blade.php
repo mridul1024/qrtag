@@ -185,13 +185,13 @@
                                     <p>Scan this to return to this product</p>
                                 </div>
                                 <!--
-                                <form method="POST" action="/subcategorytype/generateQr/">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="text" hidden name="qrcode" value="{!! Request::url() !!}" class="form-control"
-                                        id="qrcode" >
-                                        <button type="submit" class="btn btn-warning" >Generate QR </button> <br>
-                                    </form> -->
+                                    <form method="POST" action="/subcategorytype/generateQr/">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="text" hidden name="qrcode" value="{!! Request::url() !!}" class="form-control"
+                                            id="qrcode" >
+                                            <button type="submit" class="btn btn-warning" >Generate QR </button> <br>
+                                        </form> -->
 
                             @else
 
@@ -249,9 +249,9 @@
                                         <td> {{ $attribute->value }}</td>
 
                                         <!--@hasanyrole('super-admin|admin|editor|approver')
-                                                <a href="/attribute/{{ $attribute->id }}/edit" class="edit" title="Edit"
-                                                    data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                                                @endhasanyrole -->
+                                                    <a href="/attribute/{{ $attribute->id }}/edit" class="edit" title="Edit"
+                                                        data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                                                    @endhasanyrole -->
                                         @hasanyrole('super-admin|admin')
                                         @if (strcmp($subcategorytype->created_by, Auth::user()->email) == 0)
                                             <td> <a type="button" class="delete" title="Delete"
@@ -272,8 +272,94 @@
                 </div>
             </div>
         </div>
-        @if($nattributes->isNotEmpty())
-        @hasanyrole('super-admin|admin|editor|approver')
+        @if ($nattributes->isNotEmpty())
+            @hasanyrole('super-admin|admin')
+            <div class="container">
+                <div class="row">
+                    <div class="table-responsive">
+                        <div class="table-wrapper">
+                            <div class="table-title">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h2>UnPublished Attributes <b>List</b></h2>
+                                    </div>
+
+                                </div>
+                            </div>
+                            @if ($message = Session::get('success'))
+                                <div class="alert alert-success alert-block">
+                                    <button type="button" class="close" data-dismiss="alert">×</button>
+                                    <strong>{{ $message }}</strong>
+                                </div>
+                            @endif
+                            <table class="table table-striped table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Attribute Name </th>
+                                        <th>Value</th>
+                                        @hasanyrole('admin')
+                                        <th>Status</th>
+                                        @endhasanyrole
+                                        @hasanyrole('super-admin|admin|approver')
+                                        @if (strcmp($subcategorytype->created_by, Auth::user()->email) == 0)
+                                            <th>Approve / Reject / Delete</th>
+                                        @endif
+                                        @endhasanyrole
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($nattributes as $attribute)
+
+
+                                        <tr>
+                                            <td>{{ $attribute->id }}</td>
+                                            <td> {{ $attribute->name }}</td>
+                                            <td> {{ $attribute->value }}</td>
+                                            @hasanyrole('admin')
+
+                                            @if ($attribute->published == 'N')
+                                                <td><b style="color: blue"> Waiting for Approval </b></dd>
+                                                @elseif ( $attribute->status == 'Y')
+                                                    <dd> <b style="color: green"> Approved</b></dd>
+                                                @elseif ( $attribute->status == 'R')
+                                                    <dd> <b style="color: red"> Rejected</b><span>
+                                                            due to {{ $product->rejectinfo }} </span>
+                                                </td>
+                                            @endif
+                                            @endhasanyrole
+                                            @hasanyrole('super-admin|admin|approver')
+                                            @if (strcmp($subcategorytype->created_by, Auth::user()->email) == 0)
+                                                <td>
+
+                                                    <a href="/attributechange/approve/{{ $attribute->id }}" class="edit"
+                                                        title="Approve" data-toggle="tooltip"><i
+                                                            class="material-icons">&#xe5ca;</i></a>
+
+                                                    <a type="button" class="delete" title="Reject"
+                                                        data-whatever="/attributechange/reject/{{ $attribute->id }}"
+                                                        data-toggle="modal" data-target="#exampleModal2"><i
+                                                            class="material-icons">&#xe9d3;</i></a>
+
+
+                                                </td>
+                                            @endif
+                                            @endhasanyrole
+                                        </tr>
+
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            @endhasanyrole
+        @endif
+        @if ($rattributes->isNotEmpty())
+        @hasanyrole('super-admin|admin')
         <div class="container">
             <div class="row">
                 <div class="table-responsive">
@@ -281,7 +367,7 @@
                         <div class="table-title">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h2>UnPublished Attributes <b>List</b></h2>
+                                    <h2>Rejected Attributes <b>List</b></h2>
                                 </div>
 
                             </div>
@@ -295,47 +381,27 @@
                         <table class="table table-striped table-hover table-bordered">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+
                                     <th>Attribute Name </th>
                                     <th>Value</th>
-                                    @hasanyrole('editor')
+
                                     <th>Status</th>
-                                    @endhasanyrole
-                                    @hasanyrole('super-admin|admin|approver')
-                                    @if (strcmp($subcategorytype->created_by, Auth::user()->email) == 0)
-                                        <th>Approve / Reject</th>
-                                    @endif
-                                    @endhasanyrole
+                                    <th> Delete </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($nattributes as $attribute)
-
-
+                                @foreach ($rattributes as $attribute)
                                     <tr>
-                                        <td>{{ $attribute->id }}</td>
                                         <td> {{ $attribute->name }}</td>
                                         <td> {{ $attribute->value }}</td>
-                                        @hasanyrole('editor')
-                                        <td> Waiting for approval </td>
-                                        @endhasanyrole
-                                        @hasanyrole('super-admin|admin|approver')
-                                        @if (strcmp($subcategorytype->created_by, Auth::user()->email) == 0)
-                                            <td>
-
-                                                <a href="/attributechange/approve/{{ $attribute->id }}" class="edit"
-                                                    title="Approve" data-toggle="tooltip"><i
-                                                        class="material-icons">&#xe5ca;</i></a>
-
-
-                                                <a type="button" class="delete" title="Delete"
-                                                    data-whatever="/attributechange/delete/{{ $attribute->id }}"
-                                                    data-toggle="modal" data-target="#exampleModal"><i
-                                                        class="material-icons">&#xe5cd;</i></a>
-
+                                            <td><b style="color: red"> Rejected</b><span>
+                                                        due to {{ $attribute->rejectinfo }} </span>
                                             </td>
-                                        @endif
-                                        @endhasanyrole
+                                            <td><a type="button" class="delete" title="Delete"
+                                                data-whatever="/attributechange/delete/{{ $attribute->id }}"
+                                                data-toggle="modal" data-target="#exampleModal"><i
+                                                    class="material-icons">&#xE872;</i></a>
+                                            </td>
                                     </tr>
 
                                 @endforeach
@@ -371,6 +437,38 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Reject this item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" id="formreject" action="">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="rejectinfo">Rejection reason</label>
+                                <textarea name="rejectinfo" required class="form-control " id="rejectinfo" rows="2">
+                                        </textarea>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" id="submitreject" class="btn btn-primary">Reject</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>
@@ -383,6 +481,17 @@
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 
                 $('#deletecategory').attr('href', id);
+            });
+        });
+
+        $(document).ready(function() {
+            $('#exampleModal2').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data('whatever'); // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+                $('#formreject').attr('action', id);
             });
         });
     </script>

@@ -20,7 +20,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/test',function () {
-    
+
     return view('jobs.products.test');
 });
 Route::get('/home', 'HomeController@index')->name('home');
@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/attributechange/approve/{id}', 'AttributeChangeController@approve');
         Route::post('/attributechange/store', 'AttributeChangeController@store')->name('attributechange-store');
         Route::get('/attributechange/delete/{id}', 'AttributeChangeController@destroy');
+        Route::put('/attributechange/reject/{id}', 'AttributeChangeController@reject');
 
         Route::get('/unitmaster/create', 'UnitMasterController@create');
         Route::post('/unitmaster/store', 'UnitMasterController@store');

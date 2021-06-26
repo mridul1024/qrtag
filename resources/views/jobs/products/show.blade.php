@@ -33,16 +33,20 @@
            /* Media Query for Mobile Devices */
            @media (max-width: 480px) {
                  #mapid { height: 400px; width : 270px;}
-                 #pic1 { width: 18 em !important;}
+                 #pic1 { width: 25em; padding: 2em;}
         }
 
         /* Smartphones (landscape) ----------- */
         @media only screen and (min-width : 480px) {
             #mapid { height: 400px; width : 360px;}
+            #pic1 { width: 20em; padding: 2em;}
+
         }
         /* Media Query for Laptops and Desktops */
-        @@media only screen  and (min-width : 1224px) {
+        @media only screen  and (min-width : 1224px) {
             #mapid { height: 500px; width : 900px;}/* CSS */
+            #pic1 { width: 30em ; padding: 2em;}
+
 
         }
 
@@ -59,9 +63,9 @@
                         <div class="img-big-wrap">
                             <div>
                              @if ($product->subcategorytype->image == null)
-                                <img style="width: 30em; padding: 2em;" id="pic1" src="/storage/placeholder.png" alt="item image">
+                                <img id="pic1" src="/storage/placeholder.png" alt="item image">
                             @else
-                                <img  style="width: 30em; padding: 2em" src="/storage/{{ $product->subcategorytype->image }}"
+                                <img id="pic1"  src="/storage/{{ $product->subcategorytype->image }}"
                                     alt="item image">
                             @endif
                             </a></div>
@@ -73,7 +77,7 @@
                                     <p>Scan this to return to this product</p>
                                 </div>
 
-                               
+
                             </div>
                         </div>
                        <!--  <div class="img-small-wrap">

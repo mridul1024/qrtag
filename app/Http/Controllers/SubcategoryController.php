@@ -225,12 +225,17 @@ class SubcategoryController extends Controller
                 $imageNamepath = 'subcategory_images/' . $imageName1;
                 $imageName = 'public/subcategory_images/' . $imageName1;
                 Storage::disk('local')->put($imageName, base64_decode($image));
+
+                $subcategory->update([
+                    'image' => $imageNamepath,
+                ]);
             }
+
             $subcategory->update([
                 'name' => strtoupper(Str::of(request('name'))->trim()),
                 'description' => request('description'),
-                'image' => $imageNamepath,
             ]);
+            
             //write your logic for api call
             $response = [
                 'status' => 'success',

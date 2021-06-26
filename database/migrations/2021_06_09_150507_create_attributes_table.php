@@ -17,12 +17,11 @@ class CreateAttributesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('value')->nullable();
-            
             $table->unsignedBigInteger('subcategorytype_id');
             $table->string('published');
+            $table->text('rejectinfo')->nullable();
             $table->string('created_by');
             $table->timestamps();
-
             $table->foreign('subcategorytype_id')
                 ->references('id')
                 ->on('subcategorytypes')
