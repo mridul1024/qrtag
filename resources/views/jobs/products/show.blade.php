@@ -8,7 +8,6 @@
             cursor: zoom-in;
         }
 
-
         .gallery-wrap .img-small-wrap .item-gallery {
             width: 60px;
             height: 60px;
@@ -153,11 +152,32 @@
                             <div class="col-sm-12">
                                 <dl class="param param-inline">
                                     <dt>Attributes: </dt>
-                                    @foreach ($product->productsattributes as $attr)
+
                                     <dd>
-                                        {{ $attr->name }}: {{ $attr->value }} {{ $attr->unit }}
+
+                                        <table class="table">
+                                            <thead>
+                                              <tr>
+
+                                                <th scope="col"> </th>
+                                                <th scope="col">Value</th>
+                                                <th scope="col">Unit</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($product->productsattributes as $attr)
+                                                <tr>
+
+                                                <td> {{ $attr->name }}</td>
+                                                <td> {{ $attr->value }}</td>
+                                                <td> {{ $attr->unit }}</td>
+                                              </tr>
+                                              @endforeach
+                                            </tbody>
+                                          </table>
+
                                     </dd>
-                                @endforeach
+
                                 </dl> <!-- item-property .// -->
                             </div> <!-- col.// -->
                           <!-- col.// -->

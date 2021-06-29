@@ -47,16 +47,20 @@
 
                         </div>
                     </div>
-
+                    <div class="form-group col-md-12">
+                        <label for="inputRole">Type</label>
+                        <select id="inputRole" name="type" id="role" class="form-control ">
+                            <option selected value="">Choose type of unit</option>
+                                <option value="numeric">Numeric</option>
+                                <option value="alpha_num">Alpha Numeric</option>
+                        </select>
+                    </div>
                     <div class="form-group  row">
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-primary">Create</button>
                         </div>
                     </div>
-
                 </form>
-
-
     </div>
 
 

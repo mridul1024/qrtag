@@ -70,7 +70,7 @@
                             <a class="nav-link" href="/subcategories">Subcategories</a>
                           </li>
 
-                          @hasanyrole('super-admin|admin|approver')
+                          @hasanyrole('super-admin|admin|approver|editor')
                           <li class="nav-item">
                             <a class="nav-link" href="/jobs">Batch</a>
                           </li>

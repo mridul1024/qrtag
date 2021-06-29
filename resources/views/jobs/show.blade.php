@@ -158,15 +158,15 @@
                             <p>
                             <h5><b>Batch Id: </b> {{ $job->id }}</p>
                                 <p>
-                                    <h5><b>Batch Number: </b> {{ $job->job_number }}</p>
-                                <p>
-                                <h5><b>Created By: </b> {{ $job->created_by }} </h5>
-                                </p>
-                                <p>
-                                <h5><b>Created AT:</b> {{ $job->created_at }} </h5>
-                                </p>
+                                <h5><b>Batch Number: </b> {{ $job->job_number }}</p>
+                                    <p>
+                                    <h5><b>Created By: </b> {{ $job->created_by }} </h5>
+                                    </p>
+                                    <p>
+                                    <h5><b>Created AT:</b> {{ $job->created_at }} </h5>
+                                    </p>
 
-                                </p>
+                                    </p>
                         </div>
 
                         <div class="col-md-4">
@@ -194,32 +194,33 @@
                                     <h2>Item <b>List</b></h2>
                                 </div>
                                 <div class="col-sm-4">
-                                    @if($products)
-                                    <a type="button" id="" class="btn btn-info add-new" title=""
-                                    data-whatever="/product/generateqr/{{ $job->id}}"
-                                    data-toggle="modal" data-target="#exampleModal3"><i class="fa fa-plus"></i>Print QR </a>
-
+                                    @if ($products)
+                                        @hasanyrole('super-admin|admin|editor|approver')
+                                        <a type="button" id="" class="btn btn-info add-new" title=""
+                                            data-whatever="/product/generateqr/{{ $job->id }}" data-toggle="modal"
+                                            data-target="#exampleModal3"><i class="fa fa-plus"></i>Print QR </a>
+                                        @endhasanyrole
                                     @endif
 
-                                        @hasanyrole('super-admin|admin|editor|approver')
-                                        <a type="button" href="/product/create/{{ $job->id }}"
-                                            class="btn btn-info add-new"><i class="fa fa-plus"></i> Add Item</a>
+                                    @hasanyrole('super-admin|admin|editor|approver')
+                                    <a type="button" href="/product/create/{{ $job->id }}"
+                                        class="btn btn-info add-new"><i class="fa fa-plus"></i> Add Item</a>
 
-                                        @endhasanyrole
+                                    @endhasanyrole
 
 
                                 </div>
-                               <!-- <div class="col-sm-2">
-                                    @hasanyrole('super-admin|admin|approver')
-                                    @if ($job->published == 'N')
-                                        <a type="button" href="/job/approve/{{ $job->id }}"
-                                            class="btn btn-info add-new"><i class="fa fa-plus"></i> Approve Job</a>
+                                <!-- <div class="col-sm-2">
+                                        @hasanyrole('super-admin|admin|approver')
+                                        @if ($job->published == 'N')
+                                            <a type="button" href="/job/approve/{{ $job->id }}"
+                                                class="btn btn-info add-new"><i class="fa fa-plus"></i> Approve Job</a>
                                     @else
-                                    <a type="button" href="/job/disapprove/{{ $job->id }}"
-                                        class="btn btn-info add-new"><i class="fa fa-plus"></i> Disapprove Job</a>
-                                    @endif
-                                    @endhasanyrole
-                                </div> -->
+                                        <a type="button" href="/job/disapprove/{{ $job->id }}"
+                                            class="btn btn-info add-new"><i class="fa fa-plus"></i> Disapprove Job</a>
+                                        @endif
+                                        @endhasanyrole
+                                    </div> -->
 
                             </div>
                         </div>
@@ -271,24 +272,23 @@
                                             <a href="/product/show/{{ $product->id }}" class="view" title="View Product"
                                                 data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
 
-                                                @if ($product->status == 'N')
-                                                    @hasanyrole('super-admin|admin|approver')
-                                                    <a href="/product/approve/{{ $product->id }}" class="edit"
-                                                        title="Approve" data-toggle="tooltip"><i
-                                                            class="material-icons">&#xE876;</i></a>
-                                                    <a type="button" class="delete" title="Reject"
-                                                        data-whatever="/product/reject/{{ $product->id }}"
-                                                        data-toggle="modal" data-target="#exampleModal2"><i
-                                                            class="material-icons">&#xe9d3;</i></a>
-                                                    @endhasanyrole
+                                            @if ($product->status == 'N')
+                                                @hasanyrole('super-admin|admin|approver')
+                                                <a href="/product/approve/{{ $product->id }}" class="edit"
+                                                    title="Approve" data-toggle="tooltip"><i
+                                                        class="material-icons">&#xE876;</i></a>
+                                                <a type="button" class="delete" title="Reject"
+                                                    data-whatever="/product/reject/{{ $product->id }}"
+                                                    data-toggle="modal" data-target="#exampleModal2"><i
+                                                        class="material-icons">&#xe9d3;</i></a>
+                                                @endhasanyrole
 
-                                                @endif
-                                                @hasanyrole('super-admin|admin')
-                                                    <a type="button" class="delete" title="Delete"
-                                                        data-whatever="/product/delete/{{ $product->id }}"
-                                                        data-toggle="modal" data-target="#exampleModal"><i
-                                                            class="material-icons">&#xE872;</i></a>
-                                                    @endhasanyrole
+                                            @endif
+                                            @hasanyrole('super-admin|admin')
+                                            <a type="button" class="delete" title="Delete"
+                                                data-whatever="/product/delete/{{ $product->id }}" data-toggle="modal"
+                                                data-target="#exampleModal"><i class="material-icons">&#xE872;</i></a>
+                                            @endhasanyrole
 
 
                                         </td>
@@ -344,7 +344,7 @@
                             <div class="form-group col-md-12">
                                 <label for="rejectinfo">Rejection reason</label>
                                 <textarea name="rejectinfo" required class="form-control " id="rejectinfo" rows="2">
-                                    </textarea>
+                                        </textarea>
 
                             </div>
                         </div>
@@ -358,8 +358,8 @@
         </div>
     </div>
     </div>
-     <!-- Modal -->
-     <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -373,10 +373,11 @@
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="form-group col-md-12">
-                                <label for="rejectinfo">Enter  Dimensions in Pixels for each QR</label>
+                                <label for="rejectinfo">Enter Dimensions in Pixels for each QR</label>
                                 <div class="form-group col-md-6">
-                                    <label for="inputName4"> Enter Dimension  </label>
-                                    <input type="text" required name="height" class="form-control"  value="200" id="inputName4" placeholder="Enter Warehouse Code">
+                                    <label for="inputName4"> Enter Dimension </label>
+                                    <input type="text" required name="height" class="form-control" value="200"
+                                        id="inputName4" placeholder="Enter Warehouse Code">
 
                                 </div>
 
@@ -427,12 +428,10 @@
                 $('#generateqr').attr('action', id);
             });
         });
-
     </script>
     <script>
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
         });
-
     </script>
 @endsection

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\User;
-
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller {
     public  function create(Request $request, $id)
@@ -69,25 +69,46 @@ class ProductController extends Controller {
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
+
             'job_id' => 'required',
             'subcategorytype_id' => 'required',
-            'bu_code' => 'required',
-            'wh_code' => 'required'
+            'bu_code' => 'required|string|min:3',
+            'wh_code' => 'required|string|min:3'
         ]);
 
-        //dd(request('dynamic'));
+        // validation for dynamic form fields
+        foreach ($request->dynamic as $key => $value) {
+            $unit = null;
+            $unit =DB::table('unit_masters')->where('name',$value['unit'])->first();
+
+            if($unit->type == 'alpha_num'){    //checking attribute value with type of unit
+
+                 $request->validate([
+                    'dynamic.'.$key.'.value' => 'required|alpha_num',
+                ],
+                [ 'dynamic.'.$key.'.value.alpha_num' => 'The attribute field value '.$value['value'].' must be alpha numeric.']
+                );
+            }elseif($unit->type == 'numeric'){
 
 
+                 $request->validate([
+                    'dynamic.'.$key.'.value' => 'required|numeric',
+                ],
+                [ 'dynamic.'.$key.'.value.numeric' => 'The attribute field value  '.$value['value'].' must be numeric.']
+            );
+            }
 
-            //
+        }
+
+        //
             if ($request->is('api/*')) {
                 $loggedinUser = User::where('email', $request->email)->first();
 
                 $product = Product::create([
                     'job_id' => request('job_id'),
                     'subcategorytype_id' => request('subcategorytype_id'),
-                    'material_id' => 'GRP-'.Str::substr(request('bu_code'),1,3).'-'.Str::substr(request('wh_code'),1,3).'-'.date("Y-m-d H:i:s", time()),
+                    'material_id' => 'GRP-'.Str::substr(request('bu_code'),0,3).'-'.Str::substr(request('wh_code'),0,3).'-'.date("Y-m-d H:i:s", time()),
                     'latitude' => request('latitude'),
                     'longitude' => request('longitude'),
                     'status' => 'N',
@@ -130,7 +151,7 @@ class ProductController extends Controller {
                 $product = Product::create([
                     'job_id' => request('job_id'),
                     'subcategorytype_id' => request('subcategorytype_id'),
-                    'material_id' => 'GRP-'.strtoupper(Str::substr(request('bu_code'),1,3)).'-'.strtoupper(Str::substr(request('wh_code'),1,3)).'-'.date("YmdHis", time()),
+                    'material_id' => 'GRP-'.strtoupper(Str::substr(request('bu_code'),0,3)).'-'.strtoupper(Str::substr(request('wh_code'),0,3)).'-'.date("YmdHis", time()),
                     'status' => 'N',
                     'created_by' => Auth::user()->email,
                 ]);
@@ -182,12 +203,13 @@ class ProductController extends Controller {
              //write your logic for api call
              $loggedinUser = User::where('email', $request->email)->first();
              if($loggedinUser){
-                 if($loggedinUser->hasAnyRole(['super-admin','admin','editor']) ){
+                 if($loggedinUser->hasAnyRole(['super-admin','admin','editor','approver']) ){
                     $product = Product::find($id);
                     $response = [
                        'authorised' => 'Y',
                        'approved' => 'Y',
                        'product' => $product,
+                       'description' => $product->subcategorytype->subcategory->description,
                        'category' => $product->subcategorytype->subcategory->category->name,
                        'subcategory' => $product->subcategorytype->subcategory->name,
                        'subcategorytype' => $product->subcategorytype->name,
@@ -204,6 +226,7 @@ class ProductController extends Controller {
                        'authorised' => 'N',
                        'approved' => 'Y',
                        'product' => $product,
+                       'description' => $product->subcategorytype->subcategory->description,
                        'category' => $product->subcategorytype->subcategory->category->name,
                        'subcategory' => $product->subcategorytype->subcategory->name,
                        'subcategorytype' => $product->subcategorytype->name,

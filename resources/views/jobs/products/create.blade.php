@@ -207,10 +207,10 @@
                                 value = '';
                             }
                             $('#dynamic2').append(
-                                `<input type="number"  required name="dynamic[` +
+                                `<input type="text" required  name="dynamic[` +
                                 i +
                                 `][value]" value="` + value +
-                                `" class="form-control"  placeholder="Enter Value( Must be a number)">`
+                                `" class="form-control"  placeholder="Enter Value">`
                             );
                             $('#dynamic4').append(
                                 `<input type="text" hidden required name="dynamic[` +
@@ -240,7 +240,7 @@
                                 while (j < i) {
 
                                     $('#unit').append(
-                                        `<select  class="form-control formselect "  name="dynamic[` +
+                                        `<select  class="form-control formselect " required  name="dynamic[` +
                                         j + `][unit]" id="unit` + j + `" placeholder="Select Unit"  required="required">
                                                                     </select> `
                                     );

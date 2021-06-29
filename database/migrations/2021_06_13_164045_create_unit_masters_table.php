@@ -16,6 +16,7 @@ class CreateUnitMastersTable extends Migration
         Schema::create('unit_masters', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('type');
             $table->string('created_by');
             $table->timestamps();
         });

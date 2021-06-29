@@ -16,7 +16,7 @@
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <h2>Create <b>SubCategory</b></h2>
+                            <h2>Update this <b>SubCategory</b></h2>
                         </div>
 
                     </div>
@@ -59,7 +59,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="inputName4">SubCategory Name</label>
-                            <input type="text" name="name" value="{{ $category->name  }}" class="form-control" id="inputName4" placeholder="Name">
+                            <input type="text" name="name" value="{{ $subcategory->name  }}" class="form-control" id="inputName4" placeholder="Name">
 
                         </div>
                     </div>
@@ -81,7 +81,7 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                     </div>
 

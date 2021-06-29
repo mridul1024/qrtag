@@ -118,6 +118,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/attributechange/store', 'AttributeChangeController@store');
     Route::get('/attributechange/delete/{id}', 'AttributeChangeController@destroy');
     Route::put('/attributechange/reject/{id}', 'AttributeChangeController@reject');
+    
 });
 
 

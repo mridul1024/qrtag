@@ -44,8 +44,9 @@ class UnitMasterController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255|unique:unit_masters',
+            'type' => 'required'
 
         ]);
 
@@ -55,6 +56,7 @@ class UnitMasterController extends Controller
 
             UnitMaster::create([
                 'name' => strtoupper(Str::of(request('name'))->trim()),
+                'type' => request('type'),
                 'created_by' => $loggedinUser->email,
             ]);
 
@@ -68,6 +70,7 @@ class UnitMasterController extends Controller
         } else {
             UnitMaster::create([
                 'name' => strtoupper(Str::of(request('name'))->trim()),
+                'type' => request('type'),
                 'created_by' => Auth::user()->email,
             ]);
             //write your logic for web call
