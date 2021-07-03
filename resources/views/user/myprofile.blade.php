@@ -187,7 +187,7 @@
                             <label for="inputName5">Phone</label>
                             <input type="number" name="phone" value="{{ $user->phone }}" class="form-control" id="inputName5" placeholder="Must be Whatsapp Number">
                         </div>
-                        <input type="number" name="role" value="{{ $role }}" class="form-control" id="inputName6" >
+                        
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Current Email</label>
                             <input type="email"  disabled value="{{$user->email}}" class="form-control "
