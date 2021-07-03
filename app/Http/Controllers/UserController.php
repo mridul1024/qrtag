@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
 {
@@ -33,24 +34,18 @@ class UserController extends Controller
             $user = User::where('email', $request->email)->first();
 
             if ($user->hasAnyRole(['admin'])) {
-
-                $users1 = User::with('roles');
-
-                $users = $users1->whereNotIn('name', ['admin', 'super-admin'])->paginate(15);
+                $users = User::with('roles')->role(['editor', 'approver', 'viewer'])->paginate(15);
             } else {
-                $users = User::with('roles')->paginate(15);
+                $users = User::with('roles')->role(['editor', 'approver', 'viewer', 'admin'])->paginate(15);
             }
 
             return response()->json($users);
         } else {
 
             if (Auth::user()->hasAnyRole(['admin'])) {
-
-                $users1 = User::with('roles');
-
-                $users = $users1->whereNotIn('name', ['admin', 'super-admin'])->paginate(15);
+                $users = User::with('roles')->role(['editor', 'approver', 'viewer'])->paginate(15);
             } else {
-                $users = User::with('roles')->paginate(15);
+                $users = User::with('roles')->role(['editor', 'approver', 'viewer', 'admin'])->paginate(15);
             }
 
 
@@ -110,17 +105,18 @@ class UserController extends Controller
             'role' =>  'required',
         ]);
 
-        $user = factory(\App\User::class)->create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' =>  $request->phone,
-            'password' =>  Hash::make($request->password),
 
-        ]);
-
-        $user->assignRole($request->role);
 
         if ($request->is('api/*')) {
+            $user = factory(\App\User::class)->create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' =>  $request->phone,
+                'password' =>  Hash::make($request->password),
+
+            ]);
+
+            $user->assignRole($request->role);
             //write your logic for api call
             $response = [
                 'status' => 'success',
@@ -129,6 +125,17 @@ class UserController extends Controller
 
             return response($response, 201);
         } else {
+
+            $user = factory(\App\User::class)->create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' =>  $request->phone,
+                'password' =>  Hash::make($request->password),
+
+            ]);
+
+            $user->assignRole($request->role);
+
             //write your logic for web call
             return back()->with('success', 'Successfully registered a new user!');
         }
@@ -140,7 +147,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function show(Request $request, $id)
     {
         $user = User::find($id);
         $permissions = $user->getAllPermissions();
@@ -169,17 +176,25 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request,$id)
+
+    public function edit(Request $request, $id)
     {
         if ($request->is('api/*')) {
             $loggedinUser = User::where('email', $request->email)->first();
             $user = User::find($id);
 
-            if ($loggedinUser->hasAnyRole(['super-admin'])) {
+            if ($user->hasAnyRole(['admin']) && ($loggedinUser->email != $user->email)) {
+                return response(['error' => 'Unauthenticated.'], 401);
+            }
 
+            $role = $loggedinUser->getRoleNames();
+            if ($user->hasAnyRole(['super-admin']) && ($role[0] != 'super-admin')) {
+                return response(['error' => 'Unauthenticated.'], 401);
+            }
+
+            if ($loggedinUser->hasAnyRole(['super-admin'])) {
                 $roles = Role::all()->whereNotIn('name', ['super-admin']);
             } else {
-
                 $roles = Role::all()->whereNotIn('name', ['super-admin', 'admin']);
             }
             //$user = User::where('email', $request->email)->first();
@@ -197,6 +212,14 @@ class UserController extends Controller
         } else {
 
             $user = User::find($id);
+            if ($user->hasAnyRole(['admin']) && (Auth::user()->email != $user->email)) {
+                return abort(403, 'Unauthorized action.');
+            }
+            $role = Auth::user()->getRoleNames();
+            //dd($role[0]);
+            if ($user->hasAnyRole(['super-admin']) && ($role[0] != 'super-admin')) {
+                return abort(403, 'Unauthorized action.');
+            }
 
             if (Auth::user()->hasAnyRole(['super-admin'])) {
 
@@ -219,33 +242,44 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id )
+    public function update(Request $request, $id)
     {
         //$some = $request->id;
         $user = User::find($id);
 
-        $validatedData = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255',
-           // 'email' => 'required|string|unique:users,email|email|max:255',
+            'email' => 'present|email|max:255|unique:users,email,' . $user->id . '|nullable',
+            // 'email' => 'required|string|unique:users,email|email|max:255',
             'phone' => 'required|digits_between:10,12',
-            'role' =>  'required',
+            //'password' => 'nullable|confirmed|min:6|max:255',
         ]);
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' =>  $request->phone,
-            'password' =>  Hash::make($request->password),
-
-        ]);
-
-        //$user->assignRole($request->role);
-        $affected = DB::table('model_has_roles')
-              ->where('model_id', $id)
-              ->update(['role_id' => $request->role]);
 
         if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
+            if ($user->hasAnyRole(['admin']) && ($loggedinUser->email != $user->email)) {
+                return response(['error' => 'Unauthenticated.'], 401);
+            }
+            $role = $loggedinUser->getRoleNames();
+            if ($user->hasAnyRole(['super-admin']) && ($role[0] != 'super-admin')) {
+                return response(['error' => 'Unauthenticated.'], 401);
+            }
+            if(request('password') != null){
+                $user->update([
+                    'password' => Hash::make($request->password),
+                ]);
+            }
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' =>  $request->phone,
+            ]);
+
+            //$user->assignRole($request->role);
+            $affected = DB::table('model_has_roles')
+                ->where('model_id', $id)
+                ->update(['role_id' => $request->role]);
             //write your logic for api call
             $response = [
                 'status' => 'success',
@@ -254,6 +288,33 @@ class UserController extends Controller
 
             return response($response, 201);
         } else {
+            if ($user->hasAnyRole(['admin']) && (Auth::user()->email != $user->email)) {
+                return abort(403, 'Unauthorized action.');
+            }
+            $role = Auth::user()->getRoleNames();
+            //dd($role[0]);
+            if ($user->hasAnyRole(['super-admin']) && ($role[0] != 'super-admin')) {
+                return abort(403, 'Unauthorized action.');
+            }
+            if(request('password') != null){
+                $user->update([
+                    'password' => Hash::make($request->password),
+
+                ]);
+            }
+
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' =>  $request->phone,
+
+            ]);
+
+            //$user->assignRole($request->role);
+            $affected = DB::table('model_has_roles')
+                ->where('model_id', $id)
+                ->update(['role_id' => $request->role]);
+
             //write your logic for web call
             return back()->with('success', 'Successfully updated user!');
         }
@@ -265,13 +326,20 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
         $user = User::find($id);
 
-        $user->delete();
+
         if ($request->is('api/*')) {
             //write your logic for api call
+            $loggedinUser = User::where('email', $request->email)->first();
+
+            if ($user->hasAnyRole(['admin']) && ($loggedinUser->email != $user->email)) {
+                return response(['error' => 'Unauthenticated.'], 401);
+            }
+
+            $user->delete();
             $response = [
                 'status' => 'success',
                 'msg' => 'Successfully deleted user!'
@@ -279,9 +347,118 @@ class UserController extends Controller
 
             return response($response, 201);
         } else {
+
+            if ($user->hasAnyRole(['admin']) && (Auth::user()->email != $user->email)) {
+                return abort(403, 'Unauthorized action.');
+            }
+
+            $user->delete();
             //write your logic for web call
             return back()->with('success', 'Successfully deleted user!');
         }
+    }
 
+    public function editprofile(Request $request, $id)
+    {
+        if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
+            $user = User::find($id);
+
+            if($loggedinUser->email != $user->email) {
+                return response(['error' => 'Unauthenticated.'], 401);
+            }
+            $role = $user->getRoleNames();
+            $response = [
+                'user' => $user,
+                'role' => $role[0]
+            ];
+
+            return response($response, 201);
+
+        } else {
+
+            $user = User::find($id);
+            if (Auth::user()->email != $user->email) {
+                return abort(403, 'Unauthorized action.');
+            }
+            $role = $user->getRoleNames();
+            //ddd($role[0]);
+            return view('user.myprofile', ['user' => $user, 'role' => $role[0] ]);
+        }
+    }
+
+    public function updateprofile(Request $request, $id)
+    {
+        //$some = $request->id;
+        $user = User::find($id);
+        // if (!$request->has('password') {
+        //     $request->except('password');
+        // }
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'present|email|max:255|unique:users,email,' . $user->id . '|nullable',
+            // 'email' => 'required|string|unique:users,email|email|max:255',
+            'phone' => 'required|digits_between:10,12',
+
+
+        ]);
+
+
+
+
+        if ($request->is('api/*')) {
+
+            $loggedinUser = User::where('email', $request->email)->first();
+
+            if ($loggedinUser->email != $user->email) {
+                return response(['error' => 'Unauthenticated.'], 401);
+            }
+            if(request('password') != null){
+                $user->update([
+                    'password' => Hash::make($request->password),
+                ]);
+            }
+
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' =>  $request->phone,
+
+            ]);
+
+
+
+            //write your logic for api call
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully updated user!'
+            ];
+
+            return response($response, 201);
+        } else {
+            if (Auth::user()->email != $user->email) {
+                return abort(403, 'Unauthorized action.');
+            }
+           // dd(request('password'));
+            if(request('password') != null){
+                $user->update([
+                    'password' => Hash::make($request->password),
+
+                ]);
+            }
+
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' =>  $request->phone,
+
+
+            ]);
+
+
+            //write your logic for web call
+            return back()->with('success', 'Successfully updated user!');
+        }
     }
 }

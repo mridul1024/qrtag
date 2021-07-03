@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Storage;
 use App\User;
 use Illuminate\Support\Facades\Validator;
 
-class ProductController extends Controller {
+class ProductController extends Controller
+{
     public  function create(Request $request, $id)
     {
         $categories = Category::all();
@@ -31,31 +32,28 @@ class ProductController extends Controller {
             ];
 
             return response($response, 201);
-
         } else {
 
 
 
-            return view('jobs.products.create',['id' => $id, 'categories' => $categories]);
-
+            return view('jobs.products.create', ['id' => $id, 'categories' => $categories]);
         }
-
     }
 
-    public function getSubcategories(Request $request, $id){
+    public function getSubcategories(Request $request, $id)
+    {
 
-        echo json_encode(Subcategory::where('category_id','=',$id)->get());
-;
+        echo json_encode(Subcategory::where('category_id', '=', $id)->get());;
     }
 
     public function getTypes(Request $request, $id)
     {
-        echo json_encode(Subcategorytype::where('subcategory_id','=',$id)->get());
+        echo json_encode(Subcategorytype::where('subcategory_id', '=', $id)->get());
     }
 
     public function getAttributes(Request $request, $id)
     {
-        echo json_encode(Attributes::where('subcategorytype_id','=',$id)->get());
+        echo json_encode(Attributes::where('subcategorytype_id', '=', $id)->where('published', '=', 'Y')->get());
     }
 
     public function getUnits(Request $request)
@@ -63,8 +61,9 @@ class ProductController extends Controller {
         echo json_encode(UnitMaster::all());
     }
 
-    public function GetSubCatAgainstMainCatEdit(Request $request,$id){
-        echo json_encode(Subcategory::where('category_id','=',$id)->get());
+    public function GetSubCatAgainstMainCatEdit(Request $request, $id)
+    {
+        echo json_encode(Subcategory::where('category_id', '=', $id)->get());
     }
 
     public function store(Request $request)
@@ -80,238 +79,336 @@ class ProductController extends Controller {
         // validation for dynamic form fields
         foreach ($request->dynamic as $key => $value) {
             $unit = null;
-            $unit =DB::table('unit_masters')->where('name',$value['unit'])->first();
+            $unit = DB::table('unit_masters')->where('name', $value['unit'])->first();
 
-            if($unit->type == 'alpha_num'){    //checking attribute value with type of unit
+            if ($unit->type == 'alpha_num') {    //checking attribute value with type of unit
 
-                 $request->validate([
-                    'dynamic.'.$key.'.value' => 'required|alpha_num',
-                ],
-                [ 'dynamic.'.$key.'.value.alpha_num' => 'The attribute field value '.$value['value'].' must be alpha numeric.']
+                $request->validate(
+                    [
+                        'dynamic.' . $key . '.value' => 'required|alpha_num',
+                    ],
+                    ['dynamic.' . $key . '.value.alpha_num' => 'The attribute field value ' . $value['value'] . ' must be alpha numeric.']
                 );
-            }elseif($unit->type == 'numeric'){
+            } elseif ($unit->type == 'numeric') {
 
 
-                 $request->validate([
-                    'dynamic.'.$key.'.value' => 'required|numeric',
-                ],
-                [ 'dynamic.'.$key.'.value.numeric' => 'The attribute field value  '.$value['value'].' must be numeric.']
-            );
+                $request->validate(
+                    [
+                        'dynamic.' . $key . '.value' => 'required|numeric',
+                    ],
+                    ['dynamic.' . $key . '.value.numeric' => 'The attribute field value  ' . $value['value'] . ' must be numeric.']
+                );
             }
-
         }
 
         //
-            if ($request->is('api/*')) {
-                $loggedinUser = User::where('email', $request->email)->first();
+        if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
 
-                $product = Product::create([
-                    'job_id' => request('job_id'),
-                    'subcategorytype_id' => request('subcategorytype_id'),
-                    'material_id' => 'GRP-'.Str::substr(request('bu_code'),0,3).'-'.Str::substr(request('wh_code'),0,3).'-'.date("Y-m-d H:i:s", time()),
-                    'latitude' => request('latitude'),
-                    'longitude' => request('longitude'),
-                    'status' => 'N',
-                    'created_by' => $loggedinUser->email,
-                ]);
+            $product = Product::create([
+                'job_id' => request('job_id'),
+                'subcategorytype_id' => request('subcategorytype_id'),
+                'material_id' => 'GRP-' . Str::substr(request('bu_code'), 0, 3) . '-' . Str::substr(request('wh_code'), 0, 3) . '-' . date("Y-m-d H:i:s", time()),
+                'latitude' => request('latitude'),
+                'longitude' => request('longitude'),
+                'status' => 'N',
+                'created_by' => $loggedinUser->email,
+            ]);
 
-                if(request('dynamic')){
+            if (request('dynamic')) {
 
-                    foreach ($request->dynamic as $key => $value) {
-                        // $validatedData = $request->validate([
-                        //     'product_id' => 'required',
-                        //     'name' => 'required',
-                        //     'value' => 'required',
-                        //     'unit' => 'required',
-                        // ]);
+                foreach ($request->dynamic as $key => $value) {
+                    // $validatedData = $request->validate([
+                    //     'product_id' => 'required',
+                    //     'name' => 'required',
+                    //     'value' => 'required',
+                    //     'unit' => 'required',
+                    // ]);
 
-                        ProductAttribute::create([
+                    ProductAttribute::create([
 
-                            'product_id' => $product->id,
-                            'name' => $value['name'],
-                            'value' => $value['value'],
-                            'unit' => $value['unit'],
+                        'product_id' => $product->id,
+                        'name' => $value['name'],
+                        'value' => $value['value'],
+                        'unit' => $value['unit'],
 
-                        ]);
-
-                    }
-                   }
-
-                   $response = [
-                    'status' => 'success',
-                    'msg' => 'Successfully inserted a new item!'
-                ];
-
-                return response($response, 201);
-
-            } else {
-
-
-
-                $product = Product::create([
-                    'job_id' => request('job_id'),
-                    'subcategorytype_id' => request('subcategorytype_id'),
-                    'material_id' => 'GRP-'.strtoupper(Str::substr(request('bu_code'),0,3)).'-'.strtoupper(Str::substr(request('wh_code'),0,3)).'-'.date("YmdHis", time()),
-                    'status' => 'N',
-                    'created_by' => Auth::user()->email,
-                ]);
-
-                if(request('dynamic')){
-
-                    foreach ($request->dynamic as $key => $value) {
-                        // $validatedData = $request->validate([
-                        //     'dynamic['.$key.'][name]' => 'required',
-                        //     'dynamic['.$key.'][value]' => 'required',
-                        //     'dynamic['.$key.'][unit]' => 'required',
-                        // ]);
-                        ProductAttribute::create([
-
-                            'product_id' => $product->id,
-                            'name' => $value['name'],
-                            'value' => $value['value'],
-                            'unit' => $value['unit'],
-
-                        ]);
-
-                    }
-                   }
-
-
-                    return back()->with('success', 'Successfully inserted a new item!');
-
+                    ]);
+                }
             }
-            //
-     }
+
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully inserted a new item!'
+            ];
+
+            return response($response, 201);
+        } else {
 
 
-     public function generateQr(Request $request, $id){
+
+            $product = Product::create([
+                'job_id' => request('job_id'),
+                'subcategorytype_id' => request('subcategorytype_id'),
+                'material_id' => 'GRP-' . strtoupper(Str::substr(request('bu_code'), 0, 3)) . '-' . strtoupper(Str::substr(request('wh_code'), 0, 3)) . '-' . date("YmdHis", time()),
+                'status' => 'N',
+                'created_by' => Auth::user()->email,
+            ]);
+
+            if (request('dynamic')) {
+
+                foreach ($request->dynamic as $key => $value) {
+                    // $validatedData = $request->validate([
+                    //     'dynamic['.$key.'][name]' => 'required',
+                    //     'dynamic['.$key.'][value]' => 'required',
+                    //     'dynamic['.$key.'][unit]' => 'required',
+                    // ]);
+                    ProductAttribute::create([
+
+                        'product_id' => $product->id,
+                        'name' => $value['name'],
+                        'value' => $value['value'],
+                        'unit' => $value['unit'],
+
+                    ]);
+                }
+            }
 
 
-         return view('jobs.products.generateqr',['items' =>Product::where('job_id',$id)->get(),'height' => request('height'),
-         'width' => request('width') ]);
+            return back()->with('success', 'Successfully inserted a new item!');
+        }
+        //
+    }
 
-     }
 
-     public function show(Request $request, $id)
-     {
-         // $user = User::find($id);
-         // $permissions = $user->getAllPermissions();
-         // $role = $user->getRoleNames();
-         $product = Product::find($id);
+    public function generateQr(Request $request, $id)
+    {
 
-         if ($request->is('api/*')) {
-             //write your logic for api call
-             $loggedinUser = User::where('email', $request->email)->first();
-             if($loggedinUser){
-                 if($loggedinUser->hasAnyRole(['super-admin','admin','editor','approver']) ){
+
+        return view('jobs.products.generateqr', [
+            'items' => Product::where('job_id', $id)->get(), 'height' => request('height'),
+            'width' => request('width')
+        ]);
+    }
+
+    public function show(Request $request, $id)
+    {
+        // $user = User::find($id);
+        // $permissions = $user->getAllPermissions();
+        // $role = $user->getRoleNames();
+        $product = Product::find($id);
+
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $loggedinUser = User::where('email', $request->email)->first();
+            if ($loggedinUser) {
+                if ($loggedinUser->hasAnyRole(['super-admin', 'admin', 'editor', 'approver'])) {
                     $product = Product::find($id);
                     $response = [
-                       'authorised' => 'Y',
-                       'approved' => 'Y',
-                       'product' => $product,
-                       'description' => $product->subcategorytype->subcategory->description,
-                       'category' => $product->subcategorytype->subcategory->category->name,
-                       'subcategory' => $product->subcategorytype->subcategory->name,
-                       'subcategorytype' => $product->subcategorytype->name,
-                       'subcategorytype_image' =>$product->subcategorytype->image ,
-                       'attributes' => $product->productsattributes
+                        'authorised' => 'Y',
+                        'approved' => 'Y',
+                        'product' => $product,
+                        'description' => $product->subcategorytype->subcategory->description,
+                        'category' => $product->subcategorytype->subcategory->category->name,
+                        'subcategory' => $product->subcategorytype->subcategory->name,
+                        'subcategorytype' => $product->subcategorytype->name,
+                        'subcategorytype_image' => $product->subcategorytype->image,
+                        'attributes' => $product->productsattributes
                     ];
-
-                 }
-             }else{
+                }
+            } else {
                 $product = Product::find($id);
-                if($product->status == 'Y'){
+                if ($product->status == 'Y') {
 
                     $response = [
-                       'authorised' => 'N',
-                       'approved' => 'Y',
-                       'product' => $product,
-                       'description' => $product->subcategorytype->subcategory->description,
-                       'category' => $product->subcategorytype->subcategory->category->name,
-                       'subcategory' => $product->subcategorytype->subcategory->name,
-                       'subcategorytype' => $product->subcategorytype->name,
-                       'subcategorytype_image' =>$product->subcategorytype->image ,
-                       'attributes' => $product->productsattributes
+                        'authorised' => 'N',
+                        'approved' => 'Y',
+                        'product' => $product,
+                        'description' => $product->subcategorytype->subcategory->description,
+                        'category' => $product->subcategorytype->subcategory->category->name,
+                        'subcategory' => $product->subcategorytype->subcategory->name,
+                        'subcategorytype' => $product->subcategorytype->name,
+                        'subcategorytype_image' => $product->subcategorytype->image,
+                        'attributes' => $product->productsattributes
                     ];
-
-                }else{
+                } else {
                     $response = [
                         'authorised' => 'N',
                         'approved' => 'N',
 
                     ];
                 }
-             }
-
-             return response($response, 201);
-         } else {
-            if(Auth::user()){
-                if(Auth::user()->hasAnyRole(['super-admin','admin','editor','approver']) ){
-                   $product = Product::find($id);
-                   return view('jobs.products.show', ['product' => $product ]);
-                }else{
-                    if($product->status == 'Y'){
-                        return view('jobs.products.show', ['product' => $product ]);
-                       }else{
-                        return view('jobs.products.show', ['product' => NULL ]);
-                       }
-                }
-            }else{
-               $product = Product::find($id);
-               if($product->status == 'Y'){
-                return view('jobs.products.show', ['product' => $product ]);
-
-               }else{
-                return view('jobs.products.show', ['product' => NULL ]);
-               }
             }
-             //write your logic for web call
-
-         }
-     }
-
-     public function destroy(Request $request,$id)
-     {
-         $product = Product::find($id);
-
-         $product->delete();
-         if ($request->is('api/*')) {
-             //write your logic for api call
-             $response = [
-                 'status' => 'success',
-                 'msg' => 'Successfully deleted product!'
-             ];
-
-             return response($response, 201);
-         } else {
-             //write your logic for web call
-             return back()->with('success', 'Successfully deleted product!');
-         }
-     }
-
-     public function approve(Request $request, $id)
-    {
-        $product = Product::find($id);
-
-        $product->update([
-            'status' => 'Y',
-        ]);
-
-        if ($request->is('api/*')) {
-            //write your logic for api call
-            $response = [
-                'status' => 'success',
-                'msg' => 'Successfully updated approval!'
-            ];
 
             return response($response, 201);
         } else {
+            if (Auth::user()) {
+                if (Auth::user()->hasAnyRole(['super-admin', 'admin', 'editor', 'approver'])) {
+                    $product = Product::find($id);
+                    return view('jobs.products.show', ['product' => $product]);
+                } else {
+                    if ($product->status == 'Y') {
+                        return view('jobs.products.show', ['product' => $product]);
+                    } else {
+                        return view('jobs.products.show', ['product' => NULL]);
+                    }
+                }
+            } else {
+                $product = Product::find($id);
+                if ($product->status == 'Y') {
+                    return view('jobs.products.show', ['product' => $product]);
+                } else {
+                    return view('jobs.products.show', ['product' => NULL]);
+                }
+            }
             //write your logic for web call
-            return redirect()->back();
+
+        }
+    }
+
+    public function showMId(Request $request)
+    {   $id= Product::where('material_id', request('material_id') )->first();
+       // $id = $id->id;
+        //dd($id);
+        if($id == null){
+            if ($request->is('api/*')) {
+                return response(['Material ID not found'], 201);
+            }else{
+                return back()->with('error', 'Material ID not found');
+            }
+
+        }
+        $id = $id->id;
+        // $user = User::find($id);
+        // $permissions = $user->getAllPermissions();
+        // $role = $user->getRoleNames();
+        $product = Product::find($id);
+
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $loggedinUser = User::where('email', $request->email)->first();
+            if ($loggedinUser) {
+                if ($loggedinUser->hasAnyRole(['super-admin', 'admin', 'editor', 'approver'])) {
+                    $product = Product::find($id);
+                    $response = [
+                        'authorised' => 'Y',
+                        'approved' => 'Y',
+                        'product' => $product,
+                        'description' => $product->subcategorytype->subcategory->description,
+                        'category' => $product->subcategorytype->subcategory->category->name,
+                        'subcategory' => $product->subcategorytype->subcategory->name,
+                        'subcategorytype' => $product->subcategorytype->name,
+                        'subcategorytype_image' => $product->subcategorytype->image,
+                        'attributes' => $product->productsattributes
+                    ];
+                }
+            } else {
+                $product = Product::find($id);
+                if ($product->status == 'Y') {
+
+                    $response = [
+                        'authorised' => 'N',
+                        'approved' => 'Y',
+                        'product' => $product,
+                        'description' => $product->subcategorytype->subcategory->description,
+                        'category' => $product->subcategorytype->subcategory->category->name,
+                        'subcategory' => $product->subcategorytype->subcategory->name,
+                        'subcategorytype' => $product->subcategorytype->name,
+                        'subcategorytype_image' => $product->subcategorytype->image,
+                        'attributes' => $product->productsattributes
+                    ];
+                } else {
+                    $response = [
+                        'authorised' => 'N',
+                        'approved' => 'N',
+
+                    ];
+                }
+            }
+
+            return response($response, 201);
+        } else {
+            if (Auth::user()) {
+                if (Auth::user()->hasAnyRole(['super-admin', 'admin', 'editor', 'approver'])) {
+                    $product = Product::find($id);
+                    return view('jobs.products.show', ['product' => $product]);
+                } else {
+                    if ($product->status == 'Y') {
+                        return view('jobs.products.show', ['product' => $product]);
+                    } else {
+                        return view('jobs.products.show', ['product' => NULL]);
+                    }
+                }
+            } else {
+                $product = Product::find($id);
+                if ($product->status == 'Y') {
+                    return view('jobs.products.show', ['product' => $product]);
+                } else {
+                    return view('jobs.products.show', ['product' => NULL]);
+                }
+            }
+            //write your logic for web call
+
         }
     }
 
 
+    public function destroy(Request $request, $id)
+    {
+        $product = Product::find($id);
+        if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
+            if ($loggedinUser->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+
+                $product->delete();
+                //write your logic for api call
+                $response = [
+                    'status' => 'success',
+                    'msg' => 'Successfully deleted product!'
+                ];
+
+                return response($response, 201);
+            }
+        } else {
+            if (Auth::user()->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+                $product->delete();
+                //write your logic for web call
+                return back()->with('success', 'Successfully deleted product!');
+            }
+        }
+    }
+
+    public function approve(Request $request, $id)
+    {
+        if ($request->is('api/*')) {
+
+            $loggedinUser = User::where('email', $request->email)->first();
+            if ($loggedinUser->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+                $product = Product::find($id);
+
+                $product->update([
+                    'status' => 'Y',
+                ]);
+                //write your logic for api call
+                $response = [
+                    'status' => 'success',
+                    'msg' => 'Successfully updated approval!'
+                ];
+
+                return response($response, 201);
+            }
+        } else {
+            if (Auth::user()->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+                $product = Product::find($id);
+
+                $product->update([
+                    'status' => 'Y',
+                ]);
+
+                //write your logic for web call
+                return redirect()->back();
+            }
+        }
+    }
 
 
     public function reject(Request $request, $id)
@@ -319,27 +416,31 @@ class ProductController extends Controller {
         //$some = $request->id;
         $product = Product::find($id);
 
-        //$products = Product::where('job_id', '=', $id)->get();
-
-        $product->update([
-            'status' => 'R',
-            'rejectinfo' => request('rejectinfo')
-
-
-        ]);
-
-
         if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
             //write your logic for api call
-            $response = [
-                'status' => 'success',
-                'msg' => 'Successfully rejected!'
-            ];
+            if ($loggedinUser->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+                $product->update([
+                    'status' => 'R',
+                    'rejectinfo' => request('rejectinfo')
+                ]);
+                $response = [
+                    'status' => 'success',
+                    'msg' => 'Successfully rejected!'
+                ];
 
-            return response($response, 201);
+                return response($response, 201);
+            }
         } else {
-            //write your logic for web call
-            return redirect()->back();
+            //$products = Product::where('job_id', '=', $id)->get();
+            if (Auth::user()->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+                $product->update([
+                    'status' => 'R',
+                    'rejectinfo' => request('rejectinfo')
+                ]);
+                //write your logic for web call
+                return redirect()->back();
+            }
         }
     }
 }

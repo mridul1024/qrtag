@@ -2,17 +2,18 @@
 @section('content')
 <style>
 @media print{
-    div{
-        break-inside: avoid !important;
+        #print1  {
+        break-before: always;
+        break-inside: avoid;
     }
-
 }
-
 </style>
-    <div class="container">
+
+<div class="container">
         <div class="text-center" style="margin: 2em">
             <div class="btn btn-info add-new" id="printbtn" onclick="printDiv()" value="Print QR"> Print</div>
         </div>
+
         <div class="row">
             @foreach ($items as $item)
                 <div class="col" id="print1" >

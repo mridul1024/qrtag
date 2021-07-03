@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/product/show/{id}', 'ProductController@show');
+Route::post('/product/material', 'ProductController@showMId');
 Route::get('/job/show/{id}', 'JobController@show');
 
 //Route::get('users/update/{id}', 'UserController@update');
@@ -94,6 +95,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //job + product + product attributes
 
     Route::get('/jobs', 'JobController@index');
+    Route::get('/jobsf/{prop}', 'JobController@indexId');
     Route::get('/job/create', 'JobController@create');
     Route::post('/job/store', 'JobController@store');
     Route::put('/job/edit/{id}', 'JobController@edit');
@@ -118,7 +120,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/attributechange/store', 'AttributeChangeController@store');
     Route::get('/attributechange/delete/{id}', 'AttributeChangeController@destroy');
     Route::put('/attributechange/reject/{id}', 'AttributeChangeController@reject');
-    
+
+
+    Route::get('/myprofile/{user}/edit', 'UserController@editprofile');
+    Route::put('/myprofile/update/{id}', 'UserController@updateprofile');
+    Route::post('/job/search', 'JobController@search');
 });
 
 

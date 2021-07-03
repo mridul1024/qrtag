@@ -153,8 +153,9 @@
                 <div class="table-title">
                     <div class="row">
                         <div class="col-sm-12">
-                            <h2>Update <b>User</b></h2>
+                            <h2>Update <b>Profile</b></h2>
                         </div>
+
                     </div>
                 </div>
                 @if (count($errors) > 0)
@@ -166,13 +167,14 @@
                         </ul>
                     </div>
                 @endif
+
                 @if ($message = Session::get('success'))
                     <div class="alert alert-success alert-block">
                         <button type="button" class="close" data-dismiss="alert">×</button>
                         <strong>{{ $message }}</strong>
                     </div>
                 @endif
-                <form method="POST" action="/user/update/{{$user->id}}">
+                <form method="POST" action="/myprofile/update/{{$user->id}}">
                     @csrf
                     @method('PUT')
                     <div class="form-row">
@@ -185,33 +187,26 @@
                             <label for="inputName5">Phone</label>
                             <input type="number" name="phone" value="{{ $user->phone }}" class="form-control" id="inputName5" placeholder="Must be Whatsapp Number">
                         </div>
+                        <input type="number" name="role" value="{{ $role }}" class="form-control" id="inputName6" >
                         <div class="form-group col-md-6">
-                            <label for="inputEmail4">Email</label>
-                            <input type="email" name="email" value="{{ $user->email }}" class="form-control "
+                            <label for="inputEmail4">Current Email</label>
+                            <input type="email"  disabled value="{{$user->email}}" class="form-control "
                                 id="inputEmail4" placeholder="Email">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="inputRole">Role</label>
-                            <select id="inputRole" name="role" id="role" class="form-control ">
-                                <option selected value="">Choose Role of the User</option>
-                                @foreach ($roles as $role1)
-                                    @if ($role1->name == $role)
-                                        <option value="{{ $role1->id }}" selected>{{ $role }} </option>
-                                    @else
-                                        <option value="{{ $role1->id }}">{{ $role1->name }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
+                            <label for="inputEmail4">To Update, change your Email</label>
+                            <input type="email"  name="email" value="{{$user->email}}" class="form-control "
+                                id="inputEmail4" placeholder="Email">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputPassword4">Password</label>
-                            <input type="password" name="password"  class="form-control"
+                            <input type="password" name="password" value="" class="form-control"
                                 id="inputPassword4" placeholder="To change Password, just enter a new password and click update">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputPassword4">Confirm Password</label>
-                            <input type="password" name="password_confirmation"  class="form-control"
-                                id="inputPassword4" placeholder="To change Password, just enter a new password and click update">
+                            <input type="password" name="password_confirmation" value="" class="form-control"
+                                id="inputPassword4" placeholder="confirm password">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>
@@ -225,4 +220,5 @@
         });
 
     </script>
+
 @endsection

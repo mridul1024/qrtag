@@ -26,6 +26,7 @@ Route::get('/test',function () {
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/product/show/{id}', 'ProductController@show');
+Route::post('/product/material', 'ProductController@showMId');
 Route::get('/job/show/{id}', 'JobController@show');
 
 Route::middleware('auth')->group(function () {
@@ -77,6 +78,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::group(['middleware' => ['role:super-admin|admin|approver|editor']], function () {
         Route::get('/jobs', 'JobController@index');
+        Route::get('/jobsf/{prop}', 'JobController@indexId');
         Route::get('/job/create', 'JobController@create');
         Route::post('/job/store', 'JobController@store');
         Route::get('/job/delete/{id}', 'JobController@destroy');
@@ -125,6 +127,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/product/generateqr/{id}', 'ProductController@generateQr');
 
     Route::get('/unitmasters', 'UnitMasterController@index');
+
+    Route::get('/myprofile/{user}/edit', 'UserController@editprofile');
+    Route::put('/myprofile/update/{id}', 'UserController@updateprofile');
+    Route::post('/job/search', 'JobController@search');
 
 });
 

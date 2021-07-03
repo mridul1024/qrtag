@@ -146,21 +146,71 @@
         }
 
     </style>
+    <div class="container card">
+        <div class=" card-body">
+            @if ($message = Session::get('error'))
+                <div class="alert alert-success text-red alert-block">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <strong>{{ $message }}</strong>
+                </div>
+            @endif
 
-    <div class="container-xl">
+            <div class="row">
+                <div class="col-6">
+                    <form method="POST" action="/job/search">
+                        @csrf
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="Search with batch info">
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                <div class="col-6">
+                    <form method="POST" action="/product/material">
+                        @csrf
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="material_id" placeholder="Find Item with Material ID">
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
         <div class="table-responsive">
             <div class="table-wrapper">
                 <div class="table-title">
                     <div class="row">
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             <h2>Batch <b>List</b></h2>
                         </div>
                         <div class="col-sm-2">
                             @hasanyrole('super-admin|admin|editor|approver')
-                                <a type="button" class="btn btn-info add-new" title="Create New Job"
-                                data-whatever="/job/create" data-toggle="modal"
-                                data-target="#exampleModal2"><i class="fa fa-plus"></i> Create Batch</a>
+                            <a type="button" class="btn btn-info add-new" title="Create New Job" data-whatever="/job/create"
+                                data-toggle="modal" data-target="#exampleModal2"><i class="fa fa-plus"></i> Create Batch</a>
                             @endhasanyrole
+                        </div>
+                        <div class="col-sm-1 ">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Filter
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="/jobsf/desc">Recent</a>
+                                    <a class="dropdown-item" href="/jobsf/asc">Old</a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -186,7 +236,7 @@
                             <tr>
                                 <td>{{ $job->id }}</td>
                                 <td>
-                                    {{ $job->job_number}}
+                                    {{ $job->job_number }}
                                 </td>
                                 <td> {{ $job->created_by }}</td>
                                 <td>{{ $job->created_at }}</td>
@@ -235,8 +285,8 @@
         </div>
     </div>
     </div>
-       <!-- Modal -->
-       <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -286,7 +336,6 @@
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
         });
-
     </script>
 
 @endsection

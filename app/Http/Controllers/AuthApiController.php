@@ -25,7 +25,7 @@ class AuthApiController extends Controller
         // Check password
         if(!$user || !Hash::check($fields['password'], $user->password)) {
             return response([
-                'status' => 'failed',
+                'status' => 'Failed',
                 'msg' => 'Wrong credentials'
             ], 401);
         }
@@ -35,7 +35,8 @@ class AuthApiController extends Controller
            // 'user' => $user,
            'status' => 'success',
            'msg' => '',
-            'token' => $token,
+           'token' => $token,
+            'user_id' => $user->id,
             'permissions' =>  $user->getAllPermissions()
 
         ];
@@ -46,7 +47,7 @@ class AuthApiController extends Controller
     public function logout(Request $request) {
 
         $user = User::where('email', $request->email)->first();
-        
+
         $user->tokens()->delete();
 
         return [

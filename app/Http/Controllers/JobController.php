@@ -24,16 +24,85 @@ class JobController extends Controller
             }
             $response = [
                 'jobs' => $jobs,
-
             ];
-
             return response($response, 201);
+
         } else {
             if (Auth::user()->hasAnyRole(['editor'])) {
                 $jobs = Job::where('created_by', '=', Auth::user()->email)->orderBy('created_at', 'desc')
                 ->paginate(15);
             } else {
                 $jobs = Job::orderBy('created_at', 'desc')->paginate(15);
+            }
+            return view('jobs.index', ['jobs' => $jobs]);
+        }
+    }
+
+    public function indexId(Request $request,$prop)
+    {
+        //
+        if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
+            if ($loggedinUser->hasAnyRole(['editor'])) {
+                $jobs = Job::where('created_by', '=', $loggedinUser->email)->paginate(15);
+            } else {
+                $jobs = Job::orderBy('created_at', $prop)->paginate(15);
+            }
+            $response = [
+                'jobs' => $jobs,
+            ];
+            return response($response, 201);
+
+        } else {
+            if (Auth::user()->hasAnyRole(['editor'])) {
+                $jobs = Job::where('created_by', '=', Auth::user()->email)->orderBy('created_at', 'desc')
+                ->paginate(15);
+            } else {
+                $jobs = Job::orderBy('created_at', $prop)->paginate(15);
+            }
+            return view('jobs.index', ['jobs' => $jobs]);
+        }
+    }
+
+    public function search(Request $request)
+    {
+        $search = request('search');
+        //
+        if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
+            if ($loggedinUser->hasAnyRole(['editor'])) {
+
+                $jobs = Job::orderBy('created_at', 'desc')
+                ->where('job_number', 'like', "%".$search."%")
+                ->orWhere('created_at', 'like', "%".$search."%")
+                ->orWhere('created_by', 'like', "%".$search."%")
+                ->where('created_by', '=', $loggedinUser->email)->paginate(15);
+
+            } else {
+
+                $jobs = Job::orderBy('created_at', 'desc')->where('job_number', 'like', "%".$search."%")
+                    ->orWhere('created_at', 'like', "%".$search."%")
+                    ->orWhere('created_by', 'like', "%".$search."%")->paginate(15);
+            }
+            $response = [
+                'jobs' => $jobs,
+            ];
+            return response($response, 201);
+
+        } else {
+            if (Auth::user()->hasAnyRole(['editor'])) {
+                $jobs = Job::orderBy('created_at', 'desc')
+                ->where('job_number', 'like', "%".$search."%")
+                    ->orWhere('created_at', 'like', "%".$search."%")
+                    ->orWhere('created_by', 'like', "%".$search."%")
+                    ->where('created_by', '=', Auth::user()->email)->paginate(15);
+
+            } else {
+
+                $jobs = Job::orderBy('created_at', 'desc')->where('job_number', 'like', "%".$search."%")
+                    ->orWhere('created_at', 'like', "%".$search."%")
+                    ->orWhere('created_by', 'like', "%".$search."%")->paginate(15);
+
             }
             return view('jobs.index', ['jobs' => $jobs]);
         }
