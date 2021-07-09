@@ -75,7 +75,22 @@ class ProductController extends Controller
             'bu_code' => 'required|string|min:3',
             'wh_code' => 'required|string|min:3'
         ]);
+    
+        if($request->dynamic == null ){
+            if ($request->is('api/*')) {
+                $response = [
+                    'status' => 'success',
+                    'msg' => 'ERROR!!!! Attributes are not assigned to this type of subcategory! Kindly add them under the subcatgory>type> add attribute'
+                ];
+    
+                return response($response, 201);
+            }else{
 
+            return back()->with('success', 'ERROR!!!! Attributes are not assigned to this type of subcategory! Kindly add them under the subcatgory>type> add attribute');
+            
+        } 
+        }
+        
         // validation for dynamic form fields
         foreach ($request->dynamic as $key => $value) {
             $unit = null;
