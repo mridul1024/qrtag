@@ -178,26 +178,6 @@
                                 <img class="card-img" src="/storage/{{ $subcategorytype->image }}" alt="item image">
                             @endif
                         </div>
-                        <div class="col-md-4">
-                            @if ($subcategorytype->qrcode == null)
-                                <div class="visible-print text-center">
-                                    {!! QrCode::size(200)->generate(Request::url()) !!}
-                                    <p>Scan this to return to this product</p>
-                                </div>
-                                <!--
-                                    <form method="POST" action="/subcategorytype/generateQr/">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="text" hidden name="qrcode" value="{!! Request::url() !!}" class="form-control"
-                                            id="qrcode" >
-                                            <button type="submit" class="btn btn-warning" >Generate QR </button> <br>
-                                        </form> -->
-
-                            @else
-
-                                <img src="..." class="rounded float-left" alt="...">
-                            @endif
-                        </div>
 
 
                     </div>
