@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['middleware' => ['role:super-admin|admin|approver']], function () {
         Route::get('/product/approve/{id}', 'ProductController@approve');
         Route::put('/product/reject/{id}', 'ProductController@reject');
+        Route::put('/product/listaction',  'ProductController@listaction');
     });
 
     Route::get('/categories', 'CategoryController@index')->name('categories');

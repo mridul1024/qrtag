@@ -22,8 +22,6 @@ class ProductController extends Controller
     public  function create(Request $request, $id)
     {
         $categories = Category::all();
-
-
         //
         if ($request->is('api/*')) {
 
@@ -33,9 +31,6 @@ class ProductController extends Controller
 
             return response($response, 201);
         } else {
-
-
-
             return view('jobs.products.create', ['id' => $id, 'categories' => $categories]);
         }
     }
@@ -75,22 +70,22 @@ class ProductController extends Controller
             'bu_code' => 'required|string|min:3',
             'wh_code' => 'required|string|min:3'
         ]);
-    
+
         if($request->dynamic == null ){
             if ($request->is('api/*')) {
                 $response = [
                     'status' => 'success',
                     'msg' => 'ERROR!!!! Attributes are not assigned to this type of subcategory! Kindly add them under the subcatgory>type> add attribute'
                 ];
-    
+
                 return response($response, 201);
             }else{
 
             return back()->with('success', 'ERROR!!!! Attributes are not assigned to this type of subcategory! Kindly add them under the subcatgory>type> add attribute');
-            
-        } 
+
         }
-        
+        }
+
         // validation for dynamic form fields
         foreach ($request->dynamic as $key => $value) {
             $unit = null;
@@ -455,6 +450,122 @@ class ProductController extends Controller
                 ]);
                 //write your logic for web call
                 return redirect()->back();
+            }
+        }
+    }
+
+    public function listaction(Request $request){
+        $items = $request->input('items');
+        switch ($request->input('action')) {
+            case 'approve':
+                foreach($items as $item){
+                    $this->approveall($request,$item);
+                }
+                if ($request->is('api/*')) {
+                    $response = [
+                        'status' => 'success',
+                        'msg' => 'Successfully approved!'
+                    ];
+                    return response($response, 201);
+                }else{
+                    return redirect()->back();
+                }
+                break;
+
+            case 'reject':
+                foreach($items as $item){
+                    $this->rejectall($request,$item);
+                }
+                if ($request->is('api/*')) {
+                    $response = [
+                        'status' => 'success',
+                        'msg' => 'Successfully rejected!'
+                    ];
+                    return response($response, 201);
+                }else{
+                    return redirect()->back();
+                }
+                break;
+
+            case 'delete':
+                foreach($items as $item){
+                    $this->destroyall($request,$item);
+                }
+                if ($request->is('api/*')) {
+                    $response = [
+                        'status' => 'success',
+                        'msg' => 'Successfully deleted!'
+                    ];
+                    return response($response, 201);
+                }else{
+                    return redirect()->back();
+                }
+                break;
+        }
+    }
+
+    public function approveall(Request $request, $id)
+    {
+        if ($request->is('api/*')) {
+
+            $loggedinUser = User::where('email', $request->email)->first();
+            if ($loggedinUser->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+                $product = Product::find($id);
+
+                $product->update([
+                    'status' => 'Y',
+                ]);
+            }
+        } else {
+            if (Auth::user()->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+                $product = Product::find($id);
+
+                $product->update([
+                    'status' => 'Y',
+                ]);
+            }
+        }
+    }
+
+    public function rejectall(Request $request, $id)
+    {
+        //$some = $request->id;
+        $product = Product::find($id);
+
+        if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
+            //write your logic for api call
+            if ($loggedinUser->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+                $product->update([
+                    'status' => 'R',
+                    'rejectinfo' => request('rejectinfo')
+                ]);
+            }
+        } else {
+            //$products = Product::where('job_id', '=', $id)->get();
+            if (Auth::user()->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+                $product->update([
+                    'status' => 'R',
+                    'rejectinfo' => request('rejectinfo')
+                ]);
+                //write your logic for web call
+               // return redirect()->back();
+            }
+        }
+    }
+
+    public function destroyall(Request $request, $id)
+    {
+        $product = Product::find($id);
+        if ($request->is('api/*')) {
+            $loggedinUser = User::where('email', $request->email)->first();
+            if ($loggedinUser->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+
+                $product->delete();
+            }
+        } else {
+            if (Auth::user()->hasAnyRole(['super-admin', 'admin', 'approver'])) {
+                $product->delete();
             }
         }
     }

@@ -1,12 +1,14 @@
 @extends('layouts.app')
 @section('content')
 <style>
-@media print{
-        #print1  {
-        break-before: always;
-        break-inside: avoid;
-    }
+
+@media print {
+  figure {
+    break-inside: avoid;
+
+  }
 }
+
 </style>
 
 <div class="container">
@@ -16,13 +18,16 @@
 
         <div class="row">
             @foreach ($items as $item)
+
                 <div class="col" id="print1" >
-                        <div class="visible-print text-center" style="padding: 1em">
+                        <figure class="visible-print text-center" style="padding: 1em">
                             {!! QrCode::size($height)->generate(url('/product/show/' . $item->id)) !!}
                             <p><small>{{ $item->material_id }}</small></p>
-                        </div>
-                </div>
+                        </figure>
+                    </div>
+
              @endforeach
+
         </div>
     </div>
 <script>

@@ -233,7 +233,9 @@
                         <table class="table table-striped table-hover table-bordered">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    @hasanyrole('super-admin|admin|approver')
+                                      <th>#</th>
+                                    @endhasanyrole
                                     <th>Category </th>
                                     <th>SubCategory</th>
                                     <th>Type</th>
@@ -245,11 +247,16 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <form action="/product/listaction" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                <div class="form-check form-check-inline">
                                 @foreach ($products as $product)
 
 
-                                    <tr>
-                                        <td>{{ $product->id }}</td>
+                                    <tr> @hasanyrole('super-admin|admin|approver')
+                                        <td> <input style="margin-left: 0.3em" class="form-check-input" type="checkbox" name="items[]" value="{{ $product->id }}" id="defaultCheck1"></td>
+                                        @endhasanyrole
                                         <td> {{ $product->subcategorytype->subcategory->category->name }}</td>
                                         <td> {{ $product->subcategorytype->subcategory->name }}</td>
                                         <td> {{ $product->subcategorytype->name }}</td>
@@ -272,7 +279,7 @@
                                             <a href="/product/show/{{ $product->id }}" class="view" title="View Product"
                                                 data-toggle="tooltip"><i class="material-icons">&#xe5c8;</i></a>
 
-                                            @if ($product->status == 'N')
+
                                                 @hasanyrole('super-admin|admin|approver')
                                                 <a href="/product/approve/{{ $product->id }}" class="edit"
                                                     title="Approve" data-toggle="tooltip"><i
@@ -283,7 +290,7 @@
                                                         class="material-icons">&#xe9d3;</i></a>
                                                 @endhasanyrole
 
-                                            @endif
+                                           
                                             @hasanyrole('super-admin|admin')
                                             <a type="button" class="delete" title="Delete"
                                                 data-whatever="/product/delete/{{ $product->id }}" data-toggle="modal"
@@ -295,9 +302,18 @@
                                     </tr>
 
                                 @endforeach
+                            </div>
+
                             </tbody>
                         </table>
-
+                        @hasanyrole('super-admin|admin|approver')
+                        <div >
+                            <input type="checkbox" id="selectall" name="selectall" style="margin-left: 1em; padding : 2em" autocomplete="off" checked onclick="eventCheckBox()">
+                            <button class="btn btn-primary" style="margin-left: 2em" type="submit" value="approve"  name="action">Approve Selected</button>
+                            <button class="btn btn-warning" type="submit" value="reject"  name="action">Reject Selected</button>
+                            <button class="btn btn-danger" type="submit" value="delete" name="action">Delete Selected</button></div>
+                         @endhasanyrole
+                    </form>
                     </div>
                 </div>
             </div>
@@ -397,6 +413,13 @@
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>
     <script type="text/javascript">
+        function eventCheckBox() {
+            let checkboxs = document.getElementsByTagName("input");
+            for(let i = 0; i < checkboxs.length ; i++) { //zero-based array
+                checkboxs[i].checked = !checkboxs[i].checked;
+            }
+            }
+
         $(document).ready(function() {
             $('#exampleModal').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal

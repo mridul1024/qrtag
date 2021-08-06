@@ -115,6 +115,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/product/generateQr', 'ProductController@generateQr');
     Route::get('/product/approve/{id}', 'ProductController@approve');
     Route::put('/product/reject/{id}', 'ProductController@reject');
+    Route::put('/product/listaction',  'ProductController@listaction');
 
     Route::get('/attributechange/approve/{id}', 'AttributeChangeController@approve');
     Route::post('/attributechange/store', 'AttributeChangeController@store');
