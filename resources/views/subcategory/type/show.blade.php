@@ -175,7 +175,7 @@
                             @if ($subcategorytype->image == null)
                                 <img class="card-img" src="/storage/placeholder.png" alt="item image">
                             @else
-                                <img class="card-img" src="/storage/{{ $subcategorytype->image }}" alt="item image">
+                                <img class="card-img" src="/{{ $subcategorytype->image }}" alt="item image">
                             @endif
                         </div>
 
