@@ -39,7 +39,7 @@
                 @endif
                 <form method="POST" action="/subcategorytype/update/{{ $subcategorytype->id}}" enctype="multipart/form-data">
                     @csrf
-                    @method('PUT')
+                    @method('PUT') 
                     <div class="form-row">
                         <div class="form-group col-md-12">
                         <label for="inputRole">Parent Category</label>
