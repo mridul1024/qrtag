@@ -1,5 +1,5 @@
 <?php
-
+set_time_limit(500);
 /**
  * Laravel - A PHP Framework For Web Artisans
  *

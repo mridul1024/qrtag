@@ -133,6 +133,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/myprofile/update/{id}', 'UserController@updateprofile');
     Route::post('/job/search', 'JobController@search');
 
+
+    //excel imports
+    Route::get('/entry', 'TableImportController@index')->name('entry');
+    Route::post('import', 'TableImportController@import')->name('import');
+
 });
 
 
