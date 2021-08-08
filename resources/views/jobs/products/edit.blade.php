@@ -5,7 +5,7 @@
     <div class="container card" style="padding: 2em">
         <div class="row">
             <div class="col-sm-12">
-                <h4 class="text-center">Create an Item </h4>
+                <h4 class="text-center">Edit Item </h4>
             </div>
 
         </div>

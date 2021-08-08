@@ -189,6 +189,14 @@ class ProductController extends Controller
         //
     }
 
+    public function edit(Request $request, $id){
+
+        $product = Product::find($id);
+
+        return view('jobs.products.edit',['product' => $product]);
+
+    }
+
 
     public function generateQr(Request $request, $id)
     {

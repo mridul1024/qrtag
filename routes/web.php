@@ -93,6 +93,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/product/approve/{id}', 'ProductController@approve');
         Route::put('/product/reject/{id}', 'ProductController@reject');
         Route::put('/product/listaction',  'ProductController@listaction');
+
+         //excel imports
+        Route::get('/entry', 'TableImportController@index')->name('entry');
+        Route::post('import', 'TableImportController@import')->name('import');
     });
 
     Route::get('/categories', 'CategoryController@index')->name('categories');
@@ -134,9 +138,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/job/search', 'JobController@search');
 
 
-    //excel imports
-    Route::get('/entry', 'TableImportController@index')->name('entry');
-    Route::post('import', 'TableImportController@import')->name('import');
+
 
 });
 
