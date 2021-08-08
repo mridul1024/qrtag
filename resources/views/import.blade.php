@@ -2,12 +2,9 @@
 
 @section('content')
     <div class="container">
-
-
         <h2 class="text-center">
-            Master Tables Excel/CSV Import
+            Master Tables Excel Import
         </h2>
-
         @if (Session::has('success'))
             <div class="alert alert-success alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -43,7 +40,7 @@
 
         <form action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
             {{ csrf_field() }}
-            Choose your xls/csv File :
+            Choose your xls/csv/xlsx File :
             <div x-data="{ isOpen: false ,buttonDisabled: true  }">
             <input type="file" name="file" x-ref="file" x-on:change="buttonDisabled = false" class="form-control" required id="poster" style="margin-top: 2em;margin-bottom:2em">
 

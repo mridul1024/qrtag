@@ -290,7 +290,7 @@
                                                         class="material-icons">&#xe9d3;</i></a>
                                                 @endhasanyrole
 
-                                           
+
                                             @hasanyrole('super-admin|admin')
                                             <a type="button" class="delete" title="Delete"
                                                 data-whatever="/product/delete/{{ $product->id }}" data-toggle="modal"
@@ -306,13 +306,25 @@
 
                             </tbody>
                         </table>
+
                         @hasanyrole('super-admin|admin|approver')
+
+                        <div x-data="{ isOpen: false }">
+                            <div x-show="isOpen">
+                                <input class="form-control" type="text" name="rejectinfo" placeholder="Enter Reject Reasons ">
+                            <button class="btn btn-success" type="submit" value="reject" style="margin: 1em" name="action">Confirm</button>
+                            </div>
                         <div >
-                            <input type="checkbox" id="selectall" name="selectall" style="margin-left: 1em; padding : 2em" autocomplete="off" checked onclick="eventCheckBox()">
+                            <div>
+                            <input type="checkbox" id="selectall" name="selectall" style="margin: 1em; padding : 2em" autocomplete="off" checked onclick="eventCheckBox()">
                             <button class="btn btn-primary" style="margin-left: 2em" type="submit" value="approve"  name="action">Approve Selected</button>
-                            <button class="btn btn-warning" type="submit" value="reject"  name="action">Reject Selected</button>
+
+                            <a class="btn btn-warning" @click=" isOpen = !isOpen " >Reject Selected</a>
                             <button class="btn btn-danger" type="submit" value="delete" name="action">Delete Selected</button></div>
+                        </div>
                          @endhasanyrole
+
+                        </div>
                     </form>
                     </div>
                 </div>
