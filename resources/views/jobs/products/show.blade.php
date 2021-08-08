@@ -170,7 +170,10 @@
 
                                                 <td> {{ $attr->name }}</td>
                                                 <td> {{ $attr->value }}</td>
-                                                <td> {{ $attr->unit }}</td>
+                                                <td> @if ($attr->unit != "NONE")
+                                                    {{  $attr->unit  }}
+                                                    @endif
+                                                    </td>
                                               </tr>
                                               @endforeach
                                             </tbody>

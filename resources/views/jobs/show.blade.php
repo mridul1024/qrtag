@@ -262,7 +262,10 @@
                                         <td> {{ $product->subcategorytype->name }}</td>
                                         <td>
                                             @foreach ($product->productsattributes as $attr)
-                                                {{ $attr->name }} : {{ $attr->value }} {{ $attr->unit }} <br>
+                                                {{ $attr->name }} : {{ $attr->value }}
+                                                @if ($attr->unit != "NONE")
+                                                {{  $attr->unit  }}
+                                                @endif  <br>
                                             @endforeach
 
                                         </td>
@@ -306,6 +309,8 @@
 
                             </tbody>
                         </table>
+                    @if ($products->isNotEmpty())
+
 
                         @hasanyrole('super-admin|admin|approver')
 
@@ -323,7 +328,7 @@
                             <button class="btn btn-danger" type="submit" value="delete" name="action">Delete Selected</button></div>
                         </div>
                          @endhasanyrole
-
+                         @endif
                         </div>
                     </form>
                     </div>
