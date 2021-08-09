@@ -1,275 +1,187 @@
 @extends('layouts.app')
-
 @section('content')
+    <style>
+        .gallery-wrap .img-big-wrap img {
+            height: 450px;
+            width: auto;
+            display: inline-block;
+            cursor: zoom-in;
+        }
 
-    <div class="container card" style="padding: 2em">
-        <div class="row">
-            <div class="col-sm-12">
-                <h4 class="text-center">Edit Item </h4>
-            </div>
+        .gallery-wrap .img-small-wrap .item-gallery {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #ddd;
+            margin: 7px 2px;
+            display: inline-block;
+            overflow: hidden;
+        }
 
-        </div>
+        .gallery-wrap .img-small-wrap {
+            text-align: center;
+        }
 
+        .gallery-wrap .img-small-wrap img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: zoom-in;
+        }
+
+           /* Media Query for Mobile Devices */
+           @media (max-width: 480px) {
+                 #mapid { height: 400px; width : 270px;}
+                 #pic1 { width: 25em; padding: 2em;}
+        }
+
+        /* Smartphones (landscape) ----------- */
+        @media only screen and (min-width : 480px) {
+            #mapid { height: 400px; width : 360px;}
+            #pic1 { width: 20em; padding: 2em;}
+
+        }
+        /* Media Query for Laptops and Desktops */
+        @media only screen  and (min-width : 1224px) {
+            #mapid { height: 500px; width : 900px;}/* CSS */
+            #pic1 { width: 30em ; padding: 2em;}
+
+
+        }
+
+    </style>
+
+    <div class="container">
+        <br>
         @if (count($errors) > 0)
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-        @if ($message = Session::get('success'))
-            <div class="alert alert-success alert-block">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                <strong>{{ $message }}</strong>
-            </div>
-        @endif
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success alert-block">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+        </div>
+    @endif
 
-        <form action="/product/store" method="POST">
-            @csrf
+        <div class="card">
+            <div class="row">
 
-            <div class="form-row">
-                <div class="form-group col-md-12">
+                <aside class="col-sm-12">
+                    <div class="card-title text-center" style="padding-top: 1em"><h1>Edit Item </h1></div> <hr>
+                    <article class="card-body p-5">
+                        <h3 class="title mb-3">Item Name: {{ $product->subcategorytype->name }}</h3>
 
-                    <input type="text" name="job_id" hidden value="{{ $id }}" class="form-control"
-                        id="inputName4">
+                        <p class="price-detail-wrap">
+                            <span class="price h3 ">
+                                <span class="currency">Subcategory: {{ $product->subcategorytype->subcategory->name }}</span>
+                            </span>
 
-                </div>
-            </div>
+                        </p> <!-- price-detail-wrap .// -->
+                        <dl class="item-property">
+                            <dt>Description</dt>
+                            <dd>
+                                <p>{{ $product->subcategorytype->description }} </p>
+                            </dd>
+                        </dl>
+                        <dl class="param param-feature">
+                            <dt>Material Id</dt>
+                            <dd>{{ $product->material_id }}</dd>
+                        </dl> <!-- item-property-hor .// -->
+                        <dl class="param param-feature">
+                            <dt>Parent Category</dt>
+                            <dd>{{ $product->subcategorytype->subcategory->category->name }}</dd>
+                        </dl>
+                        <dl class="param param-feature">
+                            <dt>Subcategory</dt>
+                            <dd>{{ $product->subcategorytype->subcategory->name }}</dd>
+                        </dl>
+                        <dl class="param param-feature">
+                            <dt>Created By</dt>
+                            <dd>{{ $product->created_by }}</dd>
+                        </dl> <!-- item-property-hor .// -->
+                        <dl class="param param-feature">
+                            <dt>Status</dt>
+                                @if ($product->status == 'N')
+                                <dd><b style="color: blue"> Waiting for Approval </b></dd>
+                            @elseif ( $product->status == 'Y')
+                            <dd> <b style="color: green"> Approved</b></dd>
+                            @elseif ( $product->status == 'R')
+                            <dd> <b style="color: red"> Rejected</b><span>
+                                 due to {{ $product->rejectinfo }} </span></dd>
+                             @endif
 
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <label for="sub_category_name"> Category</label>
-                    <select class="form-control formselect " required placeholder="Select Category" id="sub_category_name">
-                        <option value="0" disabled selected>Select
-                            Main Category*</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">
-                                {{ ucfirst($category->name) }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                        </dl> <!-- item-property-hor .// -->
 
-            </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <dl class="param param-inline">
+                                    <dt>Attributes: </dt>
 
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <label for="sub_category">Sub Category</label>
-                    <select class="form-control formselect " required placeholder="Select Sub Category" id="sub_category">
-                    </select>
-                </div>
-            </div>
+                                    <dd>
+                                        <form action="/product/update" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="form-group">
+                                        <table class="table">
+                                            <thead>
+                                              <tr>
 
-            <div class="form-row">
-                <div class="form-group col-md-12">
-                    <label for="sub_categorytype">Type</label>
-                    <select class="form-control formselect " required name="subcategorytype_id"
-                        placeholder="Select Sub Category type" id="sub_categorytype">
-                    </select>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="inputName4">BU Code</label>
-                    <input type="text" required name="bu_code" class="form-control"  value="{{ old('bu_code') }}" id="inputName4" placeholder="Enter BU code">
+                                                <th scope="col"> </th>
+                                                <th scope="col">Value</th>
+                                                <th scope="col">Unit</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
 
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="inputName4">Warehouse Code</label>
-                    <input type="text" required name="wh_code" class="form-control"  value="{{ old('wh_code') }}" id="inputName4" placeholder="Enter Warehouse Code">
+                                                @foreach ($product->productsattributes as $attr)
+                                                <tr>
 
-                </div>
+                                                <td> {{ $attr->name }}</td>
+                                                <td><input type="hidden" name="dynamic[{{$loop->index}}][productid]" value="{{ $attr->id }}"> <input type="text" class="form-control" required name="dynamic[{{$loop->index}}][value]" value="{{ $attr->value }}"></td>
+                                                <td>
+                                                    <select class="form-control" required name="dynamic[{{$loop->index}}][unit]">
+                                                    @foreach ($units as $unit )
+                                                    @if($attr->unit == $unit->name)
+
+                                                    <option  value="{{$unit->name}}" selected>{{$unit->name}}</option>
+                                                    @else
+                                                        <option value="{{$unit->name}}">{{$unit->name}}</option>
+                                                    @endif
+                                                    @endforeach
+                                                </select>
+                                                    </td>
+                                              </tr>
+                                              @endforeach
+                                            </tbody>
+                                          </table>
 
 
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="inputName4">Location</label>
-                        <p>Click the button to get your coordinates.</p>
-                        <button disabled onclick="">Get Location</button>
-                        <div id="latitude">It is disabled on web app</div>
-                        <div id="longitude">
-                            <div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label for="dynamic1">Attribute</label>
-                            <div id="dynamic1"></div>
-                            <div id="dynamic3"></div>
-                        </div>
+                                    </dd>
 
-                        <div class="form-group col-md-4">
-                            <label for="dynamic2">Value</label>
+                                </dl> <!-- item-property .// -->
+                            </div> <!-- col.// -->
+                          <!-- col.// -->
+                        </div> <!-- row.// -->
+                        <hr>
+                        <button class="btn btn-primary" type="submit">Update</button>
+                     </div>
+                        </form>
+                    </article> <!-- card-body.// -->
+                </aside> <!-- col.// -->
+            </div> <!-- row.// -->
+        </div> <!-- card.// -->
 
-                            <div id="dynamic2"></div>
 
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="unit">Unit</label>
-                            <div id="unit"></div>
-
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-success">Save</button>
-
-        </form>
     </div>
 
-
-
-
-    <script>
-        $(document).ready(function() {
-            $('#sub_category_name').on('change', function() {
-                let id = $(this).val();
-                $('#sub_category').empty();
-                $('#sub_category').append(`<option value="0" disabled selected>Processing...</option>`);
-                $.ajax({
-                    type: 'GET',
-                    url: '/product/getsubcategories/' + id,
-                    success: function(response) {
-                        var response = JSON.parse(response);
-                        console.log(response);
-                        $('#sub_category').empty();
-                        $('#sub_category').append(
-                            `<option value="0" disabled selected>Select Sub Category*</option>`
-                        );
-                        response.forEach(element => {
-                            $('#sub_category').append(
-                                `<option value="${element['id']}">${element['name']}</option>`
-                            );
-                        });
-                    }
-                });
-            });
-        });
-
-        $(document).ready(function() {
-            $('#sub_category').on('change', function() {
-                let id = $(this).val();
-                $('#sub_categorytype').empty();
-                $('#sub_categorytype').append(`<option value="0" disabled selected>Processing...</option>`);
-                $.ajax({
-                    type: 'GET',
-                    url: '/product/gettypes/' + id,
-                    success: function(response) {
-                        var response = JSON.parse(response);
-                        console.log(response);
-                        $('#sub_categorytype').empty();
-                        $('#sub_categorytype').append(
-                            `<option value="0" disabled selected>Select Sub Category*</option>`
-                        );
-                        response.forEach(element => {
-                            $('#sub_categorytype').append(
-                                `<option value="${element['id']}">${element['name']}</option>`
-                            );
-                        });
-                    }
-                });
-            });
-        });
-
-        $(document).ready(function() {
-            $('#sub_categorytype').on('change', function() {
-                var i = 0;
-                let id = $(this).val();
-                $('#dynamic1').empty();
-                $('#dynamic2').empty();
-                $('#dynamic3').empty();
-                $('#unit').empty();
-                $.ajax({
-                    type: 'GET',
-                    url: '/product/getattributes/' + id,
-                    success: function(response) {
-
-                        var response = JSON.parse(response);
-                        console.log(response);
-                        $('#dynamic1').empty();
-                        $('#dynamic2').empty();
-                        $('#dynamic3').empty();
-                        $('#unit').empty();
-                        //$('#sub_categorytype').append(`<option value="0" disabled selected>Select Sub Category*</option>`);
-                        response.forEach(element => {
-                            $('#dynamic1').append(
-                                `<input type="text" hidden required name="dynamic[` +
-                                i +
-                                `][name]" value="${element['name']}"
-                                    class="form-control"  placeholder="Name">`
-                            );
-                            $('#dynamic3').append(
-                                `<div class="form-control">${element['name']}</div> `
-                            );
-                            var value = null;
-                            value = element['value'];
-                            if (value == null) {
-                                value = '';
-                            }
-                            $('#dynamic2').append(
-                                `<input type="text" required  name="dynamic[` +
-                                i +
-                                `][value]" value="` + value +
-                                `" class="form-control"  placeholder="Enter Value">`
-                            );
-                            $('#dynamic4').append(
-                                `<input type="text" hidden required name="dynamic[` +
-                                i + `][unit]" value="${element['unit']}"
-                                                    class="form-control"  placeholder="Name">`
-                            );
-
-                            // console.log(value['units']);
-
-
-                            i++;
-
-
-                        });
-                        //
-                        var j = 0;
-                        $('#unit').empty();
-
-
-                        $.ajax({
-                            type: 'GET',
-                            url: '/product/getunits/',
-                            success: function(response) {
-
-                                var response = JSON.parse(response);
-                                console.log(j);
-                                while (j < i) {
-
-                                    $('#unit').append(
-                                        `<select  class="form-control formselect " required  name="dynamic[` +
-                                        j + `][unit]" id="unit` + j + `" placeholder="Select Unit"  required="required">
-                                                                    </select> `
-                                    );
-                                    $('#unit' + j).append(
-                                        `<option value="" >Select Unit</option>`
-                                    );
-                                    console.log('break');
-                                    //$('#sub_categorytype').append(`<option value="0" disabled selected>Select Sub Category*</option>`);
-                                    response.forEach(element1 => {
-                                        $('#unit' + j).append(
-                                            `<option value="${element1['name']}">${element1['name']}</option>`
-                                        );
-
-                                    });
-                                    j++;
-                                }
-                            }
-                        });
-
-
-
-                        //
-                    }
-                });
-            });
-        });
-    </script>
-
-    </body>
 
 
 @endsection

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use App\User;
 use Illuminate\Support\Facades\Validator;
 
+
 class ProductController extends Controller
 {
     public  function create(Request $request, $id)
@@ -193,7 +194,91 @@ class ProductController extends Controller
 
         $product = Product::find($id);
 
-        return view('jobs.products.edit',['product' => $product]);
+        if ($request->is('api/*')) {
+            //write your logic for api call
+            $loggedinUser = User::where('email', $request->email)->first();
+            if ($loggedinUser) {
+                if ($loggedinUser->hasAnyRole(['super-admin', 'admin', 'editor', 'approver'])) {
+                    $product = Product::find($id);
+                    $units = UnitMaster::all();
+                    $response = [
+                        'status' => 'success',
+                        'product' => $product,
+                        'description' => $product->subcategorytype->subcategory->description,
+                        'category' => $product->subcategorytype->subcategory->category->name,
+                        'subcategory' => $product->subcategorytype->subcategory->name,
+                        'subcategorytype' => $product->subcategorytype->name,
+                        'subcategorytype_image' => $product->subcategorytype->image,
+                        'attributes' => $product->productsattributes,
+                        'units'=> $units
+                    ];
+                }
+            }
+
+            return response($response, 201);
+        } else {
+            if (Auth::user()) {
+                if (Auth::user()->hasAnyRole(['super-admin', 'admin', 'editor', 'approver'])) {
+                    $product = Product::find($id);
+                    $units = UnitMaster::all();
+                    return view('jobs.products.edit',['product' => $product, 'units' => $units]);
+
+                }
+
+            }
+
+        }
+
+
+
+    }
+
+    public function update(Request $request){
+        //ddd($request->dynamic );
+        // validation for dynamic form fields
+        // foreach ($request->dynamic as $key => $value) {
+        //     $unit = null;
+        //     $unit = DB::table('unit_masters')->where('name', $value['unit'])->first();
+        //     //dd($unit);
+
+        //     if ($unit->type == 'alpha_num') {    //checking attribute value with type of unit
+        //            ddd($request->dynamic[$key]);
+        //         $request->validate(
+        //             [
+        //                 'dynamic.' . $key . '.value' => 'required|alpha_num',
+        //             ],
+        //             ['dynamic.' . $key . '.value.alpha_num' => 'The attribute field value ' . $value['value'] . ' must be alpha numeric.']
+        //         );
+        //     } elseif ($unit->type == 'numeric') {
+
+
+        //         $request->validate(
+        //             [
+        //                 'dynamic.' . $key . '.value' => 'required|numeric',
+        //             ],
+        //             ['dynamic.' . $key . '.value.numeric' => 'The attribute field value  ' . $value['value'] . ' must be numeric.']
+        //         );
+        //     }
+        // }
+
+        foreach ($request->dynamic as $key => $value) {
+
+            $product_attribute = ProductAttribute::find($value['productid']);
+            $product_attribute->value = $value['value'] ;
+            $product_attribute->unit = $value['unit'] ;
+            $product_attribute->save();
+
+        }
+        if ($request->is('api/*')) {
+            $response = [
+                'status' => 'success',
+                'msg' => 'Successfully updated product!'
+            ];
+
+            return response($response, 201);
+        }else{
+        return back()->with('success', 'Successfully updated item!');
+    }
 
     }
 

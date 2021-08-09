@@ -86,7 +86,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/product/create/{id}', 'ProductController@create');
         Route::post('/product/store', 'ProductController@store');
         Route::get('/product/delete/{id}', 'ProductController@destroy');
-        Route::put('/product/edit/{id}', 'ProductController@edit');
+        Route::get('/product/edit/{id}', 'ProductController@edit');
+        Route::put('/product/update', 'ProductController@update');
 
     });
     Route::group(['middleware' => ['role:super-admin|admin|approver']], function () {

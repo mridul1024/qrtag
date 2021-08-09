@@ -291,6 +291,7 @@
                                                     data-whatever="/product/reject/{{ $product->id }}"
                                                     data-toggle="modal" data-target="#exampleModal2"><i
                                                         class="material-icons">&#xe9d3;</i></a>
+                                                 <a class="btn btn-success" href="/product/edit/{{ $product->id }}" style="color: #f6f9ff">EDIT</a>
                                                 @endhasanyrole
 
 
