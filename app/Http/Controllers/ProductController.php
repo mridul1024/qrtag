@@ -234,6 +234,7 @@ class ProductController extends Controller
     }
 
     public function update(Request $request){
+        
         //ddd($request->dynamic );
         // validation for dynamic form fields
         // foreach ($request->dynamic as $key => $value) {

@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-
+use App\UnitMaster;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -165,16 +165,13 @@ class PermissionsSeeder extends Seeder
         ]);
         $user->assignRole($role5);
 
-        $user2 = factory(App\User::class)->create([
-            'name' => 'edtior',
-            'email' => 'edtior@example.com',
-            'phone' => '1234567892',
-            'password' =>  Hash::make('demo'),
 
+
+        UnitMaster::create([
+            'name' => 'NONE',
+            'type' => 'alpha_num',
+            'created_by' => 'superadmin@example.com',
         ]);
-        $user2->assignRole($role2);
-
-
 
 
     }

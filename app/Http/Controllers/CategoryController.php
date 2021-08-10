@@ -154,7 +154,7 @@ class CategoryController extends Controller
 
             return response($response, 201);
         } else {
-            
+
             //write your logic for web call
             return back()->with('success', 'Successfully updated category!');
         }
