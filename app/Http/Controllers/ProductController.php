@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\User;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -62,6 +64,16 @@ class ProductController extends Controller
         echo json_encode(Subcategory::where('category_id', '=', $id)->get());
     }
 
+
+    //Caching function
+    public function cacheFields(){
+        return response()->json([
+            "id" => Cache::get("dynamic_fields"),
+            "value" => Cache::get("dynamic_values")
+        ]);
+    }
+
+
     public function store(Request $request)
     {
         $request->validate([
@@ -88,6 +100,10 @@ class ProductController extends Controller
         }
         }
 
+        //Caching dynamic fields
+        Cache::set("dynamic_fields", $request->dynamic_storage);
+        Cache::set("dynamic_values", $request->dynamic);
+
         // validation for dynamic form fields
         foreach ($request->dynamic as $key => $value) {
             $unit = null;
@@ -112,6 +128,9 @@ class ProductController extends Controller
                 );
             }
         }
+
+
+
 
         //
         if ($request->is('api/*')) {
@@ -185,6 +204,8 @@ class ProductController extends Controller
                 }
             }
 
+            //Clearing cached data
+            Artisan::call('cache:clear');
 
             return back()->with('success', 'Successfully inserted a new item!');
         }

@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Support\Facades\Cache;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,6 +25,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/product/show/{id}', 'ProductController@show');
 Route::post('/product/material', 'ProductController@showMId');
 Route::get('/job/show/{id}', 'JobController@show');
+
+//Caching
+Route::get('/product/cache', 'ProductController@cacheFields');
+Route::get('/product/clearcache', 'ProductController@clearCache');
+
 
 //Route::get('users/update/{id}', 'UserController@update');
 
@@ -118,6 +126,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/product/listaction',  'ProductController@listaction');
     Route::get('/product/edit/{id}', 'ProductController@edit');
     Route::put('/product/update', 'ProductController@update');
+
 
     Route::get('/attributechange/approve/{id}', 'AttributeChangeController@approve');
     Route::post('/attributechange/store', 'AttributeChangeController@store');

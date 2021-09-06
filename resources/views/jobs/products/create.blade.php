@@ -124,6 +124,10 @@
 
 
     <script>
+
+
+
+
         $(document).ready(function() {
             $('#sub_category_name').on('change', function() {
                 let id = $(this).val();
@@ -209,7 +213,8 @@
                                 `<input type="text" hidden required name="dynamic[` +
                                 i +
                                 `][name]" value="${element['name']}"
-                                    class="form-control"  placeholder="Name">`
+                                    class="form-control"  placeholder="Name">`+
+                                    `<input type="text" hidden required name="dynamic_storage[`+ i +`][name]" value="dynamic[`+ i +`][name]" class="form-control">`
                             );
                             $('#dynamic3').append(
                                 `<div class="form-control">${element['name']}</div> `
@@ -223,12 +228,14 @@
                                 `<input type="text" required  name="dynamic[` +
                                 i +
                                 `][value]" value="` + value +
-                                `" class="form-control"  placeholder="Enter Value">`
+                                `" class="form-control"  placeholder="Enter Value" id="dynamic[`+i+`][value]">`+
+                                    `<input type="text" hidden required name="dynamic_storage[`+ i +`][value]" value="dynamic[`+ i +`][value]" class="form-control">`
                             );
                             $('#dynamic4').append(
                                 `<input type="text" hidden required name="dynamic[` +
                                 i + `][unit]" value="${element['unit']}"
-                                                    class="form-control"  placeholder="Name">`
+                                                    class="form-control"  placeholder="Name">`+
+                                    `<input type="text" hidden required name="dynamic_storage[`+ i +`][unit]" value="dynamic[`+ i +`][unit]" class="form-control">`
                             );
 
                             // console.log(value['units']);
@@ -255,7 +262,8 @@
                                     $('#unit').append(
                                         `<select  class="form-control formselect " required  name="dynamic[` +
                                         j + `][unit]" id="unit` + j + `" placeholder="Select Unit"  required="required">
-                                                                    </select> `
+                                                                    </select> `+
+                                                                    `<input type="text" hidden required name="dynamic_storage[`+ j +`][unit]" value="unit`+j+`" class="form-control">`
                                     );
                                     $('#unit' + j).append(
                                         `<option value="" >Select Unit</option>`
@@ -275,7 +283,8 @@
 
 
 
-                        //
+                        //old values
+                        displayOldValues();
                     }
                 });
             });
@@ -303,6 +312,33 @@
             var subCatTypeVal = $('#type_store').val();
                 $("#sub_categorytype option[value=0]").removeAttr('selected');
                 $("#sub_categorytype option[value="+ subCatTypeVal +"]").prop('selected', true).trigger('change');
+        }
+
+
+        //Caching block
+        const displayOldValues = () => {
+            $(document).ready(function() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/product/cache',
+                    success: function(response) {
+                        var response = response;
+                        console.log(response);
+
+                        for(let i=0 ; i<response.id.length ; i++){
+                                var name = response.id[i].value;
+                                var value = response.value[i].value;
+                                document.getElementById(name).value = value;
+
+                                var unitName = response.id[i].unit;
+                                var unitValue = response.value[i].unit;
+                                $('#'+unitName+' option[value='+ unitValue +']').prop('selected', true);
+
+                        }
+                        
+                    }
+                });
+        });
         }
     </script>
 
