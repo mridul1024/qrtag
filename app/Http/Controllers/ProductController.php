@@ -65,8 +65,9 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-
             'job_id' => 'required',
+            'sub_category_name' => 'string',
+            'sub_category' => 'string',
             'subcategorytype_id' => 'required',
             'bu_code' => 'required|string|min:3',
             'wh_code' => 'required|string|min:3'

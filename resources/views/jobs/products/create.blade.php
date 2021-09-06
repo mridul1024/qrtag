@@ -33,8 +33,11 @@
             <div class="form-row">
                 <div class="form-group col-md-12">
 
-                    <input type="text" name="job_id" hidden value="{{ $id }}" class="form-control"
-                        id="inputName4">
+
+                <input type="text" name="job_id" hidden value="{{ $id }}" class="form-control" id="inputName4">
+                <input type="text" name="category_store" value="{{ old('sub_category_name') }}" class="form-control" id="category_store" hidden>
+                <input type="text" name="sub_category_store" value="{{ old('sub_category') }}" class="form-control" id="sub_category_store" hidden>
+                <input type="text" name="type_store" value="{{ old('subcategorytype_id') }}" class="form-control" id="type_store" hidden>
 
                 </div>
             </div>
@@ -42,7 +45,7 @@
             <div class="form-row">
                 <div class="form-group col-md-12">
                     <label for="sub_category_name"> Category</label>
-                    <select class="form-control formselect " required placeholder="Select Category" id="sub_category_name">
+                    <select class="form-control formselect " name="sub_category_name" required placeholder="Select Category" id="sub_category_name">
                         <option value="0" disabled selected>Select
                             Main Category*</option>
                         @foreach ($categories as $category)
@@ -57,7 +60,7 @@
             <div class="form-row">
                 <div class="form-group col-md-12">
                     <label for="sub_category">Sub Category</label>
-                    <select class="form-control formselect " required placeholder="Select Sub Category" id="sub_category">
+                    <select class="form-control formselect " name="sub_category" required placeholder="Select Sub Category" id="sub_category">
                     </select>
                 </div>
             </div>
@@ -141,6 +144,11 @@
                                 `<option value="${element['id']}">${element['name']}</option>`
                             );
                         });
+                         
+                        //Sub category autofill function call
+                        if($('#category_store').val() != ""){
+                          fetchSubCat();
+                        }
                     }
                 });
             });
@@ -166,6 +174,11 @@
                                 `<option value="${element['id']}">${element['name']}</option>`
                             );
                         });
+
+                        //Sub category type autofill function call
+                        if($('#type_store').val() != ""){
+                            fetchSubCatType();
+                        }
                     }
                 });
             });
@@ -267,6 +280,30 @@
                 });
             });
         });
+
+
+        //Automatic dropdown selection block
+        $(document).ready(function(){
+            if($('#category_store').val() != ""){
+                console.log("value 1");
+                var catVal = $('#category_store').val();
+                $("#sub_category_name option[value=0]").removeAttr('selected');
+                $("#sub_category_name option[value="+ catVal +"]").prop('selected', true).trigger('change');
+            }
+
+        });
+
+        const fetchSubCat = () => {
+                var subCatVal = $('#sub_category_store').val();
+                $("#sub_category option[value=0]").removeAttr('selected');
+                $("#sub_category option[value="+ subCatVal +"]").prop('selected', true).trigger('change');
+        }
+
+        const fetchSubCatType = () => {
+            var subCatTypeVal = $('#type_store').val();
+                $("#sub_categorytype option[value=0]").removeAttr('selected');
+                $("#sub_categorytype option[value="+ subCatTypeVal +"]").prop('selected', true).trigger('change');
+        }
     </script>
 
     </body>
